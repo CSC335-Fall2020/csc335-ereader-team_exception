@@ -15,43 +15,42 @@ import javafx.stage.Stage;
 
 
 /**
- * Purpose:
+ * Purpose: Creates the GUI for the E-Reader program. This class represents the View. 
  * 
  * @author 
  *
  */
 public class eReaderGUIView  extends Application{
-	public static final int WIDTH  = 1072;
-	public static final int HEIGHT = 1448;
-	public static final int BUTTON_DIM = 50;
+	public static final int WIDTH      = 1072;
+	public static final int HEIGHT     = 1448;
+	public static final int BUTTON_DIM = 75;
+	
 	// OBJECTS
 	private eReaderController controller;
-	private BorderPane        window;
-	private eReaderModel      model; 
-	private GridPane          gridPane;
-	private GridPane   		  text;
-	private VBox toolbarVbox;
-	private Button homeButton;
-	private Button backButton;
-	private Button forwardButton;
+	private BorderPane        window    ;
+	private GridPane          gridPane  ;
+	private eReaderModel      model     ;
+	private GridPane   		  text      ;
+	
+	private VBox   toolbarVbox   ;
+	private Button homeButton    ;
+	private Button backButton    ;
+	private Button forwardButton ;
 	private Button settingsButton;
-	private Button searchButton;
+	private Button searchButton  ;
 	
 	
 	/**
-	 * Purpose:
+	 * Purpose: Constructor that instanstiates objects. These can be created
+	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
-		this.window     = new BorderPane  (); 
-		this.model      = new eReaderModel();
-		this.controller = new eReaderController(model);
-		this.gridPane   = new GridPane();
-		//this.homeButton = new Button("Home");
-		this.backButton = new Button("Back");
-		this.forwardButton  = new Button("Forward");
-		this.settingsButton = new Button("Settings");
-		this.toolbarVbox    = new VBox();
-		this.text = new GridPane(); // Holds page info
+		this.window      = new BorderPane  (); 
+		this.model       = new eReaderModel();
+		this.controller  = new eReaderController(model);
+		this.gridPane    = new GridPane();
+		this.toolbarVbox = new VBox();
+		this.text        = new GridPane(); // Holds page info
 	}
 	
 	/**
@@ -61,8 +60,7 @@ public class eReaderGUIView  extends Application{
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("E-Reader");
 		
-		
-		
+		// Read the image data from the files
 		FileInputStream input1 = new FileInputStream("button_images/homeButton.png"    );
 		FileInputStream input2 = new FileInputStream("button_images/forwardButton.png" );
 		FileInputStream input3 = new FileInputStream("button_images/backButton.png"    );
@@ -81,7 +79,7 @@ public class eReaderGUIView  extends Application{
         ImageView imageView4 = new ImageView(image4);
         ImageView imageView5 = new ImageView(image5);
        
-        
+        // Set image width and height 
         imageView1.setFitWidth (BUTTON_DIM);
         imageView1.setFitHeight(BUTTON_DIM);
         
@@ -97,27 +95,23 @@ public class eReaderGUIView  extends Application{
         imageView5.setFitWidth (BUTTON_DIM);
         imageView5.setFitHeight(BUTTON_DIM);
         
+        //Create the buttons with images
         this.homeButton     = new Button("", imageView1);
         this.forwardButton  = new Button("", imageView2);
         this.backButton     = new Button("", imageView3);
 		this.settingsButton = new Button("", imageView4);
 		this.searchButton   = new Button("", imageView5);
 		
+		// Add buttons to the toolbar Hbox
 		HBox toolbarHbox = new HBox(this.homeButton, this.forwardButton, this.backButton, 
 				                    this.settingsButton, this.searchButton);
 		
+		// Button Spacing
+		toolbarHbox.setSpacing(50);
 		
-		toolbarHbox.setSpacing(100);
-		
-		toolbarVbox.getChildren().add(toolbarHbox);
-		this.gridPane.add(toolbarVbox, 0, 0); // Add to gridpane
-		this.window.setTop(this.gridPane); // Set gridpane to top
-		
-		
-		
-        
-		
-		
+		toolbarVbox.getChildren().add(toolbarHbox); // Add the Hbox to Vbox
+		this.gridPane.add(toolbarVbox, 0, 0);      // Add Vbox to gridpane
+		this.window.setTop(this.gridPane);        // Set gridpane to top
 		
 		
 		// Events for buttons
@@ -127,11 +121,7 @@ public class eReaderGUIView  extends Application{
 		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );});
 		this.searchButton.setOnAction  (e-> { System.out.println("Search"     );});
 		
-		
-		
-		
-		
-		
+		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
 		stage.setScene(scene);
 
