@@ -10,7 +10,7 @@ public class ControllerTestCases {
 	 */
 	@Test
 	public void test() {
-		eReaderModel model = new eReaderModel();
+		eReaderModel model = new eReaderModel(null);
 		eReaderController controller = new eReaderController(model);
 			
 	}

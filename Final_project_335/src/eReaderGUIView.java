@@ -63,7 +63,7 @@ public class eReaderGUIView  extends Application{
 	 */
 	public eReaderGUIView() {
 		this.window       = new BorderPane  (); 
-		this.model        = new eReaderModel();
+		this.model        = new eReaderModel(null);
 		this.controller   = new eReaderController(model);
 		this.gridPane     = new GridPane();
 		this.toolbarVbox  = new VBox    ();
