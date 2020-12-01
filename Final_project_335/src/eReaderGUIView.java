@@ -1,4 +1,6 @@
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -40,8 +42,9 @@ public class eReaderGUIView  extends Application{
 	private GridPane          gridPane  ;
 	private eReaderModel      model     ;
 	private GridPane          deviceName;
-	private GridPane   		  text      ;
+	private GridPane   		  bookText  ;
 	private VBox			  textBox   ;
+	private List<String>      book      ;
 	
 	// Buttons and Toolbar
 	private VBox     toolbarVbox   ;
@@ -51,29 +54,30 @@ public class eReaderGUIView  extends Application{
 	private Button   settingsButton;
 	private Button   searchButton  ;
 	
-	// Menu stuff
+	// Menu stuff and things
 	private Menu     fontSizeMenu;
 	private MenuItem font        ;
 	private MenuItem fontSize	 ;
-	private MenuBar  menuBar ;
+	private MenuBar  menuBar     ;
 
 	/**
 	 * Purpose: Constructor that instanstiates objects. These can be created
 	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
-		this.window       = new BorderPane  (); 
-		this.model        = new eReaderModel(null);
-		this.controller   = new eReaderController(model);
-		this.gridPane     = new GridPane();
-		this.toolbarVbox  = new VBox    ();
-		this.text         = new GridPane();   
-		this.deviceName   = new GridPane(); 
-		this.textBox      = new VBox    ();
-		this.fontSizeMenu = new Menu("Format");
-		this.font         = new MenuItem("Font Style");
-		this.fontSize     = new MenuItem("Size");
-		this.menuBar	  = new MenuBar();
+		this.window       = new BorderPane  (              ); 
+//		this.model        = new eReaderModel("testBook.txt"); // Push into start function. 
+//		this.controller   = new eReaderController(model    );
+		this.gridPane     = new GridPane(                  );
+		this.toolbarVbox  = new VBox    (                  );
+		this.bookText     = new GridPane(                  );   
+		this.deviceName   = new GridPane(                  ); 
+		this.textBox      = new VBox    (                  );
+		this.fontSizeMenu = new Menu    ("Format"          );
+		this.font         = new MenuItem("Font Style"      );
+		this.fontSize     = new MenuItem("Size"            );
+		this.menuBar	  = new MenuBar (                  );
+		this.book         = new ArrayList<String>(         );
 	}
 	
 	/**
@@ -88,10 +92,11 @@ public class eReaderGUIView  extends Application{
 		this.fontSizeMenu.getItems().add(this.font);
 		this.fontSizeMenu.getItems().add(this.fontSize);
 		
-		
 		// Add font menu to the menubar
 		this.menuBar.getMenus().add(this.fontSizeMenu);
-		window.setTop(this.menuBar);
+		
+		// Add menubar to the window
+		window.setTop(this.menuBar);                         // Add other dropdowns here
 		
 	
 		// Read the image data from the files
@@ -148,21 +153,38 @@ public class eReaderGUIView  extends Application{
 		this.gridPane.setAlignment(Pos.TOP_CENTER); // Center gridpane
 		this.window.setCenter(this.gridPane);      // Set gridpane to top
 		
-		
-		
-		
 		// Events for buttons
 		this.homeButton    .setOnAction(e-> { System.out.println("Home Button");});
 		this.backButton    .setOnAction(e-> { System.out.println("Back"       );});
 		this.forwardButton .setOnAction(e-> { System.out.println("Forward"    );});
-		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );});
-		this.searchButton  .setOnAction(e-> { System.out.println("Search"     );});
+		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );}); // Possibly remove later
+		
+		this.searchButton  .setOnAction(e-> { this.model      = new eReaderModel("testBook.txt");  // String arg needs to be updated to whatever 
+											  this.controller = new eReaderController(model    ); //  the user chooses
+											 this.book = this.controller.getBook();
+											 
+											 // Add text to GUI
+											 for(String line: this.book) {
+												 Text text = new Text();
+												 VBox vbox = new VBox();
+												 text.setText(line);
+												 
+												 vbox.getChildren().add(text);
+												
+												 this.gridPane.add(vbox, 0, 1);
+												
+											 }
+											 
+											//this.bookText.setAlignment(Pos.TOP_CENTER);
+											 // Need to set the font size and font style here
+											// window.setTop(this.gridPane);
+											 
+											 
+		}); // End search button event handler
 		
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
-		
 		stage.setScene(scene);
-
 		stage.show();  // Show the stage 
 	}
 

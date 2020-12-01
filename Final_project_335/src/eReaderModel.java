@@ -15,18 +15,29 @@ public class eReaderModel {
 	private String book;
 	
 	public static void main(String[] args) {
+		
 		eReaderModel test = new eReaderModel("testBook.txt");
-		List<String> pages = test.getPages(2, 18);
+		List<String> pages = test.getPages(2, 18); // 2 = page length        18 = line length
 		for(int i = 0; i < pages.size(); i++) {
 			System.out.println(pages.get(i));
 			System.out.println("tester bester");
 		}
 		System.out.println(pages.size());
 	}
+	
+	/**
+	 * 
+	 * @param filename
+	 */
 	public eReaderModel(String filename) {
 		book = "";
 		getBook(filename);
 	}
+	
+	/**
+	 * Purpose: 
+	 * @param filename
+	 */
 	private void getBook(String filename){
 		Scanner fileInput = null;
         
@@ -42,6 +53,12 @@ public class eReaderModel {
         fileInput.close();
 	}
 	
+	/**
+	 * Purpose: 
+	 * @param pageLength
+	 * @param lineLength
+	 * @return
+	 */
 	public List<String> getPages(int pageLength, int lineLength){
 		List<String> retval = new ArrayList<String>();
 		int lastSpace = 0;
@@ -73,4 +90,15 @@ public class eReaderModel {
 		retval.add(currLine);
 		return retval;
 	}
+	
+	/**
+	 * Purpose: Accessor that returns the book. 
+	 * @return
+	 */
+	public String getText() {
+		return this.book;
+	}
+	
+	
+	
 } // End class
