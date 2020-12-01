@@ -62,17 +62,17 @@ public class eReaderGUIView  extends Application{
 	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
-		this.window       = new BorderPane  (); 
-		this.model        = new eReaderModel(null);
+		this.window       = new BorderPane(); 
+		this.model        = new eReaderModel(null); // Move into search lambda
 		this.controller   = new eReaderController(model);
 		this.gridPane     = new GridPane();
 		this.toolbarVbox  = new VBox    ();
 		this.text         = new GridPane();   
 		this.deviceName   = new GridPane(); 
 		this.textBox      = new VBox    ();
-		this.fontSizeMenu = new Menu("Format");
+		this.fontSizeMenu = new Menu    ("Format"    );
 		this.font         = new MenuItem("Font Style");
-		this.fontSize     = new MenuItem("Size");
+		this.fontSize     = new MenuItem("Size"      );
 		this.menuBar	  = new MenuBar();
 	}
 	
@@ -148,15 +148,12 @@ public class eReaderGUIView  extends Application{
 		this.gridPane.setAlignment(Pos.TOP_CENTER); // Center gridpane
 		this.window.setCenter(this.gridPane);      // Set gridpane to top
 		
-		
-		
-		
 		// Events for buttons
 		this.homeButton    .setOnAction(e-> { System.out.println("Home Button");});
 		this.backButton    .setOnAction(e-> { System.out.println("Back"       );});
 		this.forwardButton .setOnAction(e-> { System.out.println("Forward"    );});
 		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );});
-		this.searchButton  .setOnAction(e-> { System.out.println("Search"     );});
+		this.searchButton  .setOnAction(e-> { System.out.println("Search"     );}); // Send text file name in with this event
 		
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
