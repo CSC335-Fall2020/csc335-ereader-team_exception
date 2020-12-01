@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -12,7 +11,15 @@ import java.util.Scanner;
  *
  */
 public class eReaderModel {
+
 	private String book;
+	private List<String> retval ;
+	private int currentPage=0;
+	private String searchBook;
+	private int searchNumber=0;
+	private String searchCurrent;
+	
+	
 	
 	public static void main(String[] args) {
 		eReaderModel test = new eReaderModel("testBook.txt");
@@ -21,7 +28,15 @@ public class eReaderModel {
 			System.out.println(pages.get(i));
 			System.out.println("tester bester");
 		}
+		
 		System.out.println(pages.size());
+		System.out.println(test.search("book"));
+		System.out.println(test.search("test"));
+		System.out.println(test.search("book"));
+		System.out.println(test.search("book"));
+		System.out.println(test.search("book"));
+		System.out.println(test.search("book"));
+	
 	}
 	public eReaderModel(String filename) {
 		book = "";
@@ -43,7 +58,7 @@ public class eReaderModel {
 	}
 	
 	public List<String> getPages(int pageLength, int lineLength){
-		List<String> retval = new ArrayList<String>();
+		retval = new ArrayList<String>();
 		int lastSpace = 0;
 		int start = 0;
 		String currLine = "";
@@ -73,4 +88,74 @@ public class eReaderModel {
 		retval.add(currLine);
 		return retval;
 	}
+	
+	
+	public String startBook() {
+		if(retval==null || retval.size()==0) {
+			System.out.println("no book content");
+			return null;
+		}
+		return retval.get(currentPage);
+	}
+	
+	
+	
+	
+	public String getNext() {
+		currentPage++;
+		if(retval==null || retval.size()==0 || currentPage>=retval.size()) {
+			System.out.println("no book content or no more page");
+			currentPage--;
+			return null;
+		}
+		return retval.get(currentPage);
+	}
+	
+	
+	
+	
+	public String getPrevious() {
+		currentPage--;
+		if(retval==null || retval.size()==0 || currentPage<0) {
+			System.out.println("no book content or first page now");
+			currentPage++;
+			return null;
+		}
+		return retval.get(currentPage);
+	}
+	
+	
+	
+	public int getCurrent() {
+		return currentPage;
+	}
+	
+	
+	
+	public int search(String input) {
+		if(searchBook==null || !searchCurrent.equals(input)) {
+			searchNumber=0;
+			searchBook=book.substring(0);
+		}
+	
+		searchCurrent=input.substring(0);
+		for (int i = 0; i <searchBook.length(); i++) {
+			     if (i <= searchBook.length() - input.length()) {
+			         if (searchBook.indexOf(input, i) > 0) {
+			             i = searchBook.indexOf(input, i);
+			             searchBook=searchBook.substring(i+input.length());
+			             searchNumber+=i+input.length();
+			          //   If the position of the last word of return is found, 
+			         //the position of the first word is searchNumber-input.length();
+			             return searchNumber;
+			         }
+			     }
+			 }
+		//
+	
+		searchBook=book.substring(0);
+		searchNumber=0;
+		return -1;
+	}
+	
 } // End class
