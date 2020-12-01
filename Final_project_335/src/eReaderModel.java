@@ -4,12 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Observable;
 
-/**
- * 
- * @author 
- *
- */
 public class eReaderModel {
 	private String book;
 	
