@@ -1,5 +1,9 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,45 +17,26 @@ import java.util.Observable;
 
 public class eReaderModel extends Observable{
 	private String book;
-	private List<String> retval ;// jia change 
+	private List<String> pages ; 
 	private int currentPage=0;//jia change
 	private String searchBook;//jia change
 	private int searchNumber=0;//jia change
 	private String searchCurrent;//jia change
 	private List<Integer> bookmarks;//winston change
 	
-	public static void main(String[] args) {
-		
-		eReaderModel test = new eReaderModel("testBook.txt");
-		List<String> pages = test.getPages(2, 18); // 2 = page length        18 = line length
-		for(int i = 0; i < pages.size(); i++) {
-			System.out.println(pages.get(i));
-			System.out.println("tester bester");
-		}
-		
-		System.out.println(pages.size());
-		System.out.println(test.search("This"));//jia change
-		System.out.println(test.search("test"));//jia change
-		System.out.println(test.search("book"));//jia change
-		System.out.println(test.search("book"));//jia change
-		System.out.println(test.search("book"));//jia change
-		System.out.println(test.search("is"));//winston change
-		System.out.println(test.search("is"));//winston change
-		System.out.println(test.search("is"));//winston change
-		System.out.println(test.search("is"));//winston change
-		System.out.println(test.search("is"));//winston change
-	}
 	public void testPrint(int index) {
 		System.out.println(book.substring(index, index + 2));
 	}
 	
 	/**
-	 * 
+	 *  Will add number of lines per page and characters per line to constructor.
 	 * @param filename
 	 */
 	public eReaderModel(String filename) {
 		book = "";
 		convertFile(filename);
+		pages = getPages(30, 80);
+		System.out.println(pages.size());
 	}
 	
 	/**
@@ -59,17 +44,25 @@ public class eReaderModel extends Observable{
 	 * @param filename
 	 */
 	private void convertFile(String filename) {
-		Scanner fileInput = null;
-        try {
-            fileInput = new Scanner(new File(filename));
+		BufferedReader fileInput = null;
+        int i = 0;
+		try {
+            fileInput = new BufferedReader(new FileReader(filename));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }while (fileInput.hasNext()) {
-        	
-            book += fileInput.nextLine() + '\n';
-            
-        }
-        fileInput.close();
+        }try {
+			while (fileInput.ready()) {
+				
+			    book += fileInput.readLine() + '\n';
+			    System.out.println(i);
+			    i++;
+			}
+			fileInput.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 	}
 	
 	public String getBook() {
@@ -83,7 +76,7 @@ public class eReaderModel extends Observable{
 	 * @return
 	 */
 	public List<String> getPages(int pageLength, int lineLength){
-		retval = new ArrayList<String>();//jia change
+		List<String> retval = new ArrayList<String>();
 		int lastSpace = 0;
 		int start = 0;
 		String currLine = "";
@@ -99,7 +92,7 @@ public class eReaderModel extends Observable{
 			}
 			if(book.charAt(i) == '\n') {
 				currLine += book.substring(start, i)+ "\n";
-				start = i+1;
+				start = i;
 				pageLine ++;
 			}
 			if(pageLine == pageLength) {
@@ -124,30 +117,34 @@ public class eReaderModel extends Observable{
 
 	//jia change
 	public String getCurrPage() {
-		if(retval==null || retval.size()==0) {
+		if(pages==null || pages.size()==0) {
 			System.out.println("no book content");
 			return null;
 		}
-		return retval.get(currentPage);
+		return pages.get(currentPage);
 	}
+	/**
+	 * Purpose: Starts book from first page
+	 * @return The first page of the book
+	 */
 	public String startBook() {
-		if(retval==null || retval.size()==0) {
+		if(pages == null || pages.size()==0) {
 			System.out.println("no book content");
 			return null;
 		}
 		currentPage = 0;
-		return retval.get(currentPage);
+		return pages.get(currentPage);
 	}
 	
 	//jia change
 	public String getNext() {
 		currentPage++;
-		if(retval==null || retval.size()==0 || currentPage>=retval.size()) {
+		if(pages==null || pages.size()==0 || currentPage>=pages.size()) {
 			System.out.println("no book content or no more page");
 			currentPage--;
 			return null;
 		}
-		return retval.get(currentPage);
+		return pages.get(currentPage);
 	}
 	
 	
@@ -155,18 +152,29 @@ public class eReaderModel extends Observable{
 	//jia change
 	public String getPrevious() {
 		currentPage--;
-		if(retval==null || retval.size()==0 || currentPage<0) {
+		if(pages==null || pages.size()==0 || currentPage<0) {
 			System.out.println("no book content or first page now");
 			currentPage++;
 			return null;
 		}
-		return retval.get(currentPage);
+		return pages.get(currentPage);
 	}
 	
 	
 	//jia change
-	public int getCurrent() {
+	/**
+	 * Purpose: returns current page number
+	 * @return an int of the current page
+	 */
+	public int getPageNumber() {
 		return currentPage;
+	}
+	/**
+	 * Purpose: returns the total number of pages in the current book
+	 * @return an int of the total number of pages
+	 */
+	public int getBookSize() {
+		return pages.size();
 	}
 	
 	
@@ -207,7 +215,7 @@ public class eReaderModel extends Observable{
 
 	//winston change
 	public void addBookmark() {
-		int index = search(retval.get(currentPage));
+		int index = search(pages.get(currentPage));
 		bookmarks.add(index);
 	}
 

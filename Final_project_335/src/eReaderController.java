@@ -29,7 +29,7 @@ public class eReaderController {
 	 * @return a string representing the page
 	 */
 	public String nextPage() {
-		String page = model.getPrevious();
+		String page = model.getNext();
 		if(page == null) {
 			return("End of Book");
 		}
