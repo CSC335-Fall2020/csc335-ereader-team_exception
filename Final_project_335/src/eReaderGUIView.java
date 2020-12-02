@@ -99,16 +99,20 @@ public class eReaderGUIView extends Application implements Observer{
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("E-Mongoose");
-		this.model      = new eReaderModel("warOfTheWorlds.txt");  // String arg needs to be updated to whatever 
+		
+		// this will get moved into the main menu button for selecting a new book
+		this.model      = new eReaderModel("books/ista_essays.txt");  // String arg needs to be updated to whatever 
 		  this.controller = new eReaderController(model    ); //  the user chooses
 		  this.book        = this.controller.getBook(      );
-		 
+		 //  end 
+		  
+		  
 		// Add submenu to font styles (i.e. font type)
 		this.fontStyle.getItems().add(this.fontOne  );
 		this.fontStyle.getItems().add(this.fontTwo  );
 		this.fontStyle.getItems().add(this.fontThree);
 		
-		// Add submenu to fontsize
+		// Add submenu to fontsizet
 		this.fontSize.getItems().add(this.sizeTen   );
 		this.fontSize.getItems().add(this.sizeEleven);
 		this.fontSize.getItems().add(this.sizeTwelve);
@@ -241,6 +245,12 @@ public class eReaderGUIView extends Application implements Observer{
 		
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
+		String page = controller.previousPage();
+		Text text = new Text();
+		VBox vbox = new VBox();
+		text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
+		text.setText(page);
+		vbox.getChildren().add(text);
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
 	}
