@@ -99,7 +99,10 @@ public class eReaderGUIView extends Application implements Observer{
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("E-Mongoose");
-
+		this.model      = new eReaderModel("warOfTheWorlds.txt");  // String arg needs to be updated to whatever 
+		  this.controller = new eReaderController(model    ); //  the user chooses
+		  this.book        = this.controller.getBook(      );
+		 
 		// Add submenu to font styles (i.e. font type)
 		this.fontStyle.getItems().add(this.fontOne  );
 		this.fontStyle.getItems().add(this.fontTwo  );
@@ -177,8 +180,37 @@ public class eReaderGUIView extends Application implements Observer{
 		
 		// Events for buttons
 		this.homeButton    .setOnAction(e-> { System.out.println("Home Button");});
-		this.backButton    .setOnAction(e-> { System.out.println("Back"       );});
-		this.forwardButton .setOnAction(e-> { System.out.println("Forward"    );});
+		this.backButton    .setOnAction(e-> { 
+			//resets gridpane with previous page as text
+			String page = controller.previousPage();
+			Text text = new Text();
+			VBox vbox = new VBox();
+			text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
+			text.setText(page);
+			vbox.getChildren().add(text);
+			GridPane newPage = new GridPane();
+			newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
+			newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
+			newPage.add(vbox, 0, 1);
+			this.gridPane = newPage;
+			this.window.setCenter(this.gridPane);      // Set gridpane to top
+			
+		});
+		this.forwardButton .setOnAction(e-> {
+			//resets gridpane with next page as text
+			String page = controller.nextPage();
+			Text text = new Text();
+			VBox vbox = new VBox();
+			text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
+			text.setText(page);
+			vbox.getChildren().add(text);
+			GridPane newPage = new GridPane();
+			newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
+			newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
+			newPage.add(vbox, 0, 1);
+			this.gridPane = newPage;
+			this.window.setCenter(this.gridPane);      // Set gridpane to top
+		});
 		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );}); // Possibly remove later
 		
 		// Events for font style
@@ -192,10 +224,7 @@ public class eReaderGUIView extends Application implements Observer{
 		this.sizeTwelve .setOnAction(e-> { System.out.println("12pt");});
 	
 	       
-		this.searchButton  .setOnAction(e-> { this.model      = new eReaderModel("testBook.txt");  // String arg needs to be updated to whatever 
-											  this.controller = new eReaderController(model    ); //  the user chooses
-											  this.book        = this.controller.getBook(      );
-											 
+		this.searchButton  .setOnAction(e-> {
 											 // Add text to GUI
 											 for(String line: this.book) {
 												 Text text = new Text();

@@ -123,11 +123,19 @@ public class eReaderModel extends Observable{
 	}
 
 	//jia change
+	public String getCurrPage() {
+		if(retval==null || retval.size()==0) {
+			System.out.println("no book content");
+			return null;
+		}
+		return retval.get(currentPage);
+	}
 	public String startBook() {
 		if(retval==null || retval.size()==0) {
 			System.out.println("no book content");
 			return null;
 		}
+		currentPage = 0;
 		return retval.get(currentPage);
 	}
 	
