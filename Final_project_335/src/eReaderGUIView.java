@@ -228,9 +228,6 @@ public class eReaderGUIView extends Application implements Observer{
 			newPage.add(vbox, 0, 1);
 			this.gridPane = newPage;
 			this.window.setCenter(this.gridPane);      // Set gridpane to top
-			System.out.println(controller.pageNumber());
-			System.out.println(controller.bookSize());
-			System.out.println(model.getText());
 		});
 		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );}); // Possibly remove later
 		

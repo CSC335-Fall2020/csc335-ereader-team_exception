@@ -33,7 +33,6 @@ public class eReaderModel extends Observable{
 		book = "";
 		convertFile(filename);
 		pages = getPages(30, 80);
-		System.out.println(pages.size());
 	}
 	
 	/**
