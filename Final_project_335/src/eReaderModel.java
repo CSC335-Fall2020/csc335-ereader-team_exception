@@ -21,8 +21,9 @@ public class eReaderModel extends Observable{
 	private List<Integer> bookmarks;//winston change
 	
 	public static void main(String[] args) {
+		
 		eReaderModel test = new eReaderModel("testBook.txt");
-		List<String> pages = test.getPages(2, 18);
+		List<String> pages = test.getPages(2, 18); // 2 = page length        18 = line length
 		for(int i = 0; i < pages.size(); i++) {
 			System.out.println(pages.get(i));
 			System.out.println("tester bester");
@@ -43,12 +44,21 @@ public class eReaderModel extends Observable{
 	public void testPrint(int index) {
 		System.out.println(book.substring(index, index + 2));
 	}
+	
+	/**
+	 * 
+	 * @param filename
+	 */
 	public eReaderModel(String filename) {
 		book = "";
 		convertFile(filename);
 	}
 	
-	private void convertFile(String filename){
+	/**
+	 * Purpose: 
+	 * @param filename
+	 */
+	private void convertFile(String filename) {
 		Scanner fileInput = null;
         try {
             fileInput = new Scanner(new File(filename));
@@ -66,6 +76,12 @@ public class eReaderModel extends Observable{
 		return book;
 	}
 	
+	/**
+	 * Purpose: 
+	 * @param pageLength
+	 * @param lineLength
+	 * @return
+	 */
 	public List<String> getPages(int pageLength, int lineLength){
 		retval = new ArrayList<String>();//jia change
 		int lastSpace = 0;
@@ -176,5 +192,12 @@ public class eReaderModel extends Observable{
 	public void addBookmark() {
 		int index = search(retval.get(currentPage));
 		bookmarks.add(index);
+	}
+	/**
+	 * Purpose: Accessor that returns the book. 
+	 * @return
+	 */
+	public String getText() {
+		return this.book;
 	}
 } // End class

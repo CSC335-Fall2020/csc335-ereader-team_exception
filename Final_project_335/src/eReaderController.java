@@ -16,6 +16,7 @@ public class eReaderController {
 		this.model = model;
 	}
 	
+
 	public List<String> getPages(int pageLength, int lineLength) {
 		return model.getPages(pageLength, lineLength);
 	}
@@ -31,4 +32,12 @@ public class eReaderController {
 	public String previousPage() {
 		return model.getPrevious();
 	}
-}
+
+	/**
+	 * Purpose:
+	 * @return
+	 */
+	public List<String> getBook() {
+		return this.model.getPages(30, 80);
+	}	
+}//End class
