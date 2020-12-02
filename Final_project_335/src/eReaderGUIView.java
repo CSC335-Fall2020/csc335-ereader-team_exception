@@ -114,12 +114,11 @@ public class eReaderGUIView extends Application implements Observer{
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("E-Mongoose");
-		
 		// this will get moved into the main menu button for selecting a new book
-		this.model      = new eReaderModel("warOfTheWorlds.txt");  // String arg needs to be updated to whatever 
-		  this.controller = new eReaderController(model    ); //  the user chooses
-		  this.book        = this.controller.getBook(      );
-		 //  end 
+				this.model      = new eReaderModel("testBook.txt");  // String arg needs to be updated to whatever 
+				  this.controller = new eReaderController(model    ); //  the user chooses
+				  this.book        = this.controller.getBook(      );
+				 //  end 
 		  
 		  
 		// Add submenu to font styles (i.e. font type)
@@ -328,7 +327,7 @@ public class eReaderGUIView extends Application implements Observer{
 		
 		// currently hard coded titles.
 		String titles[] = {"AP History Essay", "History of Crime", "ISTA Essays", "Poem of a Bipolar Mute", "Pysch Papers"};
-		
+		String addresses[] = {"books/ap_history_essays.txt" , "books/history_of_crime_essays.txt" ,"books/ista_essays.txt", "books/poem_of_a_bipolar_mute.txt", "books/psych_papers.txt"};
 		// keep track of how many times we loop.
 		int count = 0;
 		
@@ -358,7 +357,14 @@ public class eReaderGUIView extends Application implements Observer{
 				covers[numBooks-1] = new Button("", vbox);
 				
 				// set each button to currently print onto the console when pressed
-				covers[numBooks-1].setOnAction(e-> { System.out.println("titles");});
+				int temp = count;
+				covers[numBooks-1].setOnAction(e-> { 
+					// this will get moved into the main menu button for selecting a new book
+					this.model      = new eReaderModel(addresses[temp]);  // String arg needs to be updated to whatever 
+					  this.controller = new eReaderController(model    ); //  the user chooses
+					  this.book        = this.controller.getBook(      );
+					 //  end 
+				});
 				
 				// add buttons to grid
 				grid.add(covers[numBooks-1], j, i);

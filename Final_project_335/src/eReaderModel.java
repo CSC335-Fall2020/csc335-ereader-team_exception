@@ -42,7 +42,6 @@ public class eReaderModel extends Observable{
 	 */
 	private void convertFile(String filename) {
 		BufferedReader fileInput = null;
-        int i = 0;
 		try {
             fileInput = new BufferedReader(new FileReader(filename));
         } catch (FileNotFoundException e) {
@@ -51,8 +50,6 @@ public class eReaderModel extends Observable{
 			while (fileInput.ready()) {
 				
 			    book += fileInput.readLine() + '\n';
-			    System.out.println(i);
-			    i++;
 			}
 			fileInput.close();
 		} catch (IOException e) {
@@ -83,9 +80,15 @@ public class eReaderModel extends Observable{
 				lastSpace = i;
 			}
 			if(i - start >= lineLength) {
+				if(lastSpace < start) {
+					currLine += book.substring(start, i)+ "-\n";
+					pageLine++;
+					start = i;
+				}else {
 				currLine += book.substring(start, lastSpace+1)+ "\n";
 				start = lastSpace+1;
 				pageLine ++;
+				}
 			}
 			if(book.charAt(i) == '\n') {
 				currLine += book.substring(start, i)+ "\n";
@@ -96,9 +99,11 @@ public class eReaderModel extends Observable{
 				retval.add(currLine);
 				pageLine = 0;
 				currLine = "";
+				
 			}
 			
 		}
+		
 		currLine +=book.substring(start)+ "\n";
 		retval.add(currLine);
 		return retval;
