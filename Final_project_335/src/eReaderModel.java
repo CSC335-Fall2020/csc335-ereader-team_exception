@@ -123,8 +123,6 @@ public class eReaderModel extends Observable{
 		return retval.get(currentPage);
 	}
 	
-	
-	
 	//jia change
 	public String getNext() {
 		currentPage++;

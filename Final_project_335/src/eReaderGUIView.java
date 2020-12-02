@@ -31,7 +31,7 @@ import javafx.stage.Stage;
  * @author 
  *
  */
-public class eReaderGUIView  extends Application{
+public class eReaderGUIView extends Application implements Observer{
 	// STRING CONSTANTS
 	public static final String DEFAULT_FONT = "Courier New";
 	public static final String FONT_ONE     = "Times New Roman";
@@ -214,6 +214,12 @@ public class eReaderGUIView  extends Application{
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	// Function to modify the Gridpane that will display the books
