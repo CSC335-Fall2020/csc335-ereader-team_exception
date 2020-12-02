@@ -1,16 +1,24 @@
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,6 +30,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
@@ -32,6 +41,12 @@ import javafx.stage.Stage;
  *
  */
 public class eReaderGUIView extends Application implements Observer{
+	
+	// numRows/numCols based on amount of books; should be updated when new books are added
+	private int numRows = 2; 
+	private int numCols = 3;
+	private int numBooks = 5; // probably a temp variable, until we have the control worked out.
+	
 	// STRING CONSTANTS
 	public static final String DEFAULT_FONT = "Courier New";
 	public static final String FONT_ONE     = "Times New Roman";
@@ -214,12 +229,101 @@ public class eReaderGUIView extends Application implements Observer{
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
+		
+		menuStart();
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void menuStart() {
+		
+		Stage stage = new Stage();
+		Group root = new Group();
+		BorderPane border = new BorderPane();
+		ScrollBar sc = new ScrollBar();
+		
+		try {
+			border.setCenter(addGridPane());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} 
+		
+		Scene scene = new Scene(root, 485, 500);
+		stage.setScene(scene);
+		root.getChildren().addAll(border,sc);
+		
+		sc.setLayoutX(scene.getWidth()-sc.getWidth());
+        sc.setMin(0);
+        sc.setOrientation(Orientation.VERTICAL);
+        sc.setPrefHeight(500);
+        sc.setMax(200);
+		
+        // gives the scroll bar the ability to actually scroll
+        sc.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+                    border.setLayoutY(-new_val.doubleValue());
+            }
+        });
+		
+		stage.show();
+	}
+	
+	
+	public GridPane addGridPane() throws FileNotFoundException {
+		GridPane grid = new GridPane();
+		grid.setHgap(30);
+		grid.setVgap(30);
+		grid.setPadding(new Insets(20, 10, 20, 10));
+		
+		
+		Button covers[] = new Button[5];  // an array to contain all the book buttons.
+		
+		// currently hard coded titles.
+		String titles[] = {"AP History Essay", "History of Crime", "ISTA Essays", "Poem of a Bipolar Mute", "Pysch Papers"};
+		
+		// keep track of how many times we loop.
+		int count = 0;
+		
+		for (int i = 0; i < numRows; i++) {
+			for (int j = 0; j < numCols; j++) {
+				
+				if (count == numBooks) { // stop if count is equal to the amount of books we have
+					break;
+				}
+				
+				VBox vbox = new VBox(); // to contain the cover and the title
+				Label title = new Label(titles[count]); // sets titles as the label for each button
+				title.setMaxWidth(Double.MAX_VALUE);
+		        title.setAlignment(Pos.CENTER);
+		        title.setTextAlignment(TextAlignment.CENTER);
+		        title.setWrapText(true);
+		        title.setMaxWidth(100);
+		        title.setMaxHeight(50);
+		        
+		        // should be updated to include more than one cover picture
+				FileInputStream input = new FileInputStream("book_images/cover.png"); 
+				Image image = new Image(input, 110, 150, false, false); // set size of new image
+		        
+				vbox.getChildren().addAll(new ImageView(image), title);
+				
+				// create new button for each cover/title (vbox)
+				covers[numBooks-1] = new Button("", vbox);
+				
+				// set each button to currently print onto the console when pressed
+				covers[numBooks-1].setOnAction(e-> { System.out.println("titles");});
+				
+				// add buttons to grid
+				grid.add(covers[numBooks-1], j, i);
+				
+				count++;
+			}
+		}
+		return grid;
 	}
 
 	// Function to modify the Gridpane that will display the books
