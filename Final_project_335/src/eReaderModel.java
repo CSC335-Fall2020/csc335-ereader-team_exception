@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -12,7 +11,15 @@ import java.util.Scanner;
  *
  */
 public class eReaderModel {
+
 	private String book;
+	private List<String> retval ;// jia change 
+	private int currentPage=0;//jia change
+	private String searchBook;//jia change
+	private int searchNumber=0;//jia change
+	private String searchCurrent;//jia change
+	
+	
 	
 	public static void main(String[] args) {
 		
@@ -22,7 +29,15 @@ public class eReaderModel {
 			System.out.println(pages.get(i));
 			System.out.println("tester bester");
 		}
+		
 		System.out.println(pages.size());
+		System.out.println(test.search("book"));//jia change
+		System.out.println(test.search("test"));//jia change
+		System.out.println(test.search("book"));//jia change
+		System.out.println(test.search("book"));//jia change
+		System.out.println(test.search("book"));//jia change
+		System.out.println(test.search("book"));//jia change
+	
 	}
 	
 	/**
@@ -60,7 +75,7 @@ public class eReaderModel {
 	 * @return
 	 */
 	public List<String> getPages(int pageLength, int lineLength){
-		List<String> retval = new ArrayList<String>();
+		retval = new ArrayList<String>();//jia change
 		int lastSpace = 0;
 		int start = 0;
 		String currLine = "";
@@ -91,6 +106,7 @@ public class eReaderModel {
 		return retval;
 	}
 	
+
 	/**
 	 * Purpose: Accessor that returns the book. 
 	 * @return
@@ -98,7 +114,73 @@ public class eReaderModel {
 	public String getText() {
 		return this.book;
 	}
+
+	//jia change
+	public String startBook() {
+		if(retval==null || retval.size()==0) {
+			System.out.println("no book content");
+			return null;
+		}
+		return retval.get(currentPage);
+	}
 	
 	
 	
+	//jia change
+	public String getNext() {
+		currentPage++;
+		if(retval==null || retval.size()==0 || currentPage>=retval.size()) {
+			System.out.println("no book content or no more page");
+			currentPage--;
+			return null;
+		}
+		return retval.get(currentPage);
+	}
+	
+	
+	
+	//jia change
+	public String getPrevious() {
+		currentPage--;
+		if(retval==null || retval.size()==0 || currentPage<0) {
+			System.out.println("no book content or first page now");
+			currentPage++;
+			return null;
+		}
+		return retval.get(currentPage);
+	}
+	
+	
+	//jia change
+	public int getCurrent() {
+		return currentPage;
+	}
+	
+	
+	//jia change
+	public int search(String input) {
+		if(searchBook==null || !searchCurrent.equals(input)) {
+			searchNumber=0;
+			searchBook=book.substring(0);
+		}
+	
+		searchCurrent=input.substring(0);
+		for (int i = 0; i <searchBook.length(); i++) {
+			     if (i <= searchBook.length() - input.length()) {
+			         if (searchBook.indexOf(input, i) > 0) {
+			             i = searchBook.indexOf(input, i);
+			             searchBook=searchBook.substring(i+input.length());
+			             searchNumber+=i;
+			          //   If the position of the last word of return is found, 
+			         //the position of the first word is searchNumber-input.length();
+			             return searchNumber;
+			         }
+			     }
+			 }
+		//
+	
+		searchBook=book.substring(0);
+		searchNumber=0;
+		return -1;
+	}
 } // End class
