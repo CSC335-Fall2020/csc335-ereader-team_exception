@@ -20,7 +20,16 @@ public class eReaderController {
 	public List<String> getPages(int pageLength, int lineLength) {
 		return model.getPages(pageLength, lineLength);
 	}
-	
+	/**
+	 * Purpose: returns current page number
+	 * @return an int of the models current page number
+	 */
+	public int pageNumber() {
+		return model.getPageNumber();
+	}
+	public int bookSize() {
+		return model.getBookSize();
+	}
 	public void addBookmark() {
 		model.addBookmark();
 	}
@@ -29,7 +38,7 @@ public class eReaderController {
 	 * @return a string representing the page
 	 */
 	public String nextPage() {
-		String page = model.getPrevious();
+		String page = model.getNext();
 		if(page == null) {
 			return("End of Book");
 		}

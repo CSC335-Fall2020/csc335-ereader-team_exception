@@ -1,5 +1,9 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -59,17 +63,25 @@ public class eReaderModel extends Observable{
 	 * @param filename
 	 */
 	private void convertFile(String filename) {
-		Scanner fileInput = null;
-        try {
-            fileInput = new Scanner(new File(filename));
+		BufferedReader fileInput = null;
+        int i = 0;
+		try {
+            fileInput = new BufferedReader(new FileReader(filename));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }while (fileInput.hasNext()) {
-        	
-            book += fileInput.nextLine() + '\n';
-            
-        }
-        fileInput.close();
+        }try {
+			while (fileInput.ready()) {
+				
+			    book += fileInput.readLine() + '\n';
+			    System.out.println(i);
+			    i++;
+			}
+			fileInput.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 	}
 	
 	public String getBook() {
@@ -99,7 +111,7 @@ public class eReaderModel extends Observable{
 			}
 			if(book.charAt(i) == '\n') {
 				currLine += book.substring(start, i)+ "\n";
-				start = i+1;
+				start = i;
 				pageLine ++;
 			}
 			if(pageLine == pageLength) {
@@ -165,8 +177,19 @@ public class eReaderModel extends Observable{
 	
 	
 	//jia change
-	public int getCurrent() {
+	/**
+	 * Purpose: returns current page number
+	 * @return an int of the current page
+	 */
+	public int getPageNumber() {
 		return currentPage;
+	}
+	/**
+	 * Purpose: returns the total number of pages in the current book
+	 * @return an int of the total number of pages
+	 */
+	public int getBookSize() {
+		return retval.size();
 	}
 	
 	

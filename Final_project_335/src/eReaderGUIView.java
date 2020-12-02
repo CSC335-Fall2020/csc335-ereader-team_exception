@@ -116,7 +116,7 @@ public class eReaderGUIView extends Application implements Observer{
 		stage.setTitle("E-Mongoose");
 		
 		// this will get moved into the main menu button for selecting a new book
-		this.model      = new eReaderModel("books/ista_essays.txt");  // String arg needs to be updated to whatever 
+		this.model      = new eReaderModel("warOfTheWorlds.txt");  // String arg needs to be updated to whatever 
 		  this.controller = new eReaderController(model    ); //  the user chooses
 		  this.book        = this.controller.getBook(      );
 		 //  end 
@@ -229,6 +229,9 @@ public class eReaderGUIView extends Application implements Observer{
 			newPage.add(vbox, 0, 1);
 			this.gridPane = newPage;
 			this.window.setCenter(this.gridPane);      // Set gridpane to top
+			System.out.println(controller.pageNumber());
+			System.out.println(controller.bookSize());
+			System.out.println(model.getText());
 		});
 		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );}); // Possibly remove later
 		
@@ -260,12 +263,13 @@ public class eReaderGUIView extends Application implements Observer{
 		
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
-		String page = controller.previousPage();
+		String page = controller.getCurrPage();
 		Text text = new Text();
 		VBox vbox = new VBox();
 		text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
 		text.setText(page);
 		vbox.getChildren().add(text);
+		gridPane.add(vbox, 0, 1);
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
 		
