@@ -229,5 +229,7 @@ public class eReaderGUIView extends Application implements Observer{
 	
 	// Function to modify the screen brightness
 	
+	// test
+	
 
 } // End class
