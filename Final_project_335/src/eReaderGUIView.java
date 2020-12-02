@@ -1,4 +1,6 @@
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -30,18 +32,25 @@ import javafx.stage.Stage;
  *
  */
 public class eReaderGUIView  extends Application{
-	public static final int WIDTH      = 1072;
-	public static final int HEIGHT     = 1448;
-	public static final int BUTTON_DIM = 75  ;
+	// STRING CONSTANTS
+	public static final String DEFAULT_FONT = "Courier New";
+	public static final String FONT_ONE     = "Times New Roman";
+	public static final String FONT_TWO     = "Cambria";
+	
+	// INTEGER CONSTANTS
+	public static final int    DEFAULT_SIZE = 12;
+	public static final int    WIDTH      = 1072;
+	public static final int    HEIGHT     = 1448;
+	public static final int    BUTTON_DIM = 75  ;
+	
 	
 	// OBJECTS
 	private eReaderController controller;
-	private BorderPane        window    ;
+	
 	private GridPane          gridPane  ;
+	private BorderPane        window    ;
 	private eReaderModel      model     ;
-	private GridPane          deviceName;
-	private GridPane   		  text      ;
-	private VBox			  textBox   ;
+	private List<String>      book      ;
 	
 	// Buttons and Toolbar
 	private VBox     toolbarVbox   ;
@@ -51,29 +60,37 @@ public class eReaderGUIView  extends Application{
 	private Button   settingsButton;
 	private Button   searchButton  ;
 	
-	// Menu stuff
-	private Menu     fontSizeMenu;
-	private MenuItem font        ;
-	private MenuItem fontSize	 ;
-	private MenuBar  menuBar ;
-
+	// Menu stuff and things
+	private MenuItem fontTwo;
+	private MenuItem fontOne  ;
+	private MenuItem sizeEleven   ;
+	private MenuItem sizeTwelve   ;
+	private Menu     fontStyle    ;
+	private Menu     fontMenu     ;
+	private Menu     fontSize     ;
+	private MenuItem sizeTen      ;
+	private MenuBar  menuBar      ;
+	private MenuItem fontThree    ;
+	
 	/**
 	 * Purpose: Constructor that instanstiates objects. These can be created
 	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
-		this.window       = new BorderPane  (); 
-		this.model        = new eReaderModel(null);
-		this.controller   = new eReaderController(model);
-		this.gridPane     = new GridPane();
-		this.toolbarVbox  = new VBox    ();
-		this.text         = new GridPane();   
-		this.deviceName   = new GridPane(); 
-		this.textBox      = new VBox    ();
-		this.fontSizeMenu = new Menu("Format");
-		this.font         = new MenuItem("Font Style");
-		this.fontSize     = new MenuItem("Size");
-		this.menuBar	  = new MenuBar();
+		this.book        = new ArrayList<String>(     );
+		this.window      = new BorderPane(            ); 
+		this.gridPane    = new GridPane  (            );
+		this.toolbarVbox = new VBox      (            );
+		this.fontMenu    = new Menu      ("Format"    );
+		this.fontStyle   = new Menu      ("Font Style");
+		this.fontSize    = new Menu      ("Size"      );
+		this.menuBar	 = new MenuBar   (            );
+		this.sizeTen     = new MenuItem  ("10pt"      );
+		this.sizeEleven  = new MenuItem  ("11pt"      );
+		this.sizeTwelve  = new MenuItem  ("12pt"      );
+		this.fontOne     = new MenuItem  (DEFAULT_FONT);
+		this.fontTwo     = new MenuItem  (FONT_ONE    );
+		this.fontThree 	 = new MenuItem  (FONT_TWO    );
 	}
 	
 	/**
@@ -83,15 +100,25 @@ public class eReaderGUIView  extends Application{
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("E-Mongoose");
 
+		// Add submenu to font styles (i.e. font type)
+		this.fontStyle.getItems().add(this.fontOne  );
+		this.fontStyle.getItems().add(this.fontTwo  );
+		this.fontStyle.getItems().add(this.fontThree);
 		
-		// Add font menuItems to the menu
-		this.fontSizeMenu.getItems().add(this.font);
-		this.fontSizeMenu.getItems().add(this.fontSize);
+		// Add submenu to fontsize
+		this.fontSize.getItems().add(this.sizeTen   );
+		this.fontSize.getItems().add(this.sizeEleven);
+		this.fontSize.getItems().add(this.sizeTwelve);
 		
+		// Add font style and size to the font menu
+		this.fontMenu.getItems().add(this.fontStyle);
+		this.fontMenu.getItems().add(this.fontSize);
 		
 		// Add font menu to the menubar
-		this.menuBar.getMenus().add(this.fontSizeMenu);
-		window.setTop(this.menuBar);
+		this.menuBar.getMenus().add(this.fontMenu);
+		
+		// Add menubar to the window
+		this.window.setTop(this.menuBar);                         
 		
 	
 		// Read the image data from the files
@@ -113,7 +140,7 @@ public class eReaderGUIView  extends Application{
         ImageView imageView4 = new ImageView(image4);
         ImageView imageView5 = new ImageView(image5);
        
-        // Set image width and height 
+        // Set image width and height for buttons
         imageView1.setFitWidth (BUTTON_DIM);
         imageView1.setFitHeight(BUTTON_DIM);
         
@@ -143,26 +170,49 @@ public class eReaderGUIView  extends Application{
 		// Button Spacing
 		toolbarHbox.setSpacing(50);
 		
-		toolbarVbox.getChildren().add(toolbarHbox);   // Add the Hbox to Vbox
+		toolbarVbox.getChildren().add(toolbarHbox);   // Add Hbox to Vbox
 		this.gridPane.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
 		this.gridPane.setAlignment(Pos.TOP_CENTER); // Center gridpane
 		this.window.setCenter(this.gridPane);      // Set gridpane to top
-		
-		
-		
 		
 		// Events for buttons
 		this.homeButton    .setOnAction(e-> { System.out.println("Home Button");});
 		this.backButton    .setOnAction(e-> { System.out.println("Back"       );});
 		this.forwardButton .setOnAction(e-> { System.out.println("Forward"    );});
-		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );});
-		this.searchButton  .setOnAction(e-> { System.out.println("Search"     );});
+		this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );}); // Possibly remove later
+		
+		// Events for font style
+		this.fontOne   .setOnAction(e-> { System.out.println("Courier New"    );});
+		this.fontTwo   .setOnAction(e-> { System.out.println("Times New Roman");});
+		this.fontThree .setOnAction(e-> { System.out.println("Cambria"        );});
+		
+		// Events for font size
+		this.sizeTen    .setOnAction(e-> { System.out.println("10pt");});
+		this.sizeEleven .setOnAction(e-> { System.out.println("11pt");});
+		this.sizeTwelve .setOnAction(e-> { System.out.println("12pt");});
+	
+	       
+		this.searchButton  .setOnAction(e-> { this.model      = new eReaderModel("testBook.txt");  // String arg needs to be updated to whatever 
+											  this.controller = new eReaderController(model    ); //  the user chooses
+											  this.book        = this.controller.getBook(      );
+											 
+											 // Add text to GUI
+											 for(String line: this.book) {
+												 Text text = new Text();
+												 VBox vbox = new VBox();
+												 text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
+												 text.setText(line);
+												 vbox.getChildren().add(text);
+												 this.gridPane.add(vbox, 0, 1);
+											 }
+											
+		}); // End search button event handler
+		
+		 
 		
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
-		
 		stage.setScene(scene);
-
 		stage.show();  // Show the stage 
 	}
 
