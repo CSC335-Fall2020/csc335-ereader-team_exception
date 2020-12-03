@@ -116,7 +116,20 @@ public class eReaderModel extends Observable{
 	public String getText() {
 		return this.book;
 	}
-
+	
+	
+	//jia change
+	/*A thoughtful little function that displays the 
+	percentage of the currently viewed pages. print
+	he can see <9/100>.
+	*/
+	public String percent() {
+				
+		return "< "+(currentPage+1)+" / "+this.getBookSize()+" >";
+			
+		}
+	
+	
 	//jia change
 	public String getCurrPage() {
 		if(pages==null || pages.size()==0) {
