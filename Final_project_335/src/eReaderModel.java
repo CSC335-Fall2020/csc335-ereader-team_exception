@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * 
@@ -13,7 +12,7 @@ import java.util.Observable;
  *
  */
 
-public class eReaderModel extends Observable implements Serializable {
+public class eReaderModel implements Serializable {
 	private String book;
 	private List<String> pages ; 
 	private int currentPage=0;//jia change
@@ -65,7 +64,6 @@ public class eReaderModel extends Observable implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
 	}
 	
 	public String getBook() {

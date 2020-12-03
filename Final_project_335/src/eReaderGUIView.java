@@ -2,8 +2,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -40,7 +38,7 @@ import javafx.stage.Stage;
  * @author 
  *
  */
-public class eReaderGUIView extends Application implements Observer{
+public class eReaderGUIView extends Application{
 	
 	// numRows/numCols based on amount of books; should be updated when new books are added
 	private int numRows = 2; 
@@ -273,12 +271,6 @@ public class eReaderGUIView extends Application implements Observer{
 		stage.show();  // Show the stage 
 		
 		menuStart();
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public void menuStart() {
