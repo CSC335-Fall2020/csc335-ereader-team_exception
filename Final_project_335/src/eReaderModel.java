@@ -33,17 +33,17 @@ public class eReaderModel extends Observable{
 			System.out.println("tester bester");
 		}
 		
-		System.out.println(pages.size());
-		System.out.println(test.search("This"));//jia change
-		System.out.println(test.search("test"));//jia change
-		System.out.println(test.search("book"));//jia change
-		System.out.println(test.search("book"));//jia change
-		System.out.println(test.search("book"));//jia change
-		System.out.println(test.search("is"));//winston change
-		System.out.println(test.search("is"));//winston change
-		System.out.println(test.search("is"));//winston change
-		System.out.println(test.search("is"));//winston change
-		System.out.println(test.search("is"));//winston change
+//		System.out.println(pages.size());
+//		System.out.println(test.search("This"));//jia change
+//		System.out.println(test.search("test"));//jia change
+//		System.out.println(test.search("book"));//jia change
+//		System.out.println(test.search("book"));//jia change
+//		System.out.println(test.search("book"));//jia change
+//		System.out.println(test.search("is"));//winston change
+//		System.out.println(test.search("is"));//winston change
+//		System.out.println(test.search("is"));//winston change
+//		System.out.println(test.search("is"));//winston change
+//		System.out.println(test.search("is"));//winston change
 	}
 	public void testPrint(int index) {
 		System.out.println(book.substring(index, index + 2));
