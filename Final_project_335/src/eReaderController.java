@@ -7,14 +7,43 @@ import java.util.List;
  */
 public class eReaderController {
 	private eReaderModel model;
+	private HashMap<String,eReaderModel> bookList;
+	private String currBook;
 
 	/**
 	 * 
 	 * @param model
 	 */
 	public eReaderController(eReaderModel model){
+		currBook=model.getName();
 		this.model = model;
+		bookList=new HashMap<String,eReaderModel>();
+		bookList.put(currBook, model);
 	}
+	
+	
+	public void addBook(String filename) {
+		
+		eReaderModel newBook=new eReaderModel(filename);
+		bookList.put(newBook.getName(),newBook);
+	}
+	
+	
+	public void openBook(String name) {
+		if(bookList.containsKey(name)) {
+			this.model=bookList.get(name);
+			currBook=model.getName();
+		}else {
+			System.out.println("This book is not in the list.");
+		}
+		
+	}
+	
+	public String currBook() {
+		return this.currBook;
+	}
+
+
 	
 
 	public List<String> getPages(int pageLength, int lineLength) {
