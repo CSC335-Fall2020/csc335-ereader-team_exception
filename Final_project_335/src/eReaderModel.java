@@ -20,6 +20,7 @@ public class eReaderModel extends Observable{
 	private int searchNumber=0;//jia change
 	private String searchCurrent;//jia change
 	private List<Integer> bookmarks;//winston change
+	private String bookName;
 	
 	public void testPrint(int index) {
 		System.out.println(book.substring(index, index + 2));
@@ -34,8 +35,13 @@ public class eReaderModel extends Observable{
 		convertFile(filename);
 		pages = getPages(30, 80);
 		System.out.println(pages.size());
+		bookName=filename;
 	}
 	
+	
+	public String getName() {
+		return bookName;
+	}
 	/**
 	 * Purpose: 
 	 * @param filename
