@@ -48,11 +48,10 @@ public class eReaderGUIView extends Application implements Observer{
 	private int numBooks = 5; // probably a temp variable, until we have the control worked out.
 	
 	// STRING CONSTANTS
-	public static final String DEFAULT_FONT = "Courier New";
+	public static final String DEFAULT_FONT = "Courier New"    ;
 	public static final String FONT_ONE     = "Times New Roman";
-	public static final String FONT_TWO     = "Cambria";
+	public static final String FONT_TWO     = "Cambria"        ;
 
-	
 	// INTEGER CONSTANTS
 	public static final int    DEFAULT_SIZE = 12;
 	public static final int    SIZE_TWO   = 11;
@@ -61,10 +60,8 @@ public class eReaderGUIView extends Application implements Observer{
 	public static final int    HEIGHT     = 1448;
 	public static final int    BUTTON_DIM = 75  ;
 	
-	
 	// OBJECTS
 	private eReaderController controller;
-	
 	private GridPane          gridPane  ;
 	private BorderPane        window    ;
 	private eReaderModel      model     ;
@@ -75,9 +72,7 @@ public class eReaderGUIView extends Application implements Observer{
 	private Button   homeButton    ;
 	private Button   backButton    ;
 	private Button   forwardButton ;
-	private Button   settingsButton;
 	private Button   searchButton  ;
-	
 	
 	// Menu stuff and things
 	private MenuItem fontTwo;
@@ -127,23 +122,21 @@ public class eReaderGUIView extends Application implements Observer{
 		
 		// this will get moved into the main menu button for selecting a new book
 		this.model      = new eReaderModel("warOfTheWorlds.txt");  // String arg needs to be updated to whatever 
-		  this.controller = new eReaderController(model    ); //  the user chooses
-		  this.book        = this.controller.getBook(      );
-		 //  end 
-		  
-		  
+		this.controller = new eReaderController(model    );       //  the user chooses
+		this.book        = this.controller.getBook(      );
+		
 		// Add submenu to font styles (i.e. font type)
 		this.fontStyle.getItems().add(this.fontOne  );
 		this.fontStyle.getItems().add(this.fontTwo  );
 		this.fontStyle.getItems().add(this.fontThree);
 		
-		// Add submenu to fontsizet
+		// Add submenu to font size
 		this.fontSizeMenu.getItems().add(this.sizeTen   );
 		this.fontSizeMenu.getItems().add(this.sizeEleven);
 		this.fontSizeMenu.getItems().add(this.sizeTwelve);
 		
 		// Add font style and size to the font menu
-		this.fontMenu.getItems().add(this.fontStyle);
+		this.fontMenu.getItems().add(this.fontStyle   );
 		this.fontMenu.getItems().add(this.fontSizeMenu);
 		
 		// Add font menu to the menubar
@@ -154,10 +147,10 @@ public class eReaderGUIView extends Application implements Observer{
 		
 	
 		// Read the image data from the files
-		FileInputStream input1 = new FileInputStream("button_images/homeButton.png"    );
-		FileInputStream input2 = new FileInputStream("button_images/forwardButton.png" );
-		FileInputStream input3 = new FileInputStream("button_images/backButton.png"    );
-		FileInputStream input4 = new FileInputStream("button_images/searchButton.png"  );
+		FileInputStream input1 = new FileInputStream("button_images/homeButton.png"   );
+		FileInputStream input2 = new FileInputStream("button_images/forwardButton.png");
+		FileInputStream input3 = new FileInputStream("button_images/backButton.png"   );
+		FileInputStream input4 = new FileInputStream("button_images/searchButton.png" );
 		
 		Image image1 = new Image(input1);
 		Image image2 = new Image(input2);
@@ -195,44 +188,39 @@ public class eReaderGUIView extends Application implements Observer{
 		// Button Spacing
 		toolbarHbox.setSpacing(50);
 		
-		this.toolbarVbox.getChildren().add(toolbarHbox);   // Add Hbox to Vbox
-		this.gridPane.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
-		this.gridPane.setAlignment(Pos.TOP_CENTER); // Center gridpane
-		this.window.setCenter(this.gridPane);      // Set gridpane to top
+		this.toolbarVbox.getChildren().add(toolbarHbox); // Add Hbox to Vbox
+		this.gridPane.add(toolbarVbox, 0, 0);           // Add Vbox to gridpane
+		this.gridPane.setAlignment(Pos.TOP_CENTER);    // Center gridpane
+		this.window.setCenter(this.gridPane);         // Set gridpane to top
 		
 		// Events for buttons
 		this.homeButton    .setOnAction(e-> {  menuStart();});
 		
-		this.backButton    .setOnAction(e-> { setText(this.fontType, this.fontSize);});  // Chang font size
-		this.forwardButton .setOnAction(e-> { setText(this.fontType, this.fontSize );});
 		
-		//this.settingsButton.setOnAction(e-> { System.out.println("Settings"   );}); // Possibly remove later
+		this.backButton    .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});  
+		this.forwardButton .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});
 		
 		// Events for font style. Sets each fontstyle to a particular type.
-		this.fontOne   .setOnAction(e-> { setText(DEFAULT_FONT, this.fontSize);});
-		this.fontTwo   .setOnAction(e-> { setText(FONT_ONE    , this.fontSize);});
-		this.fontThree .setOnAction(e-> { setText(FONT_TWO    , this.fontSize);});
+		this.fontOne   .setOnAction(e-> { setText(DEFAULT_FONT, this.fontSize, false);});
+		this.fontTwo   .setOnAction(e-> { setText(FONT_ONE    , this.fontSize, false);});
+		this.fontThree .setOnAction(e-> { setText(FONT_TWO    , this.fontSize, false);});
 		
 		// Events for font size
-		this.sizeTen    .setOnAction(e-> { setText(this.fontType, SIZE_ONE    );});
-		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    );});
-		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE);});
+		this.sizeTen    .setOnAction(e-> { setText(this.fontType, SIZE_ONE    , false);});
+		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    , false);});
+		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE, false);});
 	
 	    // Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
-		//String page = controller.getCurrPage(); 		 //// Text that appears on homepage
-		//Text text = new Text();
-		//VBox vbox = new VBox();
-		//text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));    
-		//text.setText(page);
-		//vbox.getChildren().add(text);
-		//gridPane.add(vbox, 0, 1);
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
 		
-		//menuStart();
+		
 	}
-
+	
+	/**
+	 * Purpose: 
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
@@ -336,14 +324,30 @@ public class eReaderGUIView extends Application implements Observer{
 	/**
 	 * Purpose: Sets the text field to the new desired text type. The parameter
 	 * newFont will be the new text type. It will then display the page of text
-	 * on the GUI.
+	 * on the GUI. If a change is made to the same page (i.e. font style or size
+	 * is modified while viewing a page) then only that value that needs to be changed
+	 * will change. Otherwise, a new page will be retreived from the controller and
+	 * the page will be udpated. 
 	 * 
-	 * @param newfont new font style to be applied (if applicable).
+	 * @param newFont new font style to be applied (if applicable).
+	 * 
+	 * @param newSize new font size
+	 * 
+	 * @param isNewPage boolean variable that determines if a new page is needed
+	 * or the same page. 
 	 */
-	private void setText(String newFont, int newSize) {
+	private void setText(String newFont, int newSize, boolean isNewPage) {
+		String page = "";
 		this.fontType = newFont;
 		this.fontSize = newSize;
-		String page = controller.nextPage();
+		
+		
+		if(isNewPage) {
+			 page = controller.nextPage();     // Set new page if fwd/back button called this method
+		}else {
+			 page = controller.getCurrPage(); // Otherwise just get the old page to update style or size
+		}
+	
 		Text text = new Text();
 		VBox vbox = new VBox();
 		text.setFont(Font.font (this.fontType, this.fontSize));   /// Changed font type 
@@ -354,7 +358,7 @@ public class eReaderGUIView extends Application implements Observer{
 		newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
 		newPage.add(vbox, 0, 1);
 		this.gridPane = newPage;
-		this.window.setCenter(this.gridPane);      // Set gridpane to top
+		this.window.setCenter(this.gridPane); // Set gridpane to top
 
 	}
 	
