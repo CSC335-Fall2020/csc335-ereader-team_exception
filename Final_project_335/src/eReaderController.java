@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -9,13 +10,13 @@ public class eReaderController {
 	private eReaderModel model;
 	private HashMap<String,eReaderModel> bookList;
 	private String currBook;
-
+	
 	/**
 	 * 
 	 * @param model
 	 */
 	public eReaderController(eReaderModel model){
-		currBook=model.getName();
+		currBook = model.getName();
 		this.model = model;
 		bookList=new HashMap<String,eReaderModel>();
 		bookList.put(currBook, model);
@@ -23,7 +24,6 @@ public class eReaderController {
 	
 	
 	public void addBook(String filename) {
-		
 		eReaderModel newBook=new eReaderModel(filename);
 		bookList.put(newBook.getName(),newBook);
 	}
@@ -33,7 +33,7 @@ public class eReaderController {
 		if(bookList.containsKey(name)) {
 			this.model=bookList.get(name);
 			currBook=model.getName();
-		}else {
+		} else {
 			System.out.println("This book is not in the list.");
 		}
 		
@@ -43,12 +43,10 @@ public class eReaderController {
 		return this.currBook;
 	}
 
-
-	
-
 	public List<String> getPages(int pageLength, int lineLength) {
 		return model.getPages(pageLength, lineLength);
 	}
+	
 	/**
 	 * Purpose: returns current page number
 	 * @return an int of the models current page number
@@ -56,12 +54,15 @@ public class eReaderController {
 	public int pageNumber() {
 		return model.getPageNumber();
 	}
+	
 	public int bookSize() {
 		return model.getBookSize();
 	}
+	
 	public void addBookmark() {
 		model.addBookmark();
 	}
+	
 	/**
 	 * Purpose: returns the next page of the current book
 	 * @return a string representing the page
@@ -73,6 +74,7 @@ public class eReaderController {
 		}
 		return page;
 	}
+	
 	/**
 	 * Purpose: returns the previous page of the current book if it exists
 	 * @return a string representing the page
@@ -84,6 +86,7 @@ public class eReaderController {
 		}
 		return page;
 	}
+	
 	/**
 	 * Purpose: returns the page that the model is currently on
 	 * @return
@@ -91,6 +94,7 @@ public class eReaderController {
 	public String getCurrPage() {
 		return model.getCurrPage();
 	}
+	
 	/**
 	 * Purpose: returns the first page of the current book
 	 * @return a string representing the page
@@ -98,8 +102,9 @@ public class eReaderController {
 	public String startBook() {
 		return model.startBook();
 	}
+	
 	/**
-	 * Purpose:
+	 * Purpose: tester
 	 * @return
 	 */
 	public List<String> getBook() {

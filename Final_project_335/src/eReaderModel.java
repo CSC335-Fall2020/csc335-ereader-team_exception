@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -12,7 +13,7 @@ import java.util.Observable;
  *
  */
 
-public class eReaderModel extends Observable{
+public class eReaderModel extends Observable implements Serializable {
 	private String book;
 	private List<String> pages ; 
 	private int currentPage=0;//jia change
@@ -21,6 +22,7 @@ public class eReaderModel extends Observable{
 	private String searchCurrent;//jia change
 	private List<Integer> bookmarks;//winston change
 	private String bookName;
+	private static final long serialVersionUID = 42L;
 	
 	public void testPrint(int index) {
 		System.out.println(book.substring(index, index + 2));
@@ -35,13 +37,14 @@ public class eReaderModel extends Observable{
 		convertFile(filename);
 		pages = getPages(30, 80);
 		System.out.println(pages.size());
-		bookName=filename;
+		bookName = filename;
 	}
 	
 	
 	public String getName() {
 		return bookName;
 	}
+	
 	/**
 	 * Purpose: 
 	 * @param filename
@@ -131,10 +134,8 @@ public class eReaderModel extends Observable{
 	 * @return String with current page / max page
 	 */
 	public String percent() {
-				
 		return "< "+(currentPage+1)+" / "+this.getBookSize()+" >";
-			
-		}
+	}
 	
 	
 	//jia change
