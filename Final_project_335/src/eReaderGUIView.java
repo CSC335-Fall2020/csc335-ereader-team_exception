@@ -389,14 +389,14 @@ public class eReaderGUIView extends Application implements Observer{
 	 * 
 	 */
 	private void getFileNames(boolean isBookFile) {
-		this.bookNames.clear();     // Clear both ArrayLists before run
-		this.bookImageNames.clear();
 		File folder; // Declare folder variable
 		
 		if(isBookFile) {
-			folder = new File("books");        // Sets directory to books
+			folder = new File("books");  // Sets directory to books
+			this.bookNames.clear();     // Clear ArrayList before new pass
 		}else {
 			folder = new File("book_images"); // Sets directory to book images
+			this.bookImageNames.clear();	 // Clear ArrayList before new pass
 		}
 		
 		// Get an array of file names
