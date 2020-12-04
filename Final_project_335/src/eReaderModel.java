@@ -26,13 +26,13 @@ public class eReaderModel extends Observable{
 	
 	public static void main(String[] args) {
 		
-		eReaderModel test = new eReaderModel("testBook.txt");
-		List<String> pages = test.getPages(2, 18); // 2 = page length        18 = line length
-		for(int i = 0; i < pages.size(); i++) {
-			System.out.println(pages.get(i));
-			System.out.println("tester bester");
-		}
-		
+//		eReaderModel test = new eReaderModel("testBook.txt");
+//		List<String> pages = test.getPages(2, 18); // 2 = page length        18 = line length
+//		for(int i = 0; i < pages.size(); i++) {
+//			System.out.println(pages.get(i));
+//			System.out.println("tester bester");
+//		}
+//		
 //		System.out.println(pages.size());
 //		System.out.println(test.search("This"));//jia change
 //		System.out.println(test.search("test"));//jia change
@@ -46,7 +46,7 @@ public class eReaderModel extends Observable{
 //		System.out.println(test.search("is"));//winston change
 	}
 	public void testPrint(int index) {
-		System.out.println(book.substring(index, index + 2));
+		//System.out.println(book.substring(index, index + 2));
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class eReaderModel extends Observable{
 			while (fileInput.ready()) {
 				
 			    book += fileInput.readLine() + '\n';
-			    System.out.println(i);
+			    //System.out.println(i);
 			    i++;
 			}
 			fileInput.close();

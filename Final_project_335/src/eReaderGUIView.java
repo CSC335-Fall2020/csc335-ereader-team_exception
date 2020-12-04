@@ -67,8 +67,8 @@ public class eReaderGUIView extends Application implements Observer{
 	private BorderPane        window    ;
 	private eReaderModel      model     ;
 	private List<String>      book      ;
-	private List<String>	  bookNames ;
-	private List<String>      bookImageNames;
+	private List<String>	  bookTitlePath ;
+	private List<String>      bookImagePath;
 	
 	// Buttons and Toolbar
 	private VBox     toolbarVbox   ;
@@ -98,8 +98,8 @@ public class eReaderGUIView extends Application implements Observer{
 	 */
 	public eReaderGUIView() {
 		this.book           = new ArrayList<String>(     );
-		this.bookNames      = new ArrayList<String>(     );
-		this.bookImageNames = new ArrayList<String>(     );
+		this.bookTitlePath      = new ArrayList<String>(     );
+		this.bookImagePath = new ArrayList<String>(     );
 		this.window         = new BorderPane(            ); 
 		this.gridPane       = new GridPane  (            );
 		this.toolbarVbox    = new VBox      (            );
@@ -131,7 +131,7 @@ public class eReaderGUIView extends Application implements Observer{
 		this.controller = new eReaderController(model    );      
 		this.book        = this.controller.getBook(      );
 		
-		getFileNames(false); //  Reads in file names into a list. Move into home button later
+		//getFileNames(false); //  Reads in file names into a list. Move into home button later
 		
 		
 		// Add submenu to font styles (i.e. font type)
@@ -207,7 +207,6 @@ public class eReaderGUIView extends Application implements Observer{
 		// EVENTS																	  //
 		////////////////////////////////////////////////////////////////////////////////
 		
-		// Events for buttons
 		this.homeButton    .setOnAction(e-> {  menuStart();});
 		
 		
@@ -252,7 +251,7 @@ public class eReaderGUIView extends Application implements Observer{
 		ScrollBar sc = new ScrollBar();
 		
 		try {
-			border.setCenter(addGridPane());
+			border.setCenter(addGridPane()); // Calls addGridPane() here
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} 
@@ -289,10 +288,11 @@ public class eReaderGUIView extends Application implements Observer{
 		grid.setVgap(30);
 		grid.setPadding(new Insets(20, 10, 20, 10));
 		
+		getFileNames(false); // Get book image file names
 		
 		Button covers[] = new Button[5];  // an array to contain all the book buttons.
 		
-		// currently hard coded titles.
+		// currently hard coded titles.  // Change this to the ArrayList this.books
 		String titles[] = {"AP History Essay", "History of Crime", "ISTA Essays", "Poem of a Bipolar Mute", "Pysch Papers"};
 		
 		// keep track of how many times we loop.
@@ -314,14 +314,16 @@ public class eReaderGUIView extends Application implements Observer{
 		        title.setMaxWidth(100);
 		        title.setMaxHeight(50);
 		        
-		        // should be updated to include more than one cover picture
-				FileInputStream input = new FileInputStream("book_images/cover.png"); 
+		        // Add new picture from book_images folder
+				FileInputStream input = new FileInputStream("book_images/"+ this.bookImagePath.get(count)); 
 				Image image = new Image(input, 110, 150, false, false); // set size of new image
 		        
-				vbox.getChildren().addAll(new ImageView(image), title);
+				vbox.getChildren().add(new ImageView(image));  
+				
+				//vbox.getChildren().addAll(new ImageView(image), title); // Use for default image later when other books are added
 				
 				// create new button for each cover/title (vbox)
-				covers[numBooks-1] = new Button("", vbox);
+				covers[numBooks-1] = new Button("", vbox);   // Find way to assign a unique name to a button
 				
 				// set each button to currently print onto the console when pressed
 				covers[numBooks-1].setOnAction(e-> { System.out.println("titles");});
@@ -352,8 +354,9 @@ public class eReaderGUIView extends Application implements Observer{
 	 */
 	private void setText(String newFont, int newSize, boolean isNewPage) {
 		String page = "";
-		Text text = new Text();
-		VBox vbox = new VBox();
+		GridPane newPage = new GridPane();
+		Text text        = new Text(    );
+		VBox vbox        = new VBox(    );
 		this.fontType = newFont;
 		this.fontSize = newSize;
 		
@@ -363,11 +366,9 @@ public class eReaderGUIView extends Application implements Observer{
 			 page = controller.getCurrPage(); // Otherwise just get the old page to update style or size
 		}
 	
-		
 		text.setFont(Font.font (this.fontType, this.fontSize));   // Changed font type 
 		text.setText(page);
 		vbox.getChildren().add(text);
-		GridPane newPage = new GridPane();
 		newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
 		newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
 		newPage.add(vbox, 0, 1);
@@ -393,10 +394,10 @@ public class eReaderGUIView extends Application implements Observer{
 		
 		if(isBookFile) {
 			folder = new File("books");  // Sets directory to books
-			this.bookNames.clear();     // Clear ArrayList before new pass
+			this.bookTitlePath.clear();     // Clear ArrayList before new pass
 		}else {
 			folder = new File("book_images"); // Sets directory to book images
-			this.bookImageNames.clear();	 // Clear ArrayList before new pass
+			this.bookImagePath.clear();	 // Clear ArrayList before new pass
 		}
 		
 		// Get an array of file names
@@ -404,9 +405,9 @@ public class eReaderGUIView extends Application implements Observer{
 		
 		for (int i = 0; i < contents.length; i++) {
 			if(isBookFile) {
-				this.bookNames.add(contents[i]);
+				this.bookTitlePath.add(contents[i]);
 			}else {
-				this.bookImageNames.add(contents[i]);
+				this.bookImagePath.add(contents[i]);
 			}
 		}
 	}
