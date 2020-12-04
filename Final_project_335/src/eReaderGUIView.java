@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -66,6 +67,8 @@ public class eReaderGUIView extends Application implements Observer{
 	private BorderPane        window    ;
 	private eReaderModel      model     ;
 	private List<String>      book      ;
+	private List<String>	  bookNames ;
+	private List<String>      bookImageNames;
 	
 	// Buttons and Toolbar
 	private VBox     toolbarVbox   ;
@@ -94,23 +97,26 @@ public class eReaderGUIView extends Application implements Observer{
 	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
-		this.book         = new ArrayList<String>(     );
-		this.window       = new BorderPane(            ); 
-		this.gridPane     = new GridPane  (            );
-		this.toolbarVbox  = new VBox      (            );
-		this.fontMenu     = new Menu      ("Format"    );
-		this.fontStyle    = new Menu      ("Font Style");
-		this.fontSizeMenu = new Menu      ("Size"      );
-		this.menuBar	  = new MenuBar   (            );
-		this.sizeTen      = new MenuItem  ("10pt"      );
-		this.sizeEleven   = new MenuItem  ("11pt"      );
-		this.sizeTwelve   = new MenuItem  ("12pt"      );
-		this.fontOne      = new MenuItem  (DEFAULT_FONT);
-		this.fontTwo      = new MenuItem  (FONT_ONE    );
-		this.fontThree 	  = new MenuItem  (FONT_TWO    );
-		this.newPage      = new GridPane  (            );
-		this.fontType     = DEFAULT_FONT;
-		this.fontSize     = DEFAULT_SIZE;
+		this.book           = new ArrayList<String>(     );
+		this.bookNames      = new ArrayList<String>(     );
+		this.bookImageNames = new ArrayList<String>(     );
+		this.window         = new BorderPane(            ); 
+		this.gridPane       = new GridPane  (            );
+		this.toolbarVbox    = new VBox      (            );
+		this.fontMenu       = new Menu      ("Format"    );
+		this.fontStyle      = new Menu      ("Font Style");
+		this.fontSizeMenu   = new Menu      ("Size"      );
+		this.menuBar	    = new MenuBar   (            );
+		this.sizeTen        = new MenuItem  ("10pt"      );
+		this.sizeEleven     = new MenuItem  ("11pt"      );
+		this.sizeTwelve     = new MenuItem  ("12pt"      );
+		this.fontOne        = new MenuItem  (DEFAULT_FONT);
+		this.fontTwo        = new MenuItem  (FONT_ONE    );
+		this.fontThree 	    = new MenuItem  (FONT_TWO    );
+		this.newPage        = new GridPane  (            );
+		this.fontType       = DEFAULT_FONT;
+		this.fontSize       = DEFAULT_SIZE;
+		
 	}
 	
 	/**
@@ -121,9 +127,12 @@ public class eReaderGUIView extends Application implements Observer{
 		stage.setTitle("E-Mongoose");
 		
 		// this will get moved into the main menu button for selecting a new book
-		this.model      = new eReaderModel("warOfTheWorlds.txt");  // String arg needs to be updated to whatever 
-		this.controller = new eReaderController(model    );       //  the user chooses
+		this.model      = new eReaderModel("books/warOfTheWorlds.txt");  // Add to home button and allow the user to click to choose a book.
+		this.controller = new eReaderController(model    );      
 		this.book        = this.controller.getBook(      );
+		
+		getFileNames(false); //  Reads in file names into a list. Move into home button later
+		
 		
 		// Add submenu to font styles (i.e. font type)
 		this.fontStyle.getItems().add(this.fontOne  );
@@ -192,6 +201,11 @@ public class eReaderGUIView extends Application implements Observer{
 		this.gridPane.add(toolbarVbox, 0, 0);           // Add Vbox to gridpane
 		this.gridPane.setAlignment(Pos.TOP_CENTER);    // Center gridpane
 		this.window.setCenter(this.gridPane);         // Set gridpane to top
+		
+		
+		////////////////////////////////////////////////////////////////////////////////
+		// EVENTS																	  //
+		////////////////////////////////////////////////////////////////////////////////
 		
 		// Events for buttons
 		this.homeButton    .setOnAction(e-> {  menuStart();});
@@ -338,9 +352,10 @@ public class eReaderGUIView extends Application implements Observer{
 	 */
 	private void setText(String newFont, int newSize, boolean isNewPage) {
 		String page = "";
+		Text text = new Text();
+		VBox vbox = new VBox();
 		this.fontType = newFont;
 		this.fontSize = newSize;
-		
 		
 		if(isNewPage) {
 			 page = controller.nextPage();     // Set new page if fwd/back button called this method
@@ -348,9 +363,8 @@ public class eReaderGUIView extends Application implements Observer{
 			 page = controller.getCurrPage(); // Otherwise just get the old page to update style or size
 		}
 	
-		Text text = new Text();
-		VBox vbox = new VBox();
-		text.setFont(Font.font (this.fontType, this.fontSize));   /// Changed font type 
+		
+		text.setFont(Font.font (this.fontType, this.fontSize));   // Changed font type 
 		text.setText(page);
 		vbox.getChildren().add(text);
 		GridPane newPage = new GridPane();
@@ -361,6 +375,43 @@ public class eReaderGUIView extends Application implements Observer{
 		this.window.setCenter(this.gridPane); // Set gridpane to top
 
 	}
+	
+	/**
+	 * Purpose: Retrieves all of the file names in a directory. 
+	 * These file names will be used to update book info so 
+	 * whenever changes are made the update automatically. This 
+	 * function will do this one one of two files: books or book_images.
+	 * This allows the function to be flexible and allowed us to avoid
+	 * writing another function that does something very similar. 
+	 * 
+	 * @param isBookFile boolean variable to determine if the
+	 * file to be read will be the book or book images.
+	 * 
+	 */
+	private void getFileNames(boolean isBookFile) {
+		this.bookNames.clear();     // Clear both ArrayLists before run
+		this.bookImageNames.clear();
+		File folder; // Declare folder variable
+		
+		if(isBookFile) {
+			folder = new File("books");        // Sets directory to books
+		}else {
+			folder = new File("book_images"); // Sets directory to book images
+		}
+		
+		// Get an array of file names
+		String contents[] = folder.list(); 
+		
+		for (int i = 0; i < contents.length; i++) {
+			if(isBookFile) {
+				this.bookNames.add(contents[i]);
+			}else {
+				this.bookImageNames.add(contents[i]);
+			}
+		}
+	}
+	
+	
 	
 
 } // End class
