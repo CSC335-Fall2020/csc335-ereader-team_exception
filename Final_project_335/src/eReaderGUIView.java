@@ -49,24 +49,22 @@ import javafx.stage.Stage;
  */
 public class eReaderGUIView extends Application implements Observer{
 	
-	// numRows/numCols based on amount of books; should be updated when new books are added
-	//private int numRows  = 2; 
-	private int numCols  = 3;
-	private int numBooks = 5; // probably a temp variable, until we have the control worked out.
-	
 	// STRING CONSTANTS
 	public static final String DEFAULT_FONT = "Courier New"    ;
 	public static final String FONT_ONE     = "Times New Roman";
 	public static final String FONT_TWO     = "Cambria"        ;
-	public static final int NUM_COLS = 3;
+	
 
 	// INTEGER CONSTANTS
-	public static final int    DEFAULT_SIZE = 12;
-	public static final int    SIZE_TWO   = 11;
-	public static final int    SIZE_ONE   = 10;
-	public static final int    WIDTH      = 1072;
-	public static final int    HEIGHT     = 1448;
-	public static final int    BUTTON_DIM = 75  ;
+	public static final int    DEFAULT_SIZE = 12  ;
+	public static final int    BUTTON_DIM   = 75  ;
+	public static final int    NUM_COLS     = 3   ;
+	public static final int    SIZE_TWO     = 11  ;
+	public static final int    SIZE_ONE     = 10  ;
+	public static final int    HEIGHT       = 1448;
+	public static final int    WIDTH        = 1072;
+	
+	
 	
 	// OBJECTS TO CREATE SCENE
 	private eReaderController controller;
@@ -74,11 +72,6 @@ public class eReaderGUIView extends Application implements Observer{
 	private BorderPane        window    ;
 	private eReaderModel      model     ;
 	private List<String>      book      ;
-	
-	// DATA STRUCTURES TO HOLD THE FILE NAMES
-	
-	private List<String>	  bookTitlePath ;
-	private List<String>      bookImagePath;
 	
 	// Buttons and Toolbar
 	private VBox     toolbarVbox   ;
@@ -111,8 +104,6 @@ public class eReaderGUIView extends Application implements Observer{
 	 */
 	public eReaderGUIView() {
 		this.book           = new ArrayList<String>(     );
-		this.bookTitlePath  = new ArrayList<String>(     );
-		this.bookImagePath  = new ArrayList<String>(     );
 		this.buttonList     = new ArrayList<Button>(     );
 		this.window         = new BorderPane(            ); 
 		this.gridPane       = new GridPane  (            );
@@ -141,14 +132,6 @@ public class eReaderGUIView extends Application implements Observer{
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("E-Mongoose");
 		
-		// this will get moved into the main menu button for selecting a new book
-//		this.model      = new eReaderModel("books/warOfTheWorlds.txt");  // Add to home button and allow the user to click to choose a book.
-//		this.controller = new eReaderController(model    );      
-//		this.book        = this.controller.getBook(      );
-//		
-		
-		
-		
 		// Add submenu to font styles (i.e. font type)
 		this.fontStyle.getItems().add(this.fontOne  );
 		this.fontStyle.getItems().add(this.fontTwo  );
@@ -169,7 +152,6 @@ public class eReaderGUIView extends Application implements Observer{
 		// Add menubar to the window
 		this.window.setTop(this.menuBar);                         
 		
-	
 		// Read the image data from the files
 		FileInputStream input1 = new FileInputStream("button_images/homeButton.png"   );
 		FileInputStream input2 = new FileInputStream("button_images/forwardButton.png");
@@ -227,8 +209,6 @@ public class eReaderGUIView extends Application implements Observer{
 		
 		});
 							
-		
-		
 		this.backButton    .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});  
 		this.forwardButton .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});
 		
@@ -244,7 +224,7 @@ public class eReaderGUIView extends Application implements Observer{
 	
 		// COLOR STUFF
 		ColorAdjust colorAdjust = new ColorAdjust();
-	    colorAdjust.setBrightness(0);
+	    colorAdjust.setBrightness(0);         // 0 is the default brightness
 	    this.window.setEffect(colorAdjust);  // Set the color adjust here
 	    
 	    // Set font to white to simulate night mode.
@@ -253,15 +233,8 @@ public class eReaderGUIView extends Application implements Observer{
 		 // Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
 		
-		
-		
-		
-		
-		
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
-		
-		
 	}
 	
 	/**
@@ -324,6 +297,7 @@ public class eReaderGUIView extends Application implements Observer{
 		FileInputStream input;
 		int numRows = 0;
 		
+		// Get file names. 
 		List<String> bookNames  = getFileNames("books");
 		List<String> bookImages = getFileNames("book_images");
 		
@@ -331,7 +305,7 @@ public class eReaderGUIView extends Application implements Observer{
 		if(bookNames.size() % NUM_COLS == 0) {
 			numRows = bookNames.size() / NUM_COLS;
 		}else {
-			 numRows = (bookNames.size() / NUM_COLS) + (bookNames.size() % NUM_COLS); // Add remainder 
+			numRows = (bookNames.size() / NUM_COLS) + (bookNames.size() % NUM_COLS); // Add remainder 
 		}
 		
 		int numBooks = bookNames.size();
@@ -382,7 +356,6 @@ public class eReaderGUIView extends Application implements Observer{
 	 */
 	private int getBookImageIndex(List<String> bookImages, String searchVal) {
 		searchVal =  searchVal +".png";
-		System.out.println("Here is the search string "+searchVal);
 		for(int i =0; i < bookImages.size(); i++) {
 			if(searchVal.equals(bookImages.get(i))) {
 				return i;
@@ -422,7 +395,7 @@ public class eReaderGUIView extends Application implements Observer{
 		this.model      = new eReaderModel("books/"+ bookChoice); 
 		this.controller = new eReaderController(this.model     ); 
 		this.book       = this.controller.getBook(             );
-		setText( DEFAULT_FONT, DEFAULT_SIZE, false             );
+		setText(DEFAULT_FONT, DEFAULT_SIZE, false              );
 	}
 
 	/**
@@ -470,7 +443,11 @@ public class eReaderGUIView extends Application implements Observer{
 	 * whenever changes are made the update automatically. This 
 	 * function will do this one one of two files: books or book_images.
 	 * This allows the function to be flexible and allowed us to avoid
-	 * writing another function that does something very similar. 
+	 * writing another function that does something very similar. A version
+	 * of this method is stored in the View because these methods cannot
+	 * be accessed through the controller due to the controller not being
+	 * instantiated. The controller is instantiated after the layout for
+	 * the book options for the home button is created. 
 	 * 
 	 * @param bookName string name of the file directory to be read in.
 	 * 

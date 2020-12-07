@@ -98,32 +98,14 @@ public class eReaderController {
 	}	
 	
 	/**
-	 * Purpose: Calls the model to get a List of 
-	 * the file names for all of the books. 
+	 * Purpose: Gets the file names for a particular file path.
+	 * It will store them in an ArrayList.
 	 * 
-	 * @return list that contains all book names.
+	 * @return list that contains the file names for a particular directory.
 	 */
-//	public List<String> getBookFileNames(){
-//		return this.model.getBookFileNames();
-//	}
+	public List<String> getFilePath(String fileName) {
+		return this.model.getFileNames(fileName);
+	}
 	
-	/**
-	 * Purpose: Calls the model to get a List of 
-	 * the  image file names for all of the books. : 
-	 * 
-	 * @return list that contains names of image files.
-	 */
-//	public List<String>  getImageFileNames(){
-//		return this.model.getImageFileNames();
-//	}
-	
-	/**
-	 * Purpose: Returns the number of books in the directory.
-	 * 
-	 * @return number of books in library. 
-	 */
-//	public int getNumBooks() {
-//		return this.model.getNumBooks();
-//	}
 	
 }//End class
