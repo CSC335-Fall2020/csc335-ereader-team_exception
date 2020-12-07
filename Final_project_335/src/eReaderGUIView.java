@@ -59,7 +59,6 @@ public class eReaderGUIView extends Application{
 	public static final String FONT_ONE     = "Times New Roman";
 	public static final String FONT_TWO     = "Cambria"        ;
 	
-
 	// INTEGER CONSTANTS
 	public static final int    DEFAULT_SIZE = 12  ;
 	public static final int    BUTTON_DIM   = 75  ;
@@ -68,8 +67,6 @@ public class eReaderGUIView extends Application{
 	public static final int    SIZE_ONE     = 10  ;
 	public static final int    HEIGHT       = 1448;
 	public static final int    WIDTH        = 1072;
-	
-	
 	
 	// OBJECTS TO CREATE SCENE
 	private eReaderController controller;
@@ -101,8 +98,6 @@ public class eReaderGUIView extends Application{
 	private String   fontType;
 	private int 	 fontSize;
 	
-	
-	
 	/**
 	 * Purpose: Constructor that instanstiates objects. These can be created
 	 * before since the info will be added later. 
@@ -126,8 +121,6 @@ public class eReaderGUIView extends Application{
 		this.newPage        = new GridPane  (            );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
-		
-		
 	}
 	
 	/**
@@ -415,7 +408,7 @@ public class eReaderGUIView extends Application{
 	 * 
 	 */
 	private void getBookId() {
-		for(int i =0; i < this.buttonList.size(); i++) {
+		for(int i = 0; i < this.buttonList.size(); i++) {
 			final int val = i;
 				this.buttonList.get(i).setOnAction(e-> { 
 					String bookChoice = this.buttonList.get(val).getId();
