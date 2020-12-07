@@ -22,7 +22,7 @@ public class eReaderController {
 		bookList.put(currBook, model);
 	}
 	
-	
+
 	public void addBook(String filename) {
 		eReaderModel newBook=new eReaderModel(filename);
 		bookList.put(newBook.getName(),newBook);
@@ -43,6 +43,12 @@ public class eReaderController {
 		return this.currBook;
 	}
 
+	/**
+	 * 
+	 * @param pageLength
+	 * @param lineLength
+	 * @return
+	 */
 	public List<String> getPages(int pageLength, int lineLength) {
 		return model.getPages(pageLength, lineLength);
 	}
@@ -55,10 +61,18 @@ public class eReaderController {
 		return model.getPageNumber();
 	}
 	
+
+	/**
+	 * Purpose:
+	 * @return
+	 */
 	public int bookSize() {
 		return model.getBookSize();
 	}
 	
+	/**
+	 * Purpose:
+	 */
 	public void addBookmark() {
 		model.addBookmark();
 	}
@@ -110,4 +124,16 @@ public class eReaderController {
 	public List<String> getBook() {
 		return this.model.getPages(30, 80);
 	}	
+	
+	/**
+	 * Purpose: Gets the file names for a particular file path.
+	 * It will store them in an ArrayList.
+	 * 
+	 * @return list that contains the file names for a particular directory.
+	 */
+	public List<String> getFilePath(String fileName) {
+		return this.model.getFileNames(fileName);
+	}
+	
+	
 }//End class

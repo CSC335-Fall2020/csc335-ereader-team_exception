@@ -1,9 +1,11 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 
@@ -23,9 +25,9 @@ public class eReaderModel extends Observable implements Serializable {
 	private List<Integer> bookmarks;//winston change
 	private String bookName;
 	private static final long serialVersionUID = 42L;
-	
+
 	public void testPrint(int index) {
-		System.out.println(book.substring(index, index + 2));
+		//System.out.println(book.substring(index, index + 2));
 	}
 	
 	/**
@@ -33,6 +35,7 @@ public class eReaderModel extends Observable implements Serializable {
 	 * @param filename
 	 */
 	public eReaderModel(String filename) {
+		
 		book = "";
 		convertFile(filename);
 		pages = getPages(30, 80);
@@ -242,5 +245,31 @@ public class eReaderModel extends Observable implements Serializable {
 		int index = search(pages.get(currentPage));
 		bookmarks.add(index);
 	}
+	
 
+	
+
+	/**
+	 * Purpose: Retrieves all of the file names in a directory. 
+	 * These file names will be used to update book info so 
+	 * whenever changes are made the update automatically. This 
+	 * function will do this one one of two files: books or book_images.
+	 * This allows the function to be flexible and allowed us to avoid
+	 * writing another function that does something very similar. 
+	 * 
+	 * @param bookName string name of the file directory to be read in.
+	 * 
+	 */
+	public List<String> getFileNames(String bookName) {
+		File  folder = new File(bookName); // Declare folder variable
+		String contents[] = folder.list(); 
+		List<String> fileNames  = Arrays.asList(contents);
+		return fileNames;
+	}
+	
+	
+	
+	
+	
+	
 } // End class
