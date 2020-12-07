@@ -4,8 +4,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -47,7 +45,7 @@ import javafx.stage.Stage;
  * @author 
  *
  */
-public class eReaderGUIView extends Application implements Observer{
+public class eReaderGUIView extends Application{
 	
 	// STRING CONSTANTS
 	public static final String DEFAULT_FONT = "Courier New"    ;
@@ -242,15 +240,16 @@ public class eReaderGUIView extends Application implements Observer{
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
 	}
-	
+
 	/**
 	 * Purpose: 
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generaSted method stub
 		
 	}
+
 	
 	/**
 	 * Purpose:

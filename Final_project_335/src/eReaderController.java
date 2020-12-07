@@ -1,5 +1,14 @@
-import java.util.HashMap;
+import java.util.TreeMap;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -8,8 +17,9 @@ import java.util.List;
  */
 public class eReaderController {
 	private eReaderModel model;
-	private HashMap<String,eReaderModel> bookList;
+	private TreeMap<String, eReaderModel> bookList;
 	private String currBook;
+	private String title;
 	
 	/**
 	 * 
@@ -18,7 +28,7 @@ public class eReaderController {
 	public eReaderController(eReaderModel model){
 		currBook = model.getName();
 		this.model = model;
-		bookList=new HashMap<String,eReaderModel>();
+		bookList = new TreeMap<String,eReaderModel>();
 		bookList.put(currBook, model);
 	}
 	
@@ -27,16 +37,105 @@ public class eReaderController {
 		eReaderModel newBook=new eReaderModel(filename);
 		bookList.put(newBook.getName(),newBook);
 	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 	
+	public void addBook(String filename) {
+		eReaderModel newBook = new eReaderModel(filename);
+		bookList.put(title,newBook);
+	}
 	
 	public void openBook(String name) {
 		if(bookList.containsKey(name)) {
-			this.model=bookList.get(name);
-			currBook=model.getName();
+			this.model = bookList.get(name);
+			currBook = model.getName();
 		} else {
 			System.out.println("This book is not in the list.");
 		}
-		
+	}
+	
+	/**
+	 * when the stage first launches, serialize each book
+	 * 
+	 */
+	public void initialSerialize() {
+		Set<String> unsorted = bookList.keySet();
+		List<String> sorted = new ArrayList<String>();
+		for(String s : unsorted) {
+			sorted.add(s);
+		}
+		Collections.sort(sorted);
+		try {
+			FileOutputStream fileOut = new FileOutputStream("/tmp/Booklist.ser");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(this.bookList);
+			
+			for(String title : sorted) {
+				fileOut = new FileOutputStream("/tmp/" + title + ".ser");
+				out = new ObjectOutputStream(fileOut);
+				out.writeObject(bookList.get(title));
+			}
+			
+			out.close();
+			fileOut.close();
+		} catch (IOException i) {
+			i.printStackTrace();
+		}
+	}
+	
+	/**
+	 * each time the program is run, check to see if there already exists a save state for the booklist
+	 */
+	@SuppressWarnings("unchecked")
+	public void initialDeserialize() {
+		try {
+			FileInputStream fileIn = new FileInputStream("/tmp/Booklist.ser");
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			this.bookList = (TreeMap<String, eReaderModel>) in.readObject();
+			in.close();
+			fileIn.close();
+		} catch (FileNotFoundException f) {
+			initialSerialize();
+		} catch (IOException i) {
+			i.printStackTrace();
+		} catch (ClassNotFoundException c) {
+			c.printStackTrace();
+		}
+	}
+	
+	/**
+	 * when they close or when they add a book, serialize
+	 * BE SURE TO RUN THIS AFTER THE BOOK AND TITLE ARE ADDED TO BOOKLIST
+	 */
+	public void serialize(String title) {
+		try {
+			FileOutputStream fileOut = new FileOutputStream("/tmp/" + title + ".ser");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(bookList.get(title));
+			out.close();
+			fileOut.close();
+		} catch(IOException i) {
+			i.printStackTrace();
+		}
+	}
+	
+	/**
+	 * when they open, deserialize
+	 */
+	public void deserialize(String title) {
+		try {
+			FileInputStream fileIn = new FileInputStream("/tmp/" + title + ".ser");
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			eReaderModel e = (eReaderModel) in.readObject();
+			// have to do something with e
+			in.close();
+			fileIn.close();
+		} catch(IOException i) {
+			i.printStackTrace();
+		} catch (ClassNotFoundException c) {
+			c.printStackTrace();
+		}
 	}
 	
 	public String currBook() {
@@ -48,7 +147,7 @@ public class eReaderController {
 	 * @param pageLength
 	 * @param lineLength
 	 * @return
-	 */
+	 */S
 	public List<String> getPages(int pageLength, int lineLength) {
 		return model.getPages(pageLength, lineLength);
 	}
