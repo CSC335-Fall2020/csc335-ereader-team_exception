@@ -335,7 +335,7 @@ public class eReaderGUIView extends Application{
 		// Get file names. 
 		List<String> bookNames  = getFileNames("books");
 		List<String> bookImages = getFileNames("book_images");
-
+		System.out.println(bookNames);
 		// Calculate number of rows for the grid.
 		if(bookNames.size() % NUM_COLS == 0) {
 			numRows = bookNames.size() / NUM_COLS;
@@ -344,17 +344,12 @@ public class eReaderGUIView extends Application{
 		}
 
 
-		Button covers[] = new Button[numBooks];  // an array to contain all the book buttons.
+		Button covers[] = new Button[bookNames.size()];  // an array to contain all the book buttons.
 		
 
 		// currently hard coded titles.
 
-
 		int numBooks = bookNames.size();
-
-
-		String titles[] = {"AP History Essay", "History of Crime", "ISTA Essays", "Poem of a Bipolar Mute", "Pysch Papers", "War of the Worlds"};
-		String addresses[] = {"books/ap_history_essays.txt" , "books/history_of_crime_essays.txt" ,"books/ista_essays.txt", "books/poem_of_a_bipolar_mute.txt", "books/psych_papers.txt", "books/warOfTheWorlds.txt"};
 
 		// keep track of how many times we loop.
 		int count = 0;
@@ -379,15 +374,7 @@ public class eReaderGUIView extends Application{
 				// create new button for each cover/title (vbox)
 				Button button = new Button("", imageView);  
 				
-				// set each button to currently print onto the console when pressed
-				int temp = count;
-				covers[numBooks-1].setOnAction(e-> { 
-					// this will get moved into the main menu button for selecting a new book
-					this.model      = new eReaderModel(addresses[temp]);  // String arg needs to be updated to whatever 
-					  this.controller = new eReaderController(model    ); //  the user chooses
-					  this.book        = this.controller.getBook(      );
-					 //  end 
-				});
+
 				button.setId(bookNames.get(count));
 				this.buttonList.add(button); 
 

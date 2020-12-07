@@ -144,7 +144,7 @@ public class eReaderController {
 	 * @param pageLength
 	 * @param lineLength
 	 * @return
-	 */S
+	**/
 	public List<String> getPages(int pageLength, int lineLength) {
 		return model.getPages(pageLength, lineLength);
 	}
