@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -49,7 +50,7 @@ import javafx.stage.Stage;
 public class eReaderGUIView extends Application implements Observer{
 	
 	// numRows/numCols based on amount of books; should be updated when new books are added
-	private int numRows  = 2; 
+	//private int numRows  = 2; 
 	private int numCols  = 3;
 	private int numBooks = 5; // probably a temp variable, until we have the control worked out.
 	
@@ -57,6 +58,7 @@ public class eReaderGUIView extends Application implements Observer{
 	public static final String DEFAULT_FONT = "Courier New"    ;
 	public static final String FONT_ONE     = "Times New Roman";
 	public static final String FONT_TWO     = "Cambria"        ;
+	public static final int NUM_COLS = 3;
 
 	// INTEGER CONSTANTS
 	public static final int    DEFAULT_SIZE = 12;
@@ -74,6 +76,7 @@ public class eReaderGUIView extends Application implements Observer{
 	private List<String>      book      ;
 	
 	// DATA STRUCTURES TO HOLD THE FILE NAMES
+	
 	private List<String>	  bookTitlePath ;
 	private List<String>      bookImagePath;
 	
@@ -276,7 +279,7 @@ public class eReaderGUIView extends Application implements Observer{
 	public void menuStart() {
 		
 		Stage stage = new Stage();
-		Group root = new Group();
+		Group root  = new Group();
 		BorderPane border = new BorderPane();
 		ScrollBar sc = new ScrollBar();
 		
@@ -305,10 +308,11 @@ public class eReaderGUIView extends Application implements Observer{
         });
 		
 		stage.show();
+		//stage.close();
 	}
 	
 	/**
-	 * Purpose:
+	 * Purpose: 
 	 * @return
 	 * @throws FileNotFoundException
 	 */
@@ -317,33 +321,46 @@ public class eReaderGUIView extends Application implements Observer{
 		grid.setHgap(30);
 		grid.setVgap(30);
 		grid.setPadding(new Insets(20, 10, 20, 10));
+		FileInputStream input;
+		int numRows = 0;
 		
-		getFileNames(false); // Get book image file names
-		getFileNames(true);  // Get rid of these when I get the stuff from the controller.
+		List<String> bookNames  = getFileNames("books");
+		List<String> bookImages = getFileNames("book_images");
+		
+		// Calculate number of rows for the grid.
+		if(bookNames.size() % NUM_COLS == 0) {
+			numRows = bookNames.size() / NUM_COLS;
+		}else {
+			 numRows = (bookNames.size() / NUM_COLS) + (bookNames.size() % NUM_COLS); // Add remainder 
+		}
+		
+		int numBooks = bookNames.size();
 		
 		// keep track of how many times we loop.
 		int count = 0;
 		
 		for (int i = 0; i < numRows; i++) {
-			for (int j = 0; j < numCols; j++) {
+			for (int j = 0; j < NUM_COLS; j++) {
 				
 				if (count == numBooks) { // stop if count is equal to the amount of books we have
 					break;
 				}
+				String str = bookNames.get(count);
+				int picIndex = getBookImageIndex(bookImages, str.substring(0, str.indexOf(".")));
 				
-				// Add new picture from book_images folder
-				FileInputStream input = new FileInputStream("book_images/"+ this.bookImagePath.get(count)); // Get this from the controller later
-				ImageView imageView   = new ImageView(new Image(input));
+				if(picIndex != -1) {
+					input = new FileInputStream("book_images/"+ bookImages.get(picIndex));
+				}else {
+					input = new FileInputStream("default_book_image/cover.png");
+				}
+				
+				ImageView imageView   = new ImageView(new Image(input, 110, 150, false, false));
 			       
-		        // Set image width and height for buttons
-		        imageView.setFitWidth (110);
-		        imageView.setFitHeight(150);
-		        
-		        // create new button for each cover/title (vbox)
+				// create new button for each cover/title (vbox)
 				Button button = new Button("", imageView);  
 				
-				button.setId(this.bookTitlePath.get(count));
-				this.buttonList.add(button); // Might be able to remove the data structure. 
+				button.setId(bookNames.get(count));
+				this.buttonList.add(button); 
 				
 				// add buttons to grid
 				grid.add(button, j, i);
@@ -354,7 +371,27 @@ public class eReaderGUIView extends Application implements Observer{
 		getBookId(); // Event handler to get the button id
 		return grid;
 	}
-
+	
+	/**
+	 * Purpose: Searches for a match in the book images file. For instance if
+	 * everything before the period in the file name matches then the picture
+	 * exists in the directory. It will then return the index of that particular
+	 * image within the directory. If not, then -1 will be returned. 
+	 * 
+	 * @return index of filename if found. Otherwise -1 will be returned. 
+	 */
+	private int getBookImageIndex(List<String> bookImages, String searchVal) {
+		searchVal =  searchVal +".png";
+		System.out.println("Here is the search string "+searchVal);
+		for(int i =0; i < bookImages.size(); i++) {
+			if(searchVal.equals(bookImages.get(i))) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	
 	/**
 	 * Purpose: Event handler that gathers the book name whenever the 
 	 * user clicks on a book image. It will gather the id associated 
@@ -369,8 +406,6 @@ public class eReaderGUIView extends Application implements Observer{
 					String bookChoice = this.buttonList.get(val).getId();
 					
 					getBook(bookChoice);
-					
-					
 				}); // End lambda event
 		}
 	}
@@ -383,10 +418,11 @@ public class eReaderGUIView extends Application implements Observer{
 	 */
 	private void getBook(String bookChoice) {
 		// Create an instance of the model and controller
+		System.out.println(bookChoice);
 		this.model      = new eReaderModel("books/"+ bookChoice); 
 		this.controller = new eReaderController(this.model     ); 
 		this.book       = this.controller.getBook(             );
-		setText( DEFAULT_FONT, DEFAULT_SIZE, false);
+		setText( DEFAULT_FONT, DEFAULT_SIZE, false             );
 	}
 
 	/**
@@ -405,7 +441,6 @@ public class eReaderGUIView extends Application implements Observer{
 	 * or the same page. 
 	 */
 	private void setText(String newFont, int newSize, boolean isNewPage) {
-		System.out.println("NewFont "+ newFont+ " New size "+newSize+ " Is new page "+ isNewPage);
 		String page = "";
 		GridPane newPage = new GridPane();
 		Text text        = new Text(    );
@@ -416,18 +451,17 @@ public class eReaderGUIView extends Application implements Observer{
 		if(isNewPage) {
 			 page = controller.nextPage();     // Set new page if fwd/back button called this method
 		}else {
-			 page = controller.getCurrPage(); // Otherwise just get the old page to update style or size
+			 page = controller.getCurrPage(); // Otherwise get the current page
 		}
 	
-		text.setFont(Font.font (this.fontType, this.fontSize));   // Changed font type 
+		text.setFont(Font.font (this.fontType, this.fontSize));   
 		text.setText(page);
 		vbox.getChildren().add(text);
-		newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
-		newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
+		newPage.add(toolbarVbox, 0, 0);        
+		newPage.setAlignment(Pos.TOP_CENTER); 
 		newPage.add(vbox, 0, 1);
 		this.gridPane = newPage;
-		this.window.setCenter(this.gridPane); // Set gridpane to top
-
+		this.window.setCenter(this.gridPane); 
 	}
 	
 	/**
@@ -438,34 +472,13 @@ public class eReaderGUIView extends Application implements Observer{
 	 * This allows the function to be flexible and allowed us to avoid
 	 * writing another function that does something very similar. 
 	 * 
-	 * @param isBookFile boolean variable to determine if the
-	 * file to be read will be the book or book images.
+	 * @param bookName string name of the file directory to be read in.
 	 * 
 	 */
-	private void getFileNames(boolean isBookFile) {
-		File folder; // Declare folder variable
-		
-		if(isBookFile) {
-			folder = new File("books");  // Sets directory to books
-			this.bookTitlePath.clear();     // Clear ArrayList before new pass
-		}else {
-			folder = new File("book_images"); // Sets directory to book images
-			this.bookImagePath.clear();	 // Clear ArrayList before new pass
-		}
-		
-		// Get an array of file names
+	private List<String> getFileNames(String bookName) {
+		File  folder = new File(bookName); // Declare folder variable
 		String contents[] = folder.list(); 
-		
-		for (int i = 0; i < contents.length; i++) {
-			if(isBookFile) {
-				this.bookTitlePath.add(contents[i]);
-			}else {
-				this.bookImagePath.add(contents[i]);
-			}
-		}
+		List<String> fileNames  = Arrays.asList(contents);
+		return fileNames;
 	}
-	
-	
-	
-
 } // End class

@@ -16,7 +16,12 @@ public class eReaderController {
 		this.model = model;
 	}
 	
-
+	/**
+	 * 
+	 * @param pageLength
+	 * @param lineLength
+	 * @return
+	 */
 	public List<String> getPages(int pageLength, int lineLength) {
 		return model.getPages(pageLength, lineLength);
 	}
@@ -29,10 +34,17 @@ public class eReaderController {
 		return model.getPageNumber();
 	}
 	
+	/**
+	 * Purpose:
+	 * @return
+	 */
 	public int bookSize() {
 		return model.getBookSize();
 	}
 	
+	/**
+	 * Purpose:
+	 */
 	public void addBookmark() {
 		model.addBookmark();
 	}
@@ -84,4 +96,34 @@ public class eReaderController {
 	public List<String> getBook() {
 		return this.model.getPages(30, 80);
 	}	
+	
+	/**
+	 * Purpose: Calls the model to get a List of 
+	 * the file names for all of the books. 
+	 * 
+	 * @return list that contains all book names.
+	 */
+//	public List<String> getBookFileNames(){
+//		return this.model.getBookFileNames();
+//	}
+	
+	/**
+	 * Purpose: Calls the model to get a List of 
+	 * the  image file names for all of the books. : 
+	 * 
+	 * @return list that contains names of image files.
+	 */
+//	public List<String>  getImageFileNames(){
+//		return this.model.getImageFileNames();
+//	}
+	
+	/**
+	 * Purpose: Returns the number of books in the directory.
+	 * 
+	 * @return number of books in library. 
+	 */
+//	public int getNumBooks() {
+//		return this.model.getNumBooks();
+//	}
+	
 }//End class

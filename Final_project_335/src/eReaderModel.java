@@ -23,6 +23,8 @@ public class eReaderModel extends Observable{
 	private int searchNumber=0;//jia change
 	private String searchCurrent;//jia change
 	private List<Integer> bookmarks;//winston change
+	private List<String> bookTitles;
+	private List<String> bookImages;
 	
 	public static void main(String[] args) {
 		
@@ -54,7 +56,8 @@ public class eReaderModel extends Observable{
 	 * @param filename
 	 */
 	public eReaderModel(String filename) {
-		
+		this.bookImages = new ArrayList<String>();
+		this.bookTitles = new ArrayList<String>();
 		book = "";
 		convertFile(filename);
 	}
@@ -234,5 +237,62 @@ public class eReaderModel extends Observable{
 		int index = search(retval.get(currentPage));
 		bookmarks.add(index);
 	}
-
+	
+	/**
+	 * Purpose: Retrieves all of the file names in the picture
+	 * directory. This will aid in displaying the images to the
+	 * user so user input can be gathered.  
+	 * 
+	 * @param isBookFile boolean variable to determine if the
+	 * file to be read will be the book or book images.
+	 * 
+	 */
+//	public List<String> getImageFileNames() {
+//		File folder; // Declare folder variable
+//		folder = new File("book_images"); 
+//		this.bookImages.clear();	 // Clear ArrayList before new pass
+//		
+//		// Get an array of file names
+//		String contents[] = folder.list(); 
+//		
+//		for (int i = 0; i < contents.length; i++) {
+//			this.bookImages.add(contents[i]);
+//		}
+//		return this.bookImages;
+//	}
+	
+	/**
+	 * Puprpose: Retrieves all of the file names in the book names
+	 * directory. This will aid in displaying the images to the
+	 * user so user input can be gathered. 
+	 */
+//	public List<String> getBookFileNames() {
+//		File folder = new File("books");  // Sets directory to books
+//		this.bookTitles.clear();   
+//		
+//		// Get an array of file names
+//		String contents[] = folder.list(); 
+//		
+//		for (int i = 0; i < contents.length; i++) {
+//			this.bookTitles.add(contents[i]);
+//		}
+//		
+//		return this.bookTitles;
+//		
+//	}
+	
+	/**
+	 * Purpose: Returns the size of the list that holds the book names.
+	 * This will represent the number of books in the library. 
+	 * 
+	 * @return int value representing the number of books in the library.
+	 */
+	public int getNumBooks() {
+		return this.bookTitles.size();
+	}
+	
+	
+	
+	
+	
 } // End class
