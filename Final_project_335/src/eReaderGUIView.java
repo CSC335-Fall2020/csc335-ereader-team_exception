@@ -45,7 +45,14 @@ import javafx.stage.Stage;
  * @author 
  *
  */
+
 public class eReaderGUIView extends Application{
+	
+	// numRows/numCols based on amount of books; should be updated when new books are added
+	private int numRows = 2; 
+	private int numCols = 3;
+	private int numBooks = 6; // probably a temp variable, until we have the control worked out.
+
 	
 	// STRING CONSTANTS
 	public static final String DEFAULT_FONT = "Courier New"    ;
@@ -129,11 +136,6 @@ public class eReaderGUIView extends Application{
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("E-Mongoose");
-		// this will get moved into the main menu button for selecting a new book
-				this.model      = new eReaderModel("testBook.txt");  // String arg needs to be updated to whatever 
-				  this.controller = new eReaderController(model    ); //  the user chooses
-				  this.book        = this.controller.getBook(      );
-				 //  end 
 		  
 
 		// Add submenu to font styles (i.e. font type)
@@ -206,7 +208,41 @@ public class eReaderGUIView extends Application{
 		////////////////////////////////////////////////////////////////////////////////
 		// EVENTS																	  //
 		////////////////////////////////////////////////////////////////////////////////
-		
+
+		// Events for buttons
+		this.homeButton    .setOnAction(e-> { System.out.println("Home Button");});
+		this.backButton    .setOnAction(e-> { 
+			//resets gridpane with previous page as text
+			String page = controller.previousPage();
+			Text text = new Text();
+			VBox vbox = new VBox();
+			text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
+			text.setText(page);
+			vbox.getChildren().add(text);
+			GridPane newPage = new GridPane();
+			newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
+			newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
+			newPage.add(vbox, 0, 1);
+			this.gridPane = newPage;
+			this.window.setCenter(this.gridPane);      // Set gridpane to top
+			
+		});
+		this.forwardButton .setOnAction(e-> {
+			//resets gridpane with next page as text
+			String page = controller.nextPage();
+			Text text = new Text();
+			VBox vbox = new VBox();
+			text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
+			text.setText(page);
+			vbox.getChildren().add(text);
+			GridPane newPage = new GridPane();
+			newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
+			newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
+			newPage.add(vbox, 0, 1);
+			this.gridPane = newPage;
+			this.window.setCenter(this.gridPane);      // Set gridpane to top
+		});
+
 		this.homeButton    .setOnAction(e-> {  menuStart();
 		
 				
@@ -236,19 +272,13 @@ public class eReaderGUIView extends Application{
 	    
 		 // Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
-		
+
+		// load current page of book before showing reader screen.
+
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
 	}
 
-	/**
-	 * Purpose: 
-	 */
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generaSted method stub
-		
-	}
 
 	
 	/**
@@ -305,7 +335,7 @@ public class eReaderGUIView extends Application{
 		// Get file names. 
 		List<String> bookNames  = getFileNames("books");
 		List<String> bookImages = getFileNames("book_images");
-		
+
 		// Calculate number of rows for the grid.
 		if(bookNames.size() % NUM_COLS == 0) {
 			numRows = bookNames.size() / NUM_COLS;
@@ -313,11 +343,18 @@ public class eReaderGUIView extends Application{
 			numRows = (bookNames.size() / NUM_COLS) + (bookNames.size() % NUM_COLS); // Add remainder 
 		}
 
+
+		Button covers[] = new Button[numBooks];  // an array to contain all the book buttons.
+		
+
 		// currently hard coded titles.
-		String titles[] = {"AP History Essay", "History of Crime", "ISTA Essays", "Poem of a Bipolar Mute", "Pysch Papers"};
-		String addresses[] = {"books/ap_history_essays.txt" , "books/history_of_crime_essays.txt" ,"books/ista_essays.txt", "books/poem_of_a_bipolar_mute.txt", "books/psych_papers.txt"};
+
 
 		int numBooks = bookNames.size();
+
+
+		String titles[] = {"AP History Essay", "History of Crime", "ISTA Essays", "Poem of a Bipolar Mute", "Pysch Papers", "War of the Worlds"};
+		String addresses[] = {"books/ap_history_essays.txt" , "books/history_of_crime_essays.txt" ,"books/ista_essays.txt", "books/poem_of_a_bipolar_mute.txt", "books/psych_papers.txt", "books/warOfTheWorlds.txt"};
 
 		// keep track of how many times we loop.
 		int count = 0;

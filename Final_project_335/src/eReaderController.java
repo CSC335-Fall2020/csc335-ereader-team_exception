@@ -33,10 +33,7 @@ public class eReaderController {
 	}
 	
 
-	public void addBook(String filename) {
-		eReaderModel newBook=new eReaderModel(filename);
-		bookList.put(newBook.getName(),newBook);
-	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
