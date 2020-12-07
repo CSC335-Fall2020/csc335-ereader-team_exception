@@ -54,6 +54,7 @@ public class eReaderModel extends Observable{
 	 * @param filename
 	 */
 	public eReaderModel(String filename) {
+		
 		book = "";
 		convertFile(filename);
 	}

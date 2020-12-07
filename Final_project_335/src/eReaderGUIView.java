@@ -9,10 +9,14 @@ import java.util.Observer;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,6 +27,7 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -44,8 +49,8 @@ import javafx.stage.Stage;
 public class eReaderGUIView extends Application implements Observer{
 	
 	// numRows/numCols based on amount of books; should be updated when new books are added
-	private int numRows = 2; 
-	private int numCols = 3;
+	private int numRows  = 2; 
+	private int numCols  = 3;
 	private int numBooks = 5; // probably a temp variable, until we have the control worked out.
 	
 	// STRING CONSTANTS
@@ -61,12 +66,14 @@ public class eReaderGUIView extends Application implements Observer{
 	public static final int    HEIGHT     = 1448;
 	public static final int    BUTTON_DIM = 75  ;
 	
-	// OBJECTS
+	// OBJECTS TO CREATE SCENE
 	private eReaderController controller;
 	private GridPane          gridPane  ;
 	private BorderPane        window    ;
 	private eReaderModel      model     ;
 	private List<String>      book      ;
+	
+	// DATA STRUCTURES TO HOLD THE FILE NAMES
 	private List<String>	  bookTitlePath ;
 	private List<String>      bookImagePath;
 	
@@ -76,6 +83,7 @@ public class eReaderGUIView extends Application implements Observer{
 	private Button   backButton    ;
 	private Button   forwardButton ;
 	private Button   searchButton  ;
+	private List <Button> buttonList; 
 	
 	// Menu stuff and things
 	private MenuItem fontTwo;
@@ -92,14 +100,17 @@ public class eReaderGUIView extends Application implements Observer{
 	private String   fontType;
 	private int 	 fontSize;
 	
+	
+	
 	/**
 	 * Purpose: Constructor that instanstiates objects. These can be created
 	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
 		this.book           = new ArrayList<String>(     );
-		this.bookTitlePath      = new ArrayList<String>(     );
-		this.bookImagePath = new ArrayList<String>(     );
+		this.bookTitlePath  = new ArrayList<String>(     );
+		this.bookImagePath  = new ArrayList<String>(     );
+		this.buttonList     = new ArrayList<Button>(     );
 		this.window         = new BorderPane(            ); 
 		this.gridPane       = new GridPane  (            );
 		this.toolbarVbox    = new VBox      (            );
@@ -117,6 +128,7 @@ public class eReaderGUIView extends Application implements Observer{
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
 		
+		
 	}
 	
 	/**
@@ -127,11 +139,11 @@ public class eReaderGUIView extends Application implements Observer{
 		stage.setTitle("E-Mongoose");
 		
 		// this will get moved into the main menu button for selecting a new book
-		this.model      = new eReaderModel("books/warOfTheWorlds.txt");  // Add to home button and allow the user to click to choose a book.
-		this.controller = new eReaderController(model    );      
-		this.book        = this.controller.getBook(      );
+//		this.model      = new eReaderModel("books/warOfTheWorlds.txt");  // Add to home button and allow the user to click to choose a book.
+//		this.controller = new eReaderController(model    );      
+//		this.book        = this.controller.getBook(      );
+//		
 		
-		//getFileNames(false); //  Reads in file names into a list. Move into home button later
 		
 		
 		// Add submenu to font styles (i.e. font type)
@@ -202,12 +214,16 @@ public class eReaderGUIView extends Application implements Observer{
 		this.gridPane.setAlignment(Pos.TOP_CENTER);    // Center gridpane
 		this.window.setCenter(this.gridPane);         // Set gridpane to top
 		
-		
 		////////////////////////////////////////////////////////////////////////////////
 		// EVENTS																	  //
 		////////////////////////////////////////////////////////////////////////////////
 		
-		this.homeButton    .setOnAction(e-> {  menuStart();});
+		this.homeButton    .setOnAction(e-> {  menuStart();
+		
+				
+		
+		});
+							
 		
 		
 		this.backButton    .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});  
@@ -223,8 +239,22 @@ public class eReaderGUIView extends Application implements Observer{
 		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    , false);});
 		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE, false);});
 	
-	    // Set the scene
+		// COLOR STUFF
+		ColorAdjust colorAdjust = new ColorAdjust();
+	    colorAdjust.setBrightness(0);
+	    this.window.setEffect(colorAdjust);  // Set the color adjust here
+	    
+	    // Set font to white to simulate night mode.
+	    // Figure out what settings the images need and menu items
+	    
+		 // Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
+		
+		
+		
+		
+		
+		
 		stage.setScene(scene);
 		stage.show();  // Show the stage 
 		
@@ -289,11 +319,7 @@ public class eReaderGUIView extends Application implements Observer{
 		grid.setPadding(new Insets(20, 10, 20, 10));
 		
 		getFileNames(false); // Get book image file names
-		
-		Button covers[] = new Button[5];  // an array to contain all the book buttons.
-		
-		// currently hard coded titles.  // Change this to the ArrayList this.books
-		String titles[] = {"AP History Essay", "History of Crime", "ISTA Essays", "Poem of a Bipolar Mute", "Pysch Papers"};
+		getFileNames(true);  // Get rid of these when I get the stuff from the controller.
 		
 		// keep track of how many times we loop.
 		int count = 0;
@@ -305,38 +331,64 @@ public class eReaderGUIView extends Application implements Observer{
 					break;
 				}
 				
-				VBox vbox = new VBox(); // to contain the cover and the title
-				Label title = new Label(titles[count]); // sets titles as the label for each button
-				title.setMaxWidth(Double.MAX_VALUE);
-		        title.setAlignment(Pos.CENTER);
-		        title.setTextAlignment(TextAlignment.CENTER);
-		        title.setWrapText(true);
-		        title.setMaxWidth(100);
-		        title.setMaxHeight(50);
+				// Add new picture from book_images folder
+				FileInputStream input = new FileInputStream("book_images/"+ this.bookImagePath.get(count)); // Get this from the controller later
+				ImageView imageView   = new ImageView(new Image(input));
+			       
+		        // Set image width and height for buttons
+		        imageView.setFitWidth (110);
+		        imageView.setFitHeight(150);
 		        
-		        // Add new picture from book_images folder
-				FileInputStream input = new FileInputStream("book_images/"+ this.bookImagePath.get(count)); 
-				Image image = new Image(input, 110, 150, false, false); // set size of new image
-		        
-				vbox.getChildren().add(new ImageView(image));  
+		        // create new button for each cover/title (vbox)
+				Button button = new Button("", imageView);  
 				
-				//vbox.getChildren().addAll(new ImageView(image), title); // Use for default image later when other books are added
-				
-				// create new button for each cover/title (vbox)
-				covers[numBooks-1] = new Button("", vbox);   // Find way to assign a unique name to a button
-				
-				// set each button to currently print onto the console when pressed
-				covers[numBooks-1].setOnAction(e-> { System.out.println("titles");});
+				button.setId(this.bookTitlePath.get(count));
+				this.buttonList.add(button); // Might be able to remove the data structure. 
 				
 				// add buttons to grid
-				grid.add(covers[numBooks-1], j, i);
+				grid.add(button, j, i);
 				
 				count++;
 			}
 		}
+		getBookId(); // Event handler to get the button id
 		return grid;
 	}
+
+	/**
+	 * Purpose: Event handler that gathers the book name whenever the 
+	 * user clicks on a book image. It will gather the id associated 
+	 * with that button so that the an instance of the model can be
+	 * created later. 
+	 * 
+	 */
+	private void getBookId() {
+		for(int i =0; i < this.buttonList.size(); i++) {
+			final int val = i;
+				this.buttonList.get(i).setOnAction(e-> { 
+					String bookChoice = this.buttonList.get(val).getId();
+					
+					getBook(bookChoice);
+					
+					
+				}); // End lambda event
+		}
+	}
 	
+	/**
+	 * Purpose: Opens the book up. This has to be called from the lambda function in
+	 * order for all information to open the book. 
+	 * 
+	 * @param bookChoice string representing the user's choice of a book to read. 
+	 */
+	private void getBook(String bookChoice) {
+		// Create an instance of the model and controller
+		this.model      = new eReaderModel("books/"+ bookChoice); 
+		this.controller = new eReaderController(this.model     ); 
+		this.book       = this.controller.getBook(             );
+		setText( DEFAULT_FONT, DEFAULT_SIZE, false);
+	}
+
 	/**
 	 * Purpose: Sets the text field to the new desired text type. The parameter
 	 * newFont will be the new text type. It will then display the page of text
@@ -353,6 +405,7 @@ public class eReaderGUIView extends Application implements Observer{
 	 * or the same page. 
 	 */
 	private void setText(String newFont, int newSize, boolean isNewPage) {
+		System.out.println("NewFont "+ newFont+ " New size "+newSize+ " Is new page "+ isNewPage);
 		String page = "";
 		GridPane newPage = new GridPane();
 		Text text        = new Text(    );
