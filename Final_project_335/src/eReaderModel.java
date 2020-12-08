@@ -218,7 +218,7 @@ public class eReaderModel implements Serializable {
 			             searchBook=searchBook.substring(i+input.length());
 			             searchNumber+=i;
 			          //   If the position of the last word of return is found, 
-			             searchBook = searchBook.substring(i+input.length());
+			            
 			             if(searchNumber == 0) {//winston change
 			            	 searchNumber += i;
 			             } else {//winston change
