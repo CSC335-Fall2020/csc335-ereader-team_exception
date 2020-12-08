@@ -17,29 +17,25 @@ import java.util.List;
 public class eReaderModel implements Serializable {
 	private String book;
 	private List<String> pages ; 
-	private int currentPage=0;//jia change
+	private int currentPage;//jia change
 	private String searchBook;//jia change
 	private int searchNumber=0;//jia change
 	private String searchCurrent;//jia change
 	private List<Integer> bookmarks;//winston change
 	private String bookName;
 	private static final long serialVersionUID = 42L;
-
-	public void testPrint(int index) {
-		//System.out.println(book.substring(index, index + 2));
-	}
+	private double progress;
 	
 	/**
 	 *  Will add number of lines per page and characters per line to constructor.
 	 * @param filename
 	 */
-	public eReaderModel(String filename) {
-		
+	public eReaderModel(String bookName, String filename) {
+		currentPage = 0;
 		book = "";
 		convertFile(filename);
 		pages = getPages(30, 80);
-		System.out.println(pages.size());
-		bookName = filename;
+		this.bookName = bookName;
 	}
 	
 	
@@ -129,17 +125,6 @@ public class eReaderModel implements Serializable {
 	
 	
 	//jia change
-	/** Purpose:A thoughtful little function that displays the 
-	 * percentage of the currently viewed pages. print
-	 * he can see <9/100>.
-	 * @return String with current page / max page
-	 */
-	public String percent() {
-		return "< "+(currentPage+1)+" / "+this.getBookSize()+" >";
-	}
-	
-	
-	//jia change
 	public String getCurrPage() {
 		if(pages==null || pages.size()==0) {
 			System.out.println("no book content");
@@ -168,6 +153,7 @@ public class eReaderModel implements Serializable {
 			currentPage--;
 			return null;
 		}
+		progress = (double)currentPage/pages.size();
 		return pages.get(currentPage);
 	}
 	
@@ -181,6 +167,7 @@ public class eReaderModel implements Serializable {
 			currentPage++;
 			return null;
 		}
+		progress = (double)currentPage/pages.size();
 		return pages.get(currentPage);
 	}
 	
@@ -264,7 +251,9 @@ public class eReaderModel implements Serializable {
 		List<String> fileNames  = Arrays.asList(contents);
 		return fileNames;
 	}
-	
+	public double getProgress() {
+		return progress;
+	}
 	
 	
 	

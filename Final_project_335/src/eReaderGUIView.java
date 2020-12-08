@@ -204,44 +204,12 @@ public class eReaderGUIView extends Application{
 		this.gridPane.add(toolbarVbox, 0, 0);           // Add Vbox to gridpane
 		this.gridPane.setAlignment(Pos.TOP_CENTER);    // Center gridpane
 		this.window.setCenter(this.gridPane);         // Set gridpane to top
-		
+		this.window.setBottom();
 		////////////////////////////////////////////////////////////////////////////////
 		// EVENTS																	  //
 		////////////////////////////////////////////////////////////////////////////////
 
 		// Events for buttons
-		this.homeButton    .setOnAction(e-> { System.out.println("Home Button");});
-		this.backButton    .setOnAction(e-> { 
-			//resets gridpane with previous page as text
-			String page = controller.previousPage();
-			Text text = new Text();
-			VBox vbox = new VBox();
-			text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
-			text.setText(page);
-			vbox.getChildren().add(text);
-			GridPane newPage = new GridPane();
-			newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
-			newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
-			newPage.add(vbox, 0, 1);
-			this.gridPane = newPage;
-			this.window.setCenter(this.gridPane);      // Set gridpane to top
-			
-		});
-		this.forwardButton .setOnAction(e-> {
-			//resets gridpane with next page as text
-			String page = controller.nextPage();
-			Text text = new Text();
-			VBox vbox = new VBox();
-			text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
-			text.setText(page);
-			vbox.getChildren().add(text);
-			GridPane newPage = new GridPane();
-			newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
-			newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
-			newPage.add(vbox, 0, 1);
-			this.gridPane = newPage;
-			this.window.setCenter(this.gridPane);      // Set gridpane to top
-		});
 
 		this.homeButton    .setOnAction(e-> {  menuStart();
 		
@@ -446,7 +414,7 @@ public class eReaderGUIView extends Application{
 	 * on the GUI. If a change is made to the same page (i.e. font style or size
 	 * is modified while viewing a page) then only that value that needs to be changed
 	 * will change. Otherwise, a new page will be retreived from the controller and
-	 * the page will be udpated. 
+	 * the page will be updated. 
 	 * 
 	 * @param newFont new font style to be applied (if applicable).
 	 * 
