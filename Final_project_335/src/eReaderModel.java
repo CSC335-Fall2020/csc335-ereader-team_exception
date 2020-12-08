@@ -17,9 +17,9 @@ import java.util.List;
 public class eReaderModel implements Serializable {
 	private String book;
 	private List<String> pages ; 
-	private int currentPage=0;//jia change
+	private int currentPage  = 0;//jia change
 	private String searchBook;//jia change
-	private int searchNumber=0;//jia change
+	private int searchNumber = 0;//jia change
 	private String searchCurrent;//jia change
 	private List<Integer> bookmarks;//winston change
 	private String bookName;
@@ -203,20 +203,26 @@ public class eReaderModel implements Serializable {
 	}
 	
 	
-	//jia change
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 */
 	public int search(String input) {
 		if(searchBook == null || !searchCurrent.equals(input)) {
 			searchNumber = 0;
 			searchBook = book;
 		}
-	
+		System.out.println("Book Length: "+searchBook);
 		searchCurrent = input;
+		
 		for (int i = 0; i < searchBook.length(); i++) {
-			     if (i <= searchBook.length() - input.length()) {
+			     if (i < searchBook.length() - input.length()) {
 			         if (searchBook.indexOf(input, i) >= 0) {
 			             i = searchBook.indexOf(input, i);
-			             searchBook=searchBook.substring(i+input.length());
-			             searchNumber+=i;
+			             searchBook=searchBook.substring(i + input.length());
+			            
+			             searchNumber += i;
 			          //   If the position of the last word of return is found, 
 			             searchBook = searchBook.substring(i+input.length());
 			             if(searchNumber == 0) {//winston change
@@ -231,7 +237,7 @@ public class eReaderModel implements Serializable {
 			         }
 			     }
 			 }
-		//
+		
 	
 		searchBook = book.substring(0);
 		searchNumber = 0;

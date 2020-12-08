@@ -231,5 +231,16 @@ public class eReaderController {
 		return this.model.getFileNames(fileName);
 	}
 	
+	/**
+	 * Purpose: Calls the search function to get the page number for the
+	 * text that user searched for.
+	 * 
+	 * @param str string the user wants to search for in the book.
+	 * 
+	 * @return int value representing the page number of the search string
+	 */
+	public int search(String str) {
+		return this.model.search(str);
+	}
 	
 }//End class

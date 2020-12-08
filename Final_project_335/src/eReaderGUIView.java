@@ -17,12 +17,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -47,12 +50,6 @@ import javafx.stage.Stage;
  */
 
 public class eReaderGUIView extends Application{
-	
-	// numRows/numCols based on amount of books; should be updated when new books are added
-	private int numRows = 2; 
-	private int numCols = 3;
-	private int numBooks = 6; // probably a temp variable, until we have the control worked out.
-
 	
 	// STRING CONSTANTS
 	public static final String DEFAULT_FONT = "Courier New"    ;
@@ -203,7 +200,7 @@ public class eReaderGUIView extends Application{
 		////////////////////////////////////////////////////////////////////////////////
 
 		// Events for buttons
-		this.homeButton    .setOnAction(e-> { System.out.println("Home Button");});
+		
 		this.backButton    .setOnAction(e-> { 
 			//resets gridpane with previous page as text
 			String page = controller.previousPage();
@@ -244,6 +241,7 @@ public class eReaderGUIView extends Application{
 							
 		this.backButton    .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});  
 		this.forwardButton .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});
+		this.searchButton  .setOnAction(e-> { searchMenu();});
 		
 		// Events for font style. Sets each fontstyle to a particular type.
 		this.fontOne   .setOnAction(e-> { setText(DEFAULT_FONT, this.fontSize, false);});
@@ -285,7 +283,7 @@ public class eReaderGUIView extends Application{
 		ScrollBar sc = new ScrollBar();
 		
 		try {
-			border.setCenter(addGridPane()); // Calls addGridPane() here
+			border.setCenter(addGridPane(stage)); // Calls addGridPane() here
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} 
@@ -317,7 +315,7 @@ public class eReaderGUIView extends Application{
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	public GridPane addGridPane() throws FileNotFoundException {
+	public GridPane addGridPane(Stage stage) throws FileNotFoundException {
 		GridPane grid = new GridPane();
 		grid.setHgap(30);
 		grid.setVgap(30);
@@ -328,7 +326,7 @@ public class eReaderGUIView extends Application{
 		// Get file names. 
 		List<String> bookNames  = getFileNames("books");
 		List<String> bookImages = getFileNames("book_images");
-		System.out.println(bookNames);
+		
 		// Calculate number of rows for the grid.
 		if(bookNames.size() % NUM_COLS == 0) {
 			numRows = bookNames.size() / NUM_COLS;
@@ -337,7 +335,7 @@ public class eReaderGUIView extends Application{
 		}
 
 
-		Button covers[] = new Button[bookNames.size()];  // an array to contain all the book buttons.
+		//Button covers[] = new Button[bookNames.size()];  // an array to contain all the book buttons.
 		
 
 		// currently hard coded titles.
@@ -377,7 +375,7 @@ public class eReaderGUIView extends Application{
 				count++;
 			}
 		}
-		getBookId(); // Event handler to get the button id
+		getBookId(stage); // Event handler to get the button id
 		return grid;
 	}
 	
@@ -407,13 +405,14 @@ public class eReaderGUIView extends Application{
 	 * created later. 
 	 * 
 	 */
-	private void getBookId() {
+	private void getBookId(Stage stage) {
 		for(int i = 0; i < this.buttonList.size(); i++) {
 			final int val = i;
 				this.buttonList.get(i).setOnAction(e-> { 
 					String bookChoice = this.buttonList.get(val).getId();
 					
 					getBook(bookChoice);
+					stage.close(); // Close the book menu after user makes choice
 				}); // End lambda event
 		}
 	}
@@ -432,7 +431,63 @@ public class eReaderGUIView extends Application{
 		this.book       = this.controller.getBook(             );
 		setText(DEFAULT_FONT, DEFAULT_SIZE, false              );
 	}
-
+	
+	
+	/**
+	 * Purpose: 
+	 */
+	private void searchMenu() {
+		GridPane textContainer  = new GridPane();
+		Stage stage             = new Stage();
+		TextField textField     = new TextField(); 
+		BorderPane searchWindow = new BorderPane();
+		Button nextButton       = new Button("Next");
+		VBox vbox               = new VBox();
+		VBox vbox1 				= new VBox();
+		VBox vbox2              = new VBox();
+		
+		Label label = new Label("Find: ");
+		label.setFont(new Font("Crimson", 18));
+		HBox hbox = new HBox(label, textField);
+		
+		nextButton.setTranslateX(15           );
+		vbox.getChildren().add(hbox           );
+		vbox1.getChildren().add(nextButton    );
+		vbox2.setSpacing(15                   );
+		vbox2.getChildren().addAll(vbox, vbox1);
+		vbox1.setAlignment(Pos.BOTTOM_CENTER  );
+		textContainer.setAlignment(Pos.CENTER );
+		textContainer.add(vbox2,0,0           );
+		searchWindow.setCenter(textContainer  );
+		
+		// Use next button to handle the event
+		nextButton.setOnAction(e-> {displaySearchResults(textField.getText());});
+		
+		Scene scene = new Scene(searchWindow, 500, 125);
+		stage.setScene(scene);
+		stage.show();  // Show the stage 
+	}
+	
+	/**
+	 * Purpose: Calls controller to get the 
+	 */
+	private void displaySearchResults(String str) {
+		
+		int page = this.controller.search(str);
+		System.out.println("Here is the index number: "+ page);
+		// Print alert to user that search returned no results
+		if(page == -1) {
+			
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Message");
+			alert.setHeaderText("Message");
+			alert.setContentText("Text not Found.");
+			alert.showAndWait();
+			alert.close();
+		}
+	}
+	
+	
 	/**
 	 * Purpose: Sets the text field to the new desired text type. The parameter
 	 * newFont will be the new text type. It will then display the page of text
