@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Purpose: Represents the Controller in the MVC architecture. Allows the view to 
+ * interact with the model to to gather information. 
  * 
- * @author 
+ * @author Ztaylor9000, caseywhitmire, jialiangzhao, David (Winston?), and blsmith86
  *
  */
 public class eReaderController {
@@ -22,8 +24,11 @@ public class eReaderController {
 	private String title;
 	
 	/**
+	 * Purpose: Controller that instantiates the controller for the e-reader.
 	 * 
-	 * @param model
+	 * 
+	 * @param model instance of the model class used access the methods in 
+	 * model. 
 	 */
 	public eReaderController(eReaderModel model){
 		currBook = model.getName();
@@ -32,12 +37,18 @@ public class eReaderController {
 		bookList.put(currBook, model);
 	}
 	
-
-
-	public void setTitle(String title) {
+	/**
+	 * Purpose: Sets the title for the book. 
+	 * @param title
+	 */
+	public void setTitle(String title) {  // Possibly delete later. 
 		this.title = title;
 	}
 	
+	/**
+	 * Purpose: Call
+	 * @param filename
+	 */
 	public void addBook(String filename) {
 		eReaderModel newBook = new eReaderModel(filename);
 		bookList.put(title,newBook);
@@ -135,6 +146,10 @@ public class eReaderController {
 		}
 	}
 	
+	/**
+	 * Purpose:
+	 * @return
+	 */
 	public String currBook() {
 		return this.currBook;
 	}
@@ -157,7 +172,6 @@ public class eReaderController {
 		return model.getPageNumber();
 	}
 	
-
 	/**
 	 * Purpose:
 	 * @return
@@ -221,15 +235,7 @@ public class eReaderController {
 		return this.model.getPages(30, 80);
 	}	
 	
-	/**
-	 * Purpose: Gets the file names for a particular file path.
-	 * It will store them in an ArrayList.
-	 * 
-	 * @return list that contains the file names for a particular directory.
-	 */
-	public List<String> getFilePath(String fileName) {
-		return this.model.getFileNames(fileName);
-	}
+	
 	
 	/**
 	 * Purpose: Calls the search function to get the page number for the

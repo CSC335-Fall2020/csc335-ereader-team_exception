@@ -4,18 +4,13 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -29,23 +24,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
 /**
  * Purpose: Creates the GUI for the E-Reader program. This class represents the View. 
+ * It creates a main stage with options that allow the user to choose a book, modify,
+ * the font size/type, and search for particular words or phrases.
  * 
- * @author 
+ * @author Ztaylor9000, caseywhitmire, jialiangzhao, David (Winston?), and blsmith86
  *
  */
 
@@ -273,7 +266,9 @@ public class eReaderGUIView extends Application{
 
 	
 	/**
-	 * Purpose:
+	 * Purpose: Starts up the stage for the book selection menu. Closes upon
+	 * book selection. Adds a scroll functionality as well.
+	 * 
 	 */
 	public void menuStart() {
 		
@@ -307,13 +302,16 @@ public class eReaderGUIView extends Application{
         });
 		
 		stage.show();
-		//stage.close();
 	}
 	
 	/**
-	 * Purpose: 
-	 * @return
-	 * @throws FileNotFoundException
+	 * Purpose: Creates the gridpane with the books for the stage. It will
+	 * also initialize the event handler to allow the user to click on a 
+	 * book to make a choice. That will then open the book.
+	 * 
+	 * @return returns the gridpane to menuStart();
+	 * @throws FileNotFoundException throws exception if the file to be
+	 * read in for the pictures or books does not exist. 
 	 */
 	public GridPane addGridPane(Stage stage) throws FileNotFoundException {
 		GridPane grid = new GridPane();
@@ -333,12 +331,6 @@ public class eReaderGUIView extends Application{
 		}else {
 			numRows = (bookNames.size() / NUM_COLS) + (bookNames.size() % NUM_COLS); // Add remainder 
 		}
-
-
-		//Button covers[] = new Button[bookNames.size()];  // an array to contain all the book buttons.
-		
-
-		// currently hard coded titles.
 
 		int numBooks = bookNames.size();
 
@@ -385,6 +377,11 @@ public class eReaderGUIView extends Application{
 	 * exists in the directory. It will then return the index of that particular
 	 * image within the directory. If not, then -1 will be returned. 
 	 * 
+	 * @param bookImages list of strings that represent the file path to the
+	 * book images. 
+	 * 
+	 * @param searchVal string that matches the filepath in the book.
+	 * 
 	 * @return index of filename if found. Otherwise -1 will be returned. 
 	 */
 	private int getBookImageIndex(List<String> bookImages, String searchVal) {
@@ -403,6 +400,9 @@ public class eReaderGUIView extends Application{
 	 * user clicks on a book image. It will gather the id associated 
 	 * with that button so that the an instance of the model can be
 	 * created later. 
+	 * 
+	 * @param stage stage object that will be used to close the menu
+	 * when the user chooses a book (i.e. click on a book image).
 	 * 
 	 */
 	private void getBookId(Stage stage) {
@@ -434,19 +434,21 @@ public class eReaderGUIView extends Application{
 	
 	
 	/**
-	 * Purpose: 
+	 * Purpose: Creates the stage for the search menu. It will
+	 * send a search for a string. 
+	 *  
 	 */
 	private void searchMenu() {
-		GridPane textContainer  = new GridPane();
-		Stage stage             = new Stage();
-		TextField textField     = new TextField(); 
-		BorderPane searchWindow = new BorderPane();
+		GridPane textContainer  = new GridPane(    );
+		Stage stage             = new Stage(       );
+		TextField textField     = new TextField(   ); 
+		BorderPane searchWindow = new BorderPane(  );
 		Button nextButton       = new Button("Next");
-		VBox vbox               = new VBox();
-		VBox vbox1 				= new VBox();
-		VBox vbox2              = new VBox();
+		VBox vbox               = new VBox(        );
+		VBox vbox1 				= new VBox(        );
+		VBox vbox2              = new VBox(        );
 		
-		Label label = new Label("Find: ");
+		Label label = new Label("Find: "     );
 		label.setFont(new Font("Crimson", 18));
 		HBox hbox = new HBox(label, textField);
 		
@@ -469,12 +471,17 @@ public class eReaderGUIView extends Application{
 	}
 	
 	/**
-	 * Purpose: Calls controller to get the 
+	 * Purpose: Calls controller to get the search string index.
+	 * It will use that to display the page number for the 
+	 * desired search string. 
+	 * 
+	 * @param string to pass to the Controller -> Model to search
+	 * for. 
 	 */
 	private void displaySearchResults(String str) {
 		
 		int page = this.controller.search(str);
-		System.out.println("Here is the index number: "+ page);
+		
 		// Print alert to user that search returned no results
 		if(page == -1) {
 			

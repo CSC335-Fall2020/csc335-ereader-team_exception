@@ -9,47 +9,55 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Purpose: This class represents the Model of the MVC 
+ * architecture. It has methods to read in the book from
+ * a folder contained within the project. It also contains 
+ * methods to get page info and create a save state. 
  * 
- * @author 
+ * @author Ztaylor9000, caseywhitmire, jialiangzhao, David (Winston?), and blsmith86
  *
  */
 
 public class eReaderModel implements Serializable {
-	private String book;
-	private List<String> pages ; 
-	private int currentPage  = 0;//jia change
-	private String searchBook;//jia change
-	private int searchNumber = 0;//jia change
-	private String searchCurrent;//jia change
-	private List<Integer> bookmarks;//winston change
+	private String        book  ;
+	private List<String>  pages ; 
+	private int           currentPage;
+	private String        searchBook;
+	private int           searchNumber;
+	private String        searchCurrent;
+	private List<Integer> bookmarks;
 	private String bookName;
 	private static final long serialVersionUID = 42L;
 
-	public void testPrint(int index) {
-		//System.out.println(book.substring(index, index + 2));
-	}
-	
 	/**
 	 *  Will add number of lines per page and characters per line to constructor.
 	 * @param filename
 	 */
 	public eReaderModel(String filename) {
-		
-		book = "";
+		currentPage  = 0;
+		searchNumber = 0;
+		book         = "";
 		convertFile(filename);
 		pages = getPages(30, 80);
 		System.out.println(pages.size());
 		bookName = filename;
 	}
 	
-	
+	/**
+	 * Purpose: Getter that returns the name of the book to the controller.
+	 * 
+	 * @return bookName string that represents the name of the book. 
+	 */
 	public String getName() {
 		return bookName;
 	}
 	
 	/**
-	 * Purpose: 
-	 * @param filename
+	 * Purpose: Opens a book and reads it in. The book will be read
+	 * into a string while concatenating newline characters where
+	 * appropriate. 
+	 * 
+	 * @param filename name of file to be read in. 
 	 */
 	private void convertFile(String filename) {
 		BufferedReader fileInput = null;
@@ -64,27 +72,36 @@ public class eReaderModel implements Serializable {
 			}
 			fileInput.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Purpose: Returns the string that represents the book
+	 * to the controller. 
+	 * 
+	 * @return string that represents the book. 
+	 */
 	public String getBook() {
 		return book;
 	}
 	
 	/**
-	 * Purpose: 
-	 * @param pageLength
-	 * @param lineLength
-	 * @return
+	 * Purpose: Gets the specific page in the book. 
+	 * 
+	 * @param pageLength length of the page to slice out
+	 * 
+	 * @param lineLength length of the line to slice. 
+	 * 
+	 * @return retval ArrayList that holds the book spit into
+	 * pages. 
 	 */
 	public List<String> getPages(int pageLength, int lineLength){
 		List<String> retval = new ArrayList<String>();
-		int lastSpace = 0;
-		int start = 0;
+		int lastSpace   = 0;
+		int start       = 0;
 		String currLine = "";
-		int pageLine = 0;
+		int pageLine    = 0;
 		for(int i = 0; i < book.length(); i++) {
 			if(book.charAt(i) == ' ') {
 				lastSpace = i;
@@ -127,28 +144,34 @@ public class eReaderModel implements Serializable {
 		return this.book;
 	}
 	
-	
-	//jia change
-	/** Purpose:A thoughtful little function that displays the 
+	/** 
+	 * Purpose: A thoughtful little function that displays the 
 	 * percentage of the currently viewed pages. print
 	 * he can see <9/100>.
+	 * 
 	 * @return String with current page / max page
 	 */
 	public String percent() {
 		return "< "+(currentPage+1)+" / "+this.getBookSize()+" >";
 	}
 	
-	
-	//jia change
+	/**
+	 * Purpose: Gets the current page of the book.
+	 * 
+	 * @return current page of the book stored in the
+	 * ArrayList.
+	 */
 	public String getCurrPage() {
-		if(pages==null || pages.size()==0) {
+		if(pages == null || pages.size()== 0) {
 			System.out.println("no book content");
 			return null;
 		}
 		return pages.get(currentPage);
 	}
+	
 	/**
-	 * Purpose: Starts book from first page
+	 * Purpose: Starts book from first page.
+	 * 
 	 * @return The first page of the book
 	 */
 	public String startBook() {
@@ -160,10 +183,14 @@ public class eReaderModel implements Serializable {
 		return pages.get(currentPage);
 	}
 	
-	//jia change
+	/**
+	 * Purpose: Gets the next page of the book. 
+	 * 
+	 * @return string that represets the next page in the book. 
+	 */
 	public String getNext() {
 		currentPage++;
-		if(pages==null || pages.size()==0 || currentPage>=pages.size()) {
+		if(pages == null || pages.size() == 0 || currentPage >= pages.size()) {
 			System.out.println("no book content or no more page");
 			currentPage--;
 			return null;
@@ -171,12 +198,14 @@ public class eReaderModel implements Serializable {
 		return pages.get(currentPage);
 	}
 	
-	
-	
-	//jia change
+	/**
+	 * Purpose: Gets the previous page.
+	 * 
+	 * @return string that represents the previous page in the book. 
+	 */
 	public String getPrevious() {
 		currentPage--;
-		if(pages==null || pages.size()==0 || currentPage<0) {
+		if(pages == null || pages.size() == 0 || currentPage <0) {
 			System.out.println("no book content or first page now");
 			currentPage++;
 			return null;
@@ -184,47 +213,47 @@ public class eReaderModel implements Serializable {
 		return pages.get(currentPage);
 	}
 	
-	
-	//jia change
 	/**
-	 * Purpose: returns current page number
+	 * Purpose: returns current page number.
+	 * 
 	 * @return an int of the current page
 	 */
 	public int getPageNumber() {
 		return currentPage;
 	}
+	
 	/**
-	 * Purpose: returns the total number of pages in the current book
+	 * Purpose: Returns the total number of pages in the current book.
+	 * 
 	 * @return an int of the total number of pages
 	 */
 	public int getBookSize() {
-
 		return pages.size();
 	}
 	
-	
 	/**
+	 * Purpose: Searches for a particular word in the book. It will 
+	 * find every instance of the word in the book and go to the
+	 * next instance when called. 
 	 * 
-	 * @param input
-	 * @return
+	 * @param input string to search for 
+	 * 
+	 * @return index of string if found, -1 if not found. 
 	 */
 	public int search(String input) {
 		if(searchBook == null || !searchCurrent.equals(input)) {
 			searchNumber = 0;
 			searchBook = book;
 		}
-		System.out.println("Book Length: "+searchBook);
-		searchCurrent = input;
 		
+		searchCurrent = input;
 		for (int i = 0; i < searchBook.length(); i++) {
 			     if (i < searchBook.length() - input.length()) {
 			         if (searchBook.indexOf(input, i) >= 0) {
 			             i = searchBook.indexOf(input, i);
-			             searchBook=searchBook.substring(i + input.length());
-			            
+			             searchBook = searchBook.substring(i + input.length());
 			             searchNumber += i;
-			          //   If the position of the last word of return is found, 
-			             searchBook = searchBook.substring(i+input.length());
+			         
 			             if(searchNumber == 0) {//winston change
 			            	 searchNumber += i;
 			             } else {//winston change
@@ -237,43 +266,16 @@ public class eReaderModel implements Serializable {
 			         }
 			     }
 			 }
-		
-	
 		searchBook = book.substring(0);
 		searchNumber = 0;
 		return -1;
 	}
 
-	//winston change
+	/**
+	 * Purpose: Adds a bookmark to the page. 
+	 */
 	public void addBookmark() {
 		int index = search(pages.get(currentPage));
 		bookmarks.add(index);
 	}
-	
-
-	
-
-	/**
-	 * Purpose: Retrieves all of the file names in a directory. 
-	 * These file names will be used to update book info so 
-	 * whenever changes are made the update automatically. This 
-	 * function will do this one one of two files: books or book_images.
-	 * This allows the function to be flexible and allowed us to avoid
-	 * writing another function that does something very similar. 
-	 * 
-	 * @param bookName string name of the file directory to be read in.
-	 * 
-	 */
-	public List<String> getFileNames(String bookName) {
-		File  folder = new File(bookName); // Declare folder variable
-		String contents[] = folder.list(); 
-		List<String> fileNames  = Arrays.asList(contents);
-		return fileNames;
-	}
-	
-	
-	
-	
-	
-	
 } // End class
