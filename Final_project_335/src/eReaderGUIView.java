@@ -21,6 +21,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -218,31 +219,37 @@ public class eReaderGUIView extends Application{
 		// EVENTS																	  //
 		////////////////////////////////////////////////////////////////////////////////
 
-		this.homeButton    .setOnAction(e-> {  controller.closeBook();reader.close();menuStart();
+		this.homeButton    .setOnAction(e-> {  controller.closeBook();reader.close();
+		try {
+			menuStart();
+		} catch (FileNotFoundException e1) {
+			
+			e1.printStackTrace();
+		}
 		
 		});
 				
 		this.backButton    .setOnAction(e-> { controller.previousPage();
-		                                      setText(this.fontType, this.fontSize, true);
+		                                      setText(this.fontType, this.fontSize);
 			                                  updatePageNum(); // Update page number and progress bar
 		});  
 		
 		this.forwardButton .setOnAction(e-> { controller.nextPage();
-		                                      setText(this.fontType, this.fontSize, true);
+		                                      setText(this.fontType, this.fontSize);
 			                                  updatePageNum(); // Update page number and progress bar
 		});
 
 		this.searchButton  .setOnAction(e-> { searchMenu();});
 		
 		// Events for font style. Sets each fontstyle to a particular type.
-		this.fontOne   .setOnAction(e-> { setText(DEFAULT_FONT, this.fontSize, false);});
-		this.fontTwo   .setOnAction(e-> { setText(FONT_ONE    , this.fontSize, false);});
-		this.fontThree .setOnAction(e-> { setText(FONT_TWO    , this.fontSize, false);});
+		this.fontOne   .setOnAction(e-> { setText(DEFAULT_FONT, this.fontSize);});
+		this.fontTwo   .setOnAction(e-> { setText(FONT_ONE    , this.fontSize);});
+		this.fontThree .setOnAction(e-> { setText(FONT_TWO    , this.fontSize);});
 		
 		// Events for font size
-		this.sizeTen    .setOnAction(e-> { setText(this.fontType, SIZE_ONE    , false);});
-		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    , false);});
-		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE, false);});
+		this.sizeTen    .setOnAction(e-> { setText(this.fontType, SIZE_ONE    );});
+		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    );});
+		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE);});
 	
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
@@ -307,9 +314,11 @@ public class eReaderGUIView extends Application{
 	/**
 	 * Purpose: Starts up the stage for the book selection menu. Closes upon
 	 * book selection. Adds a scroll functionality as well.
+	 * @throws FileNotFoundException 
 	 * 
 	 */
-	public void menuStart() {
+	public void menuStart() throws FileNotFoundException {
+		this.mainMenuBorder.setCenter(addGridPane(mainMenu));
 		mainMenu.show();
 	}
 	
@@ -353,7 +362,8 @@ public class eReaderGUIView extends Application{
 				}
 			
 				String str = bookNames.get(count);
-				
+				this.controller.openBook(bookNames.get(count));
+				ProgressIndicator progressIndicator = new ProgressIndicator(this.controller.getProgress());
 				VBox vbox = new VBox(); // to contain the cover and the title
 				Label title = new Label(str); // sets titles as the label for each button
 				title.setMaxWidth(Double.MAX_VALUE);
@@ -366,7 +376,7 @@ public class eReaderGUIView extends Application{
 		        input = new FileInputStream("default_book_image/cover.png");
 				
 				ImageView imageView   = new ImageView(new Image(input, 110, 150, false, false));
-				vbox.getChildren().addAll(imageView, title);
+				vbox.getChildren().addAll(imageView, title,progressIndicator);
 			       
 				// create new button for each cover/title (vbox)
 				Button button = new Button("", vbox);  
@@ -454,7 +464,11 @@ public class eReaderGUIView extends Application{
 				}
 				
 				stage.close(); //close current stage
-				menuStart(); // reopen menu
+				try {
+					menuStart();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} // reopen menu
 			}
 			
 			;});
@@ -462,7 +476,11 @@ public class eReaderGUIView extends Application{
 		Button cancel = new Button("Cancel");
 		cancel.setOnAction(e-> { 
 			stage.close(); // close current stage
-			menuStart(); // reopen menu
+			try {
+				menuStart();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} // reopen menu
 			;}); 
 		
 		HBox buttons = new HBox(); // Add buttons to HBox
@@ -472,7 +490,7 @@ public class eReaderGUIView extends Application{
 		
 		border.setCenter(grid);
 		border.setBottom(buttons); // add buttons to grid
-		//border.setAlignment(buttons, Pos.CENTER);
+		
 		
 		root.getChildren().addAll(border);
 		stage.show();
@@ -514,7 +532,7 @@ public class eReaderGUIView extends Application{
 	 */
 	private void getBook(String bookChoice) {
 		this.controller.openBook(bookChoice      ); 
-		setText(DEFAULT_FONT, DEFAULT_SIZE, false);
+		setText(DEFAULT_FONT, DEFAULT_SIZE);
 	}
 
 	/**
@@ -522,7 +540,7 @@ public class eReaderGUIView extends Application{
 	 * send a search for a string. 
 	 *  
 	 */
-	private void searchMenu() {
+	private void searchMenu() {									///////////////////////////////////////////////////// Here
 		GridPane textContainer  = new GridPane(    );
 		Stage stage             = new Stage(       );
 		TextField textField     = new TextField(   ); 
@@ -575,7 +593,14 @@ public class eReaderGUIView extends Application{
 			alert.setContentText("Text not Found.");
 			alert.showAndWait();
 			alert.close();
+		}else {
+			
+			this.controller.flipToPage(page);
+			System.out.println("Before update: "+controller.pageNumber());
+			System.out.println("Page number: "+ page);
+			setText(this.fontType, this.fontSize);
 		}
+		
 	}
 	
 	/**
@@ -590,10 +615,8 @@ public class eReaderGUIView extends Application{
 	 * 
 	 * @param newSize new font size
 	 * 
-	 * @param isNewPage boolean variable that determines if a new page is needed
-	 * or the same page. 
 	 */
-	private void setText(String newFont, int newSize, boolean isNewPage) {
+	private void setText(String newFont, int newSize) {
 		String page = "";
 		GridPane newPage = new GridPane();
 		Text text        = new Text(    );
@@ -601,7 +624,7 @@ public class eReaderGUIView extends Application{
 		this.fontType = newFont;
 		this.fontSize = newSize;
 		
-		page = controller.getCurrPage(); // Otherwise get the current page	
+		page = this.controller.getCurrPage(); // Otherwise get the current page	
 		text.setFont(Font.font (this.fontType, this.fontSize));   
 		text.setText(page);
 		vbox.getChildren().add(text);
@@ -610,27 +633,5 @@ public class eReaderGUIView extends Application{
 		newPage.add(vbox, 0, 1);
 		this.gridPane = newPage;
 		this.window.setCenter(this.gridPane); 
-	}
-	
-	/**
-	 * Purpose: Retrieves all of the file names in a directory. 
-	 * These file names will be used to update book info so 
-	 * whenever changes are made the update automatically. This 
-	 * function will do this one one of two files: books or book_images.
-	 * This allows the function to be flexible and allowed us to avoid
-	 * writing another function that does something very similar. A version
-	 * of this method is stored in the View because these methods cannot
-	 * be accessed through the controller due to the controller not being
-	 * instantiated. The controller is instantiated after the layout for
-	 * the book options for the home button is created. 
-	 * 
-	 * @param bookName string name of the file directory to be read in.
-	 * 
-	 */
-	private List<String> getFileNames(String bookName) {
-		File  folder = new File(bookName); // Declare folder variable
-		String contents[] = folder.list(); 
-		List<String> fileNames  = Arrays.asList(contents);
-		return fileNames;
 	}
 } // End class

@@ -279,4 +279,15 @@ public class eReaderController {
 		return this.model.getProgress();
 	}
 	
+	/**
+	 * Purpose: Calls Model to flip to the next instance of the page
+	 * found by the search function. 
+	 * 
+	 * @param pageNumber page number determined to have the next
+	 * text searched for by user. 
+	 */
+	public void flipToPage(int pageNumber) {
+		this.model.setPage(pageNumber);
+	}
+	
 }//End class

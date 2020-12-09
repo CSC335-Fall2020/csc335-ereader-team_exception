@@ -246,9 +246,9 @@ public class eReaderModel implements Serializable {
 			             searchBook = searchBook.substring(i + input.length());
 			             searchNumber += i;
 			         
-			             if(searchNumber == 0) {//winston change
+			             if(searchNumber == 0) {
 			            	 searchNumber += i;
-			             } else {//winston change
+			             } else {
 				             searchNumber += i;
 				             searchNumber += input.length();
 			             }
@@ -280,5 +280,15 @@ public class eReaderModel implements Serializable {
 		return progress;
 	}
 	
+	/**
+	 * Purpose: 
+	 */
+	public void setPage(int pageNumber) {
+		
+		if(pageNumber < pages.size()) {
+			System.out.println("In the model");
+			this.currentPage = pageNumber;
+		}
+	}
 
 } // End class
