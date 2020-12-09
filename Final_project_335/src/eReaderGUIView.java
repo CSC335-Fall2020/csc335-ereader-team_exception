@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -31,6 +32,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
@@ -271,6 +273,7 @@ public class eReaderGUIView extends Application{
 	public void menuStart() {
 		
 		Stage stage = new Stage();
+		stage.setTitle("Main menu");
 		Group root  = new Group();
 		BorderPane border = new BorderPane();
 		ScrollBar sc = new ScrollBar();
@@ -281,6 +284,8 @@ public class eReaderGUIView extends Application{
 			e.printStackTrace();
 		} 
 		
+		border.setTop(addComboBox(stage));
+		
 		Scene scene = new Scene(root, 485, 500);
 		stage.setScene(scene);
 		root.getChildren().addAll(border,sc);
@@ -289,7 +294,7 @@ public class eReaderGUIView extends Application{
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(500);
-        sc.setMax(200);
+        sc.setMax(1000);
 		
         // gives the scroll bar the ability to actually scroll
         sc.valueProperty().addListener(new ChangeListener<Number>() {
@@ -299,7 +304,7 @@ public class eReaderGUIView extends Application{
             }
         });
 		
-		stage.show();
+		stage.show();;
 	}
 	
 	/**
@@ -342,19 +347,26 @@ public class eReaderGUIView extends Application{
 				if (count == numBooks) { // stop if count is equal to the amount of books we have
 					break;
 				}
-				String str = bookNames.get(count);
-				//int picIndex = getBookImageIndex(bookImages, str.substring(0, str.indexOf(".")));
 				
-				//if(picIndex != -1) {
-					//input = new FileInputStream("book_images/"+ bookImages.get(picIndex));
-				//}else {
-					input = new FileInputStream("default_book_image/cover.png");
-				//}
+				
+				String str = bookNames.get(count);
+				
+				VBox vbox = new VBox(); // to contain the cover and the title
+				Label title = new Label(str); // sets titles as the label for each button
+				title.setMaxWidth(Double.MAX_VALUE);
+		        title.setAlignment(Pos.CENTER);
+		        title.setTextAlignment(TextAlignment.CENTER);
+		        title.setWrapText(true);
+		        title.setMaxWidth(100);
+		        title.setMaxHeight(50);
+				
+				input = new FileInputStream("default_book_image/cover.png");
 				
 				ImageView imageView   = new ImageView(new Image(input, 110, 150, false, false));
+				vbox.getChildren().addAll(imageView, title);
 			       
 				// create new button for each cover/title (vbox)
-				Button button = new Button("", imageView);  
+				Button button = new Button("", vbox);  
 				
 
 				button.setId(bookNames.get(count));
@@ -368,6 +380,79 @@ public class eReaderGUIView extends Application{
 		}
 		getBookId(stage); // Event handler to get the button id
 		return grid;
+	}
+	
+	private ComboBox addComboBox(Stage menuStage) {
+		final ComboBox<String> combo = new ComboBox();
+		
+		combo.getItems().add("Input");
+		combo.setOnAction((e) -> {
+            inputBookWindow();
+            menuStage.close();
+		});
+		return combo;
+	}
+	
+	private void inputBookWindow() {
+		
+		Stage stage = new Stage();
+		Group root  = new Group();
+		BorderPane border = new BorderPane();
+		
+		Scene scene = new Scene(root, 485, 200);
+		stage.setScene(scene);
+		
+		Label title = new Label("Book title:");
+		TextField strTitle = new TextField ();
+		HBox getTitle = new HBox();
+		getTitle.getChildren().addAll(title, strTitle);
+		getTitle.setSpacing(10);
+		
+		Label path = new Label("File path:");
+		TextField strPath = new TextField ();
+		HBox getPath = new HBox();
+		getPath.getChildren().addAll(path, strPath);
+		getPath.setSpacing(15);
+		
+		GridPane grid = new GridPane();
+		grid.setVgap(30);
+		grid.setPadding(new Insets(20, 10, 20, 10));
+		
+		grid.add(getTitle, 0, 0);
+		grid.add(getPath, 0, 1);
+		
+		Button submit = new Button("Submit");
+		submit.setOnAction(e-> { 
+			if (strTitle.getText() != null && strPath.getText() != null) {
+				controller.addBook(strTitle.getText(), strPath.getText());
+				stage.close();
+				menuStart();
+			}
+			
+			;});
+		
+		Button cancel = new Button("Cancel");
+		cancel.setOnAction(e-> { 
+			stage.close();
+			menuStart();
+			;});
+		
+		HBox buttons = new HBox();
+		buttons.getChildren().addAll(submit, cancel);
+		buttons.setSpacing(20);
+		buttons.setPadding(new Insets(20, 10, 20, 10));
+		
+		
+		
+		border.setCenter(grid);
+		border.setBottom(buttons);
+		border.setAlignment(buttons, Pos.CENTER);
+		
+		root.getChildren().addAll(border);
+		
+		
+		stage.show();
+		
 	}
 	
 	/**
