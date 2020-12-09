@@ -265,6 +265,16 @@ public class eReaderController {
 	public List<String> getFilePath(String fileName) {
 		return this.model.getFileNames(fileName);
 	}
-	
-	
+	/*
+	 * 
+	 */
+	public List<String> getBookList(){
+		Set<String> bookSet = bookList.keySet();
+		List<String> bookListSorted = new ArrayList<String>();
+		for(String x: bookSet) {
+			bookListSorted.add(x);
+		}
+		Collections.sort(bookListSorted);
+		return bookListSorted;
+	}
 }//End class
