@@ -12,22 +12,33 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Purpose: Represents the Controller in the MVC architecture. Allows the view to 
+ * interact with the model to to gather information. 
  * 
- * @author 
+ * @author Ztaylor9000, caseywhitmire, jialiangzhao, David (Winston?), and blsmith86
  *
  */
 public class eReaderController {
 	private eReaderModel model;
 	private TreeMap<String, eReaderModel> bookList;
 	private String currBook;
-	
+
+	/**
+	 * Purpose: Controller that instantiates the controller for the e-reader.
+	 * 
+	 * 
+	 * 
+	 */
+
 
 	public eReaderController(){
 		initialDeserialize();
-		
 	}
 
-	
+	/**
+	 * Purpose: Call
+	 * @param filename
+	 */
 	public void addBook(String bookTitle, String filename) {
 		model = new eReaderModel(bookTitle, filename);
 		bookList.put(bookTitle, model);
@@ -137,6 +148,10 @@ public class eReaderController {
 		return null;
 	}
 	
+	/**
+	 * Purpose:
+	 * @return
+	 */
 	public String currBook() {
 		return this.currBook;
 	}
@@ -159,7 +174,6 @@ public class eReaderController {
 		return model.getPageNumber();
 	}
 	
-
 	/**
 	 * Purpose:
 	 * @return
@@ -237,4 +251,18 @@ public class eReaderController {
 		Collections.sort(bookListSorted);
 		return bookListSorted;
 	}
+	
+	
+	/**
+	 * Purpose: Calls the search function to get the page number for the
+	 * text that user searched for.
+	 * 
+	 * @param str string the user wants to search for in the book.
+	 * 
+	 * @return int value representing the page number of the search string
+	 */
+	public int search(String str) {
+		return this.model.search(str);
+	}
+	
 }//End class
