@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
@@ -64,7 +65,7 @@ public class eReaderGUIView extends Application{
 	private BorderPane        window    ;
 	private List<String>      book      ;
 	
-	// Buttons and Toolbar
+	// BUTTONS AND TOOLBAR
 	private VBox     toolbarVbox   ;
 	private Button   homeButton    ;
 	private Button   backButton    ;
@@ -72,7 +73,7 @@ public class eReaderGUIView extends Application{
 	private Button   searchButton  ;
 	private List <Button> buttonList; 
 	
-	// Menu stuff and things
+	// MENU STUFF AND THINGS
 	private MenuItem fontTwo;
 	private MenuItem fontOne  ;
 	private MenuItem sizeEleven   ;
@@ -87,6 +88,10 @@ public class eReaderGUIView extends Application{
 	private String   fontType;
 	private int 	 fontSize;
 	
+	// PROGRESS BAR
+	GridPane progressPane;
+	ProgressBar progressBar;
+	
 	/**
 	 * Purpose: Constructor that instanstiates objects. These can be created
 	 * before since the info will be added later. 
@@ -96,6 +101,7 @@ public class eReaderGUIView extends Application{
 		this.buttonList     = new ArrayList<Button>(     );
 		this.window         = new BorderPane(            ); 
 		this.gridPane       = new GridPane  (            );
+		this.progressPane   = new GridPane    (          );
 		this.toolbarVbox    = new VBox      (            );
 		this.fontMenu       = new Menu      ("Format"    );
 		this.fontStyle      = new Menu      ("Font Style");
@@ -108,9 +114,10 @@ public class eReaderGUIView extends Application{
 		this.fontTwo        = new MenuItem  (FONT_ONE    );
 		this.fontThree 	    = new MenuItem  (FONT_TWO    );
 		this.newPage        = new GridPane  (            );
+		this.progressBar    = new ProgressBar(0          );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
-
+		
 		// load basic books into eReader
 		controller = new eReaderController();
 		if(controller.getBookList().size() == 0) {
@@ -228,17 +235,26 @@ public class eReaderGUIView extends Application{
 		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    , false);});
 		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE, false);});
 	
-		// COLOR STUFF
-		ColorAdjust colorAdjust = new ColorAdjust();
-	    colorAdjust.setBrightness(0);         // 0 is the default brightness
-	    this.window.setEffect(colorAdjust);  // Set the color adjust here
-	    
-	    // Set font to white to simulate night mode.
-	    // Figure out what settings the images need and menu items
-	    
-		 // Set the scene
+	
+		
+		
+		// Add the progress bar 
+		HBox hbox = new HBox(this.progressBar);
+		
+		
+		this.progressPane.setAlignment(Pos.CENTER);
+		this.progressPane.add(hbox,1,2);
+		this.window.setBottom(progressPane);
+		
+		// Set the progress  // NEEDS TO MOVE TO THE APPROPRIATE PLACE TO UPDATE
+		progressBar.setProgress(0.5);
+		
+		// Set size 
+		this.progressBar.setPrefSize(400, 30);
+		
+		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
-
+		
 		// load current page of book before showing reader screen.
 
 		stage.setScene(scene);
