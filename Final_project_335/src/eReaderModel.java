@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -267,12 +268,22 @@ public class eReaderModel implements Serializable {
 	 * Purpose: Adds a bookmark to the page. 
 	 */
 	public void addBookmark() {
-		int index = search(pages.get(currentPage));
-		bookmarks.add(index);
+		if(!bookmarks.contains(currentPage)) {
+			bookmarks.add(currentPage);
+		}
 	}
-
-
-
+	
+	public void removeBookmark() {
+		if(bookmarks.contains(currentPage)) {
+			bookmarks.remove(currentPage);
+		}
+	}
+	
+	public List<Integer> getBookmarks() {
+		Collections.sort(bookmarks);
+		return bookmarks;
+	}
+	
 	public double getProgress() {
 		return progress;
 	}

@@ -188,6 +188,13 @@ public class eReaderController {
 		model.addBookmark();
 	}
 	
+	public void removeBookmark() {
+		model.removeBookmark();
+	}
+	
+	public void getBookmarks() {
+		model.getBookmarks();
+	}
 	/**
 	 * Purpose: returns the next page of the current book
 	 * @return a string representing the page
