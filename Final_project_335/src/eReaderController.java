@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class eReaderController {
 	private eReaderModel model;
-	private TreeMap<String, eReaderModel> bookList;
+	private List<String> bookList;
 	private String currBook;
 
 	/**
@@ -41,13 +41,13 @@ public class eReaderController {
 	 */
 	public void addBook(String bookTitle, String filename) {
 		model = new eReaderModel(bookTitle, filename);
-		bookList.put(bookTitle, model);
+		bookList.add(bookTitle);
 		this.serialize(bookTitle);
 		initialSerialize();
 	}
 	
 	public void openBook(String name) {
-		if(bookList.containsKey(name)) {
+		if(bookList.contains(name)) {
 			this.model = this.deserialize(name);
 			System.out.println(model.getName());
 			currBook = model.getName();
@@ -85,12 +85,12 @@ public class eReaderController {
 		try {
 			FileInputStream fileIn = new FileInputStream("Booklist.ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
-			this.bookList = (TreeMap<String, eReaderModel>) in.readObject();
+			this.bookList = (List<String>) in.readObject();
 			in.close();
 			fileIn.close();
 		} catch (FileNotFoundException f) {
 			try {
-				this.bookList = new TreeMap<String, eReaderModel>();
+				this.bookList = new ArrayList<String>();
 				File bookListFile = new File("Booklist.ser");
 				bookListFile.createNewFile();
 				try {
@@ -243,13 +243,8 @@ public class eReaderController {
 	 * 
 	 */
 	public List<String> getBookList(){
-		Set<String> bookSet = bookList.keySet();
-		List<String> bookListSorted = new ArrayList<String>();
-		for(String x: bookSet) {
-			bookListSorted.add(x);
-		}
-		Collections.sort(bookListSorted);
-		return bookListSorted;
+		Collections.sort(bookList);
+		return bookList;
 	}
 	
 	

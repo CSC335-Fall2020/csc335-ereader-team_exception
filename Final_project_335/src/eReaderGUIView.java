@@ -86,7 +86,8 @@ public class eReaderGUIView extends Application{
 	private GridPane newPage;
 	private String   fontType;
 	private int 	 fontSize;
-	
+	private Stage mainMenu;
+	private Stage reader;
 	/**
 	 * Purpose: Constructor that instanstiates objects. These can be created
 	 * before since the info will be added later. 
@@ -110,17 +111,15 @@ public class eReaderGUIView extends Application{
 		this.newPage        = new GridPane  (            );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
-
+		
 		// load basic books into eReader
 		controller = new eReaderController();
 		if(controller.getBookList().size() == 0) {
-			System.out.println("list was empty");
 			controller.addBook("Alice in Wonderland", "books/aliceInWonderland.txt");
 			controller.addBook("War Of The Worlds", "books/warOfTheWorlds.txt");
 			controller.addBook("Dracula", "books/dracula.txt");
 			controller.addBook("Roswell Report", "books/roswellReport.txt");
-			controller.addBook("Wizard of Oz", "books/wizardOfOz.txt");
-			controller.addBook("Roswell Report", "books/roswellReport.txt");
+			controller.addBook("Wizard of Oz", "books/wizardOfOz.txt");  
 		}
 		
 	}
@@ -129,27 +128,30 @@ public class eReaderGUIView extends Application{
 	 * Purpose: 
 	 */
 	@Override
-	public void start(Stage stage) throws Exception {
-		stage.setTitle("E-Mongoose");
-		  
+	public void start(Stage stage)  throws Exception {
+		reader = new Stage();
+		reader.setTitle("E-Mongoose");
+		this.gridPane = new GridPane();
+
 
 		// Add submenu to font styles (i.e. font type)
-		this.fontStyle.getItems().add(this.fontOne  );
-		this.fontStyle.getItems().add(this.fontTwo  );
-		this.fontStyle.getItems().add(this.fontThree);
-		
-		// Add submenu to font size
-		this.fontSizeMenu.getItems().add(this.sizeTen   );
-		this.fontSizeMenu.getItems().add(this.sizeEleven);
-		this.fontSizeMenu.getItems().add(this.sizeTwelve);
-		
-		// Add font style and size to the font menu
-		this.fontMenu.getItems().add(this.fontStyle   );
-		this.fontMenu.getItems().add(this.fontSizeMenu);
-		
-		// Add font menu to the menubar
-		this.menuBar.getMenus().add(this.fontMenu);
-		
+				this.fontStyle.getItems().add(this.fontOne  );
+				this.fontStyle.getItems().add(this.fontTwo  );
+				this.fontStyle.getItems().add(this.fontThree);
+				
+				// Add submenu to font size
+				this.fontSizeMenu.getItems().add(this.sizeTen   );
+				this.fontSizeMenu.getItems().add(this.sizeEleven);
+				this.fontSizeMenu.getItems().add(this.sizeTwelve);
+				
+				// Add font style and size to the font menu
+				this.fontMenu.getItems().add(this.fontStyle   );
+				this.fontMenu.getItems().add(this.fontSizeMenu);
+				
+				// Add font menu to the menubar
+				this.menuBar.getMenus().add(this.fontMenu);
+
+
 		// Add menubar to the window
 		this.window.setTop(this.menuBar);                         
 		
@@ -207,7 +209,7 @@ public class eReaderGUIView extends Application{
 		// Events for buttons
 
 
-		this.homeButton    .setOnAction(e-> {  controller.closeBook();menuStart();
+		this.homeButton    .setOnAction(e-> {  controller.closeBook();reader.close();menuStart();
 		
 				
 		
@@ -241,20 +243,9 @@ public class eReaderGUIView extends Application{
 
 		// load current page of book before showing reader screen.
 
-		stage.setScene(scene);
-		stage.show();  // Show the stage 
-	}
-
-
-	
-	/**
-	 * Purpose: Starts up the stage for the book selection menu. Closes upon
-	 * book selection. Adds a scroll functionality as well.
-	 * 
-	 */
-	public void menuStart() {
+		reader.setScene(scene);
 		
-		Stage stage = new Stage();
+		mainMenu = stage;
 		Group root  = new Group();
 		BorderPane border = new BorderPane();
 		ScrollBar sc = new ScrollBar();
@@ -265,11 +256,11 @@ public class eReaderGUIView extends Application{
 			e.printStackTrace();
 		} 
 		
-		Scene scene = new Scene(root, 485, 500);
-		stage.setScene(scene);
+		Scene sceneMenu = new Scene(root, 485, 500);
+		stage.setScene(sceneMenu);
 		root.getChildren().addAll(border,sc);
 		
-		sc.setLayoutX(scene.getWidth()-sc.getWidth());
+		sc.setLayoutX(sceneMenu.getWidth()-sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(500);
@@ -284,6 +275,17 @@ public class eReaderGUIView extends Application{
         });
 		
 		stage.show();
+	}
+
+	
+	/**
+	 * Purpose: Starts up the stage for the book selection menu. Closes upon
+	 * book selection. Adds a scroll functionality as well.
+	 * 
+	 */
+	public void menuStart() {
+		
+		mainMenu.show();
 	}
 	
 	/**
@@ -396,6 +398,7 @@ public class eReaderGUIView extends Application{
 					
 					getBook(bookChoice);
 					stage.close(); // Close the book menu after user makes choice
+					reader.show();
 				}); // End lambda event
 		}
 	}
