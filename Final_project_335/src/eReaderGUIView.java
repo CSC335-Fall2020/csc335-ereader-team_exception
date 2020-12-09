@@ -125,8 +125,18 @@ public class eReaderGUIView extends Application{
 		this.newPage        = new GridPane  (            );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
-		controller = new eReaderController();
 		
+		// load basic books into eReader
+		controller = new eReaderController();
+		if(controller.getBookList().size() == 0) {
+			System.out.println("list was empty");
+			controller.addBook("Alice in Wonderland", "books/aliceInWonderland.txt");
+			controller.addBook("War Of The Worlds", "books/warOfTheWorlds.txt");
+			controller.addBook("Dracula", "books/dracula.txt");
+			controller.addBook("Roswell Report", "books/roswellReport.txt");
+			controller.addBook("Wizard of Oz", "books/wizardOfOz.txt");
+			controller.addBook("Roswell Report", "books/roswellReport.txt");
+		}
 		
 	}
 	
@@ -211,14 +221,14 @@ public class eReaderGUIView extends Application{
 
 		// Events for buttons
 
-		this.homeButton    .setOnAction(e-> {  menuStart();
+		this.homeButton    .setOnAction(e-> {  controller.closeBook();menuStart();
 		
 				
 		
 		});
 							
-		this.backButton    .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});  
-		this.forwardButton .setOnAction(e-> { setText(this.fontType, this.fontSize, true);});
+		this.backButton    .setOnAction(e-> { controller.previousPage();setText(this.fontType, this.fontSize, true);});  
+		this.forwardButton .setOnAction(e-> { controller.nextPage();setText(this.fontType, this.fontSize, true);});
 		
 		// Events for font style. Sets each fontstyle to a particular type.
 		this.fontOne   .setOnAction(e-> { setText(DEFAULT_FONT, this.fontSize, false);});
@@ -428,12 +438,7 @@ public class eReaderGUIView extends Application{
 		this.fontType = newFont;
 		this.fontSize = newSize;
 		
-		if(isNewPage) {
-			 page = controller.nextPage();     // Set new page if fwd/back button called this method
-		}else {
-			 page = controller.getCurrPage(); // Otherwise get the current page
-		}
-	
+		page = controller.getCurrPage(); // Otherwise get the current page	
 		text.setFont(Font.font (this.fontType, this.fontSize));   
 		text.setText(page);
 		vbox.getChildren().add(text);

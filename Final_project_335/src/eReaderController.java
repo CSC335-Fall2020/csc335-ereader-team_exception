@@ -21,38 +21,10 @@ public class eReaderController {
 	private TreeMap<String, eReaderModel> bookList;
 	private String currBook;
 	
-	/**
-	 * 
-	 * @param model
-	 */
+
 	public eReaderController(){
 		initialDeserialize();
 		
-	}
-	public static void main(String[] args) {
-		eReaderController test = new eReaderController();
-		System.out.println(test.bookList);
-		//test.addBook("War of the Worlds", "books/warOfTheWorlds.txt");
-		test.openBook("War of the Worlds");
-		System.out.println(test.pageNumber());
-		System.out.println(test.nextPage());
-		System.out.println(test.pageNumber());
-		System.out.println(test.nextPage());
-		System.out.println(test.pageNumber());
-		test.closeBook();
-		test.openBook("Alice In Wonderland");
-		System.out.println(test.pageNumber());
-		System.out.println(test.nextPage());
-		System.out.println(test.pageNumber());
-		System.out.println(test.nextPage());
-		System.out.println(test.pageNumber());
-		test.closeBook();
-		test.openBook("Alice In Wonderland");
-		System.out.println(test.pageNumber());
-		System.out.println(test.nextPage());
-		System.out.println(test.pageNumber());
-		test.closeBook();
-		test.initialSerialize();
 	}
 
 	
@@ -60,6 +32,7 @@ public class eReaderController {
 		model = new eReaderModel(bookTitle, filename);
 		bookList.put(bookTitle, model);
 		this.serialize(bookTitle);
+		initialSerialize();
 	}
 	
 	public void openBook(String name) {
@@ -78,16 +51,10 @@ public class eReaderController {
 	}
 	
 	/**
-	 * when the stage first launches, serialize each book
+	 * When a book is added to the book list serialize the book list
 	 * 
 	 */
 	public void initialSerialize() {
-		Set<String> unsorted = bookList.keySet();
-		List<String> sorted = new ArrayList<String>();
-		for(String s : unsorted) {
-			sorted.add(s);
-		}
-		Collections.sort(sorted);
 		try {
 			FileOutputStream fileOut = new FileOutputStream("Booklist.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -152,7 +119,7 @@ public class eReaderController {
 	}
 	
 	/**
-	 * when they open, deserialize
+	 * when they open a book, deserialize that book
 	 */
 	public eReaderModel deserialize(String title) {
 		try {
@@ -217,6 +184,7 @@ public class eReaderController {
 		if(page == null) {
 			return("End of Book");
 		}
+		serialize(currBook);
 		return page;
 	}
 	
@@ -229,6 +197,7 @@ public class eReaderController {
 		if(page == null) {
 			return(model.getCurrPage());
 		}
+		serialize(currBook);
 		return page;
 	}
 	
@@ -255,16 +224,7 @@ public class eReaderController {
 	public List<String> getBook() {
 		return this.model.getPages(30, 80);
 	}	
-	
-	/**
-	 * Purpose: Gets the file names for a particular file path.
-	 * It will store them in an ArrayList.
-	 * 
-	 * @return list that contains the file names for a particular directory.
-	 */
-	public List<String> getFilePath(String fileName) {
-		return this.model.getFileNames(fileName);
-	}
+
 	/*
 	 * 
 	 */
