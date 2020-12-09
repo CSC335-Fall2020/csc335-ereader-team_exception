@@ -29,8 +29,9 @@ public class eReaderModel implements Serializable {
 	private double progress;
 
 	/**
-	 *  Will add number of lines per page and characters per line to constructor.
-	 * @param filename
+	 *  creates the model of each book with a title and a file address
+	 * @param filename is the file address for the text file of the book
+	 * @param bookName is the title for this book
 	 */
 	public eReaderModel(String bookName, String filename) {
 		currentPage = 0;
@@ -73,16 +74,6 @@ public class eReaderModel implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Purpose: Returns the string that represents the book
-	 * to the controller. 
-	 * 
-	 * @return string that represents the book. 
-	 */
-	public String getBook() {
-		return book;
 	}
 	
 	/**
@@ -134,15 +125,7 @@ public class eReaderModel implements Serializable {
 		retval.add(currLine);
 		return retval;
 	}
-	
-	/**
-	 * Purpose: Accessor that returns the book. 
-	 * @return
-	 */
-	public String getText() {
-		return this.book;
-	}
-	
+
 
 	/**
 	 * Purpose: Gets the current page of the book.
@@ -158,20 +141,7 @@ public class eReaderModel implements Serializable {
 		return pages.get(currentPage);
 	}
 	
-	/**
-	 * Purpose: Starts book from first page.
-	 * 
-	 * @return The first page of the book
-	 */
-	public String startBook() {
-		if(pages == null || pages.size()==0) {
-			System.out.println("no book content");
-			return null;
-		}
-		currentPage = 0;
-		return pages.get(currentPage);
-	}
-	
+
 	/**
 	 * Purpose: Gets the next page of the book. 
 	 * 
@@ -232,35 +202,46 @@ public class eReaderModel implements Serializable {
 	 * @return index of string if found, -1 if not found. 
 	 */
 	public int search(String input) {
-		if(searchBook == null || !searchCurrent.equals(input)) {
-			searchNumber = 0;
-			searchBook = book;
-		}
-		
-		searchCurrent = input;
-		for (int i = 0; i < searchBook.length(); i++) {
-			     if (i < searchBook.length() - input.length()) {
-			         if (searchBook.indexOf(input, i) >= 0) {
-			             i = searchBook.indexOf(input, i);
-			          //   If the position of the last word of return is found, 
-			             searchBook = searchBook.substring(i + input.length());
-			             searchNumber += i;
-			         
-			             if(searchNumber == 0) {//winston change
-			            	 searchNumber += i;
-			             } else {//winston change
+		if(pages.isEmpty()) {
+			return -1;
+		}else {
+
+			if(searchBook == null || !searchCurrent.equals(input)) {
+				searchNumber = 0;
+				searchBook = book;
+			}
+			
+			searchCurrent = input;
+			for (int i = 0; i < searchBook.length(); i++) {
+				     if (i < searchBook.length() - input.length()) {
+				         if (searchBook.indexOf(input, i) >= 0) {
+				             i = searchBook.indexOf(input, i);
+				          //   If the position of the last word of return is found, 
+				             searchBook = searchBook.substring(i + input.length());
 				             searchNumber += i;
-				             searchNumber += input.length();
-			             }
-			         //If the position of the last word of return is found, 
-			         //the position of the first word is searchNumber-input.length();
-			             return searchNumber;
-			         }
-			     }
-			 }
-		searchBook = book.substring(0);
-		searchNumber = 0;
-		return -1;
+				         
+				             if(searchNumber == 0) {//winston change
+				            	 searchNumber += i;
+				             } else {//winston change
+					             searchNumber += i;
+					             searchNumber += input.length();
+					             int g = 0;
+					             while(searchNumber > 0) {
+					            	 if (searchNumber > pages.get(g).length()) {
+					            		 searchNumber -=  pages.get(g).length();
+					            		 g++;
+					            	 }else {
+					            		 return g;
+					            	 }
+					             }
+				             }
+				         }
+				     }
+				 }
+			searchBook = book.substring(0);
+			searchNumber = 0;
+			return -1;
+		}
 	}
 
 	/**
