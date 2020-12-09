@@ -22,7 +22,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -343,13 +342,7 @@ public class eReaderGUIView extends Application{
 					break;
 				}
 				String str = bookNames.get(count);
-				//int picIndex = getBookImageIndex(bookImages, str.substring(0, str.indexOf(".")));
-				
-				//if(picIndex != -1) {
-					//input = new FileInputStream("book_images/"+ bookImages.get(picIndex));
-				//}else {
-					input = new FileInputStream("default_book_image/cover.png");
-				//}
+				input = new FileInputStream("default_book_image/cover.png");
 				
 				ImageView imageView   = new ImageView(new Image(input, 110, 150, false, false));
 			       
