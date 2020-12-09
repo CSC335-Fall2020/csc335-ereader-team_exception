@@ -179,14 +179,6 @@ public class eReaderController {
 	/**
 	 * Purpose: Adds a bookmark to the model of the book.
 	 */
-//	public void addBookmark() {
-//		model.addBookmark();
-//	}
-	
-//	public void removeBookmark() {
-//		model.removeBookmark();
-//	}
-	
 	public void removeBookmark() {
 		model.removeBookmark();
 	}
