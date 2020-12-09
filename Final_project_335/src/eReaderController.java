@@ -1,4 +1,5 @@
 import java.util.TreeMap;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,7 +21,7 @@ import java.util.Set;
  */
 public class eReaderController {
 	private eReaderModel model;
-	private List<String> bookList;
+	private TreeMap<String, eReaderModel> bookList;
 	private String currBook;
 
 	/**
@@ -41,13 +42,13 @@ public class eReaderController {
 	 */
 	public void addBook(String bookTitle, String filename) {
 		model = new eReaderModel(bookTitle, filename);
-		bookList.add(bookTitle);
+		bookList.put(bookTitle, model);
 		this.serialize(bookTitle);
 		initialSerialize();
 	}
 	
 	public void openBook(String name) {
-		if(bookList.contains(name)) {
+		if(bookList.containsKey(name)) {
 			this.model = this.deserialize(name);
 			System.out.println(model.getName());
 			currBook = model.getName();
@@ -83,13 +84,14 @@ public class eReaderController {
 	public void initialDeserialize() {
 		try {
 			FileInputStream fileIn = new FileInputStream("Booklist.ser");
+			
 			ObjectInputStream in = new ObjectInputStream(fileIn);
-			this.bookList = (List<String>) in.readObject();
+			this.bookList = (TreeMap<String, eReaderModel>) in.readObject();
 			in.close();
 			fileIn.close();
 		} catch (FileNotFoundException f) {
 			try {
-				this.bookList = new ArrayList<String>();
+				this.bookList = new TreeMap<String, eReaderModel>();
 				File bookListFile = new File("Booklist.ser");
 				bookListFile.createNewFile();
 				try {
@@ -177,9 +179,13 @@ public class eReaderController {
 	/**
 	 * Purpose: Adds a bookmark to the model of the book.
 	 */
-	public void addBookmark() {
-		model.addBookmark();
-	}
+//	public void addBookmark() {
+//		model.addBookmark();
+//	}
+	
+//	public void removeBookmark() {
+//		model.removeBookmark();
+//	}
 	
 	/**
 	 * Purpose: returns the next page of the current book
@@ -221,8 +227,13 @@ public class eReaderController {
 	 * @return a list of strings
 	 */
 	public List<String> getBookList(){
-		Collections.sort(bookList);
-		return bookList;
+		Set<String> bookSet = bookList.keySet();
+		List<String> bookListSorted = new ArrayList<String>();
+		for(String x: bookSet) {
+			bookListSorted.add(x);
+		}
+		Collections.sort(bookListSorted);
+		return bookListSorted;
 	}
 	
 	
@@ -236,6 +247,26 @@ public class eReaderController {
 	 */
 	public int search(String str) {
 		return this.model.search(str);
+	}
+	
+	
+	/**
+	 * Purpose: 
+	 * @return
+	 */
+	public double getProgress() {
+		return this.model.getProgress();
+	}
+	
+	/**
+	 * Purpose: Calls Model to flip to the next instance of the page
+	 * found by the search function. 
+	 * 
+	 * @param pageNumber page number determined to have the next
+	 * text searched for by user. 
+	 */
+	public void flipToPage(int pageNumber) {
+		this.model.setPage(pageNumber);
 	}
 	
 }//End class

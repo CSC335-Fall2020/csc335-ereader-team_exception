@@ -253,10 +253,23 @@ public class eReaderModel implements Serializable {
 	}
 
 
-
+	/**
+	 * Purpose: 
+	 * @return
+	 */
 	public double getProgress() {
 		return progress;
 	}
 	
+	/**
+	 * Purpose: 
+	 */
+	public void setPage(int pageNumber) {
+		
+		if(pageNumber < pages.size()) {
+			System.out.println("In the model");
+			this.currentPage = pageNumber;
+		}
+	}
 
 } // End class
