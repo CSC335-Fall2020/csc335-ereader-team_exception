@@ -221,19 +221,6 @@ public class eReaderController {
 	}
 	
 
-	/**
-	 * Purpose: Returns a sorted string list 
-	 * @return a list of strings
-	 */
-	public List<String> getBookList(){
-		Set<String> bookSet = bookList.keySet();
-		List<String> bookListSorted = new ArrayList<String>();
-		for(String x: bookSet) {
-			bookListSorted.add(x);
-		}
-		Collections.sort(bookListSorted);
-		return bookListSorted;
-	}
 	
 	
 	/**
