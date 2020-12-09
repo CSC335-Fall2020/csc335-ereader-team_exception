@@ -124,6 +124,8 @@ public class eReaderGUIView extends Application{
 		this.progressBar    = new ProgressBar(0          );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
+		System.out.println(fontSize);
+		System.out.println(fontType);
 		initialDeserialize();
 		// load basic books into eReader
 		controller = new eReaderController();
@@ -177,6 +179,8 @@ public class eReaderGUIView extends Application{
 	 */
 	@Override
 	public void start(Stage stage)  throws Exception {
+		System.out.println(fontSize);
+		System.out.println(fontType);
 		reader = new Stage();
 		reader.setTitle("E-Mongoose");
 		this.gridPane = new GridPane();
@@ -316,6 +320,8 @@ public class eReaderGUIView extends Application{
 													initialSerialize();
 		});
 	
+		System.out.println(fontSize);
+		System.out.println(fontType);
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
 		
@@ -404,6 +410,8 @@ public class eReaderGUIView extends Application{
 	 */
 	public void menuStart() throws FileNotFoundException {
 		this.mainMenuBorder.setCenter(addGridPane(mainMenu));
+		System.out.println(fontSize);
+		System.out.println(fontType);
 		mainMenu.show();
 	}
 	
@@ -617,7 +625,7 @@ public class eReaderGUIView extends Application{
 	 */
 	private void getBook(String bookChoice) {
 		this.controller.openBook(bookChoice      ); 
-		setText(DEFAULT_FONT, DEFAULT_SIZE);
+		setText(fontType, fontSize);
 	}
 
 	/**
