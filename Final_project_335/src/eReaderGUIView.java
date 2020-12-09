@@ -382,17 +382,32 @@ public class eReaderGUIView extends Application{
 		return grid;
 	}
 	
+	/**
+	 * Creates a drop down bar to be added to the top of the menu.
+	 * <p>
+	 * Adds an input option to a combobox (drop down menu). 
+	 * Opens the input window and closes the menu upon clicking on the option.
+	 * 
+	 * @param menuStage the menu stage; gives the ability to close it when the input window opens
+	 * @return a ComboBox; to be added to the menu
+	 */
 	private ComboBox addComboBox(Stage menuStage) {
 		final ComboBox<String> combo = new ComboBox();
 		
 		combo.getItems().add("Input");
 		combo.setOnAction((e) -> {
-            inputBookWindow();
-            menuStage.close();
+            inputBookWindow(); // open input window
+            menuStage.close(); // close menu
 		});
 		return combo;
 	}
 	
+	/**
+	 * Creates the input window.
+	 * <p>
+	 * Creates a new stage, with two text fields that allow the user to input the
+	 * title of the book they want to add, as well as the books path.
+	 */
 	private void inputBookWindow() {
 		
 		Stage stage = new Stage();
@@ -404,13 +419,13 @@ public class eReaderGUIView extends Application{
 		
 		Label title = new Label("Book title:");
 		TextField strTitle = new TextField ();
-		HBox getTitle = new HBox();
+		HBox getTitle = new HBox(); // contains the text field and label
 		getTitle.getChildren().addAll(title, strTitle);
 		getTitle.setSpacing(10);
 		
 		Label path = new Label("File path:");
-		TextField strPath = new TextField ();
-		HBox getPath = new HBox();
+		TextField strPath = new TextField (); // MUST type exact path
+		HBox getPath = new HBox(); // contains the text field and label
 		getPath.getChildren().addAll(path, strPath);
 		getPath.setSpacing(15);
 		
@@ -418,41 +433,42 @@ public class eReaderGUIView extends Application{
 		grid.setVgap(30);
 		grid.setPadding(new Insets(20, 10, 20, 10));
 		
+		// add HBox's to grid
 		grid.add(getTitle, 0, 0);
 		grid.add(getPath, 0, 1);
 		
 		Button submit = new Button("Submit");
 		submit.setOnAction(e-> { 
 			if (strTitle.getText() != null && strPath.getText() != null) {
+				
+				// add book to controller
 				controller.addBook(strTitle.getText(), strPath.getText());
-				stage.close();
-				menuStart();
+				
+				stage.close(); //close current stage
+				menuStart(); // reopen menu
 			}
 			
 			;});
 		
 		Button cancel = new Button("Cancel");
 		cancel.setOnAction(e-> { 
-			stage.close();
-			menuStart();
-			;});
+			stage.close(); // close current stage
+			menuStart(); // reopen menu
+			;}); 
 		
-		HBox buttons = new HBox();
+		HBox buttons = new HBox(); // Add buttons to HBox
 		buttons.getChildren().addAll(submit, cancel);
 		buttons.setSpacing(20);
 		buttons.setPadding(new Insets(20, 10, 20, 10));
 		
-		
-		
 		border.setCenter(grid);
-		border.setBottom(buttons);
+		border.setBottom(buttons); // add buttons to grid
 		border.setAlignment(buttons, Pos.CENTER);
 		
 		root.getChildren().addAll(border);
 		
 		
 		stage.show();
-		
 	}
 	
 	/**
