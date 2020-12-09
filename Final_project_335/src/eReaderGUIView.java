@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +69,6 @@ public class eReaderGUIView extends Application{
 	private eReaderController controller;
 	private GridPane          gridPane  ;
 	private BorderPane        window    ;
-	private List<String>      book      ;
 	
 	// BUTTONS AND TOOLBAR
 	private VBox     toolbarVbox   ;
@@ -99,14 +99,12 @@ public class eReaderGUIView extends Application{
 	// PROGRESS BAR
 	GridPane    progressPane;
 	ProgressBar progressBar;
-	private int pageNumber;
 	
 	/**
 	 * Purpose: Constructor that instanstiates objects. These can be created
 	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
-		this.book           = new ArrayList<String>(     );
 		this.buttonList     = new ArrayList<Button>(     );
 		this.window         = new BorderPane(            ); 
 		this.gridPane       = new GridPane  (            );
@@ -126,8 +124,7 @@ public class eReaderGUIView extends Application{
 		this.progressBar    = new ProgressBar(0          );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
-		this.pageNumber     = 0;
-		
+		initialDeserialize();
 		// load basic books into eReader
 		controller = new eReaderController();
 		if(controller.getBookList().size() == 0) {
@@ -137,9 +134,44 @@ public class eReaderGUIView extends Application{
 			controller.addBook("Roswell Report", "books/roswellReport.txt");
 			controller.addBook("Wizard of Oz", "books/wizardOfOz.txt");  
 		}
-		
+		System.out.println(fontSize);
+		System.out.println(fontType);
 	}
-	
+	@SuppressWarnings("unchecked")
+	public void initialDeserialize() {
+		try {
+			FileInputStream fileIn = new FileInputStream("Settings.ser");
+			
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			this.fontSize = (int) in.readObject();
+			System.out.println(fontSize);
+			this.fontType =  (String) in.readObject();	
+			System.out.println(fontType);
+			in.close();
+			fileIn.close();
+		} catch (FileNotFoundException f) {
+			try {
+				File settings = new File("Settings.ser");
+				settings.createNewFile();
+				try {
+					FileOutputStream fileOut = new FileOutputStream("Settings.ser");
+					ObjectOutputStream out = new ObjectOutputStream(fileOut);
+					out.writeObject(this.fontSize);
+					out.writeObject(this.fontType);
+					out.close();
+					fileOut.close();
+				} catch (IOException i) {
+					i.printStackTrace();
+				}
+			}catch(IOException g) {
+				g.printStackTrace();
+			}
+		} catch (IOException i) {
+			i.printStackTrace();
+		} catch (ClassNotFoundException c) {
+			c.printStackTrace();
+		}
+	}
 	/**
 	 * Purpose: 
 	 */
@@ -233,6 +265,7 @@ public class eReaderGUIView extends Application{
 		});
 				
 		this.backButton    .setOnAction(e-> { controller.previousPage();
+		System.out.println(this.fontType + this.fontSize);
 		                                      setText(this.fontType, this.fontSize);
 			                                  updatePageNum(); // Update page number and progress bar
 		});  
@@ -333,7 +366,7 @@ public class eReaderGUIView extends Application{
 			FileOutputStream fileOut = new FileOutputStream("Settings.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(this.fontSize);	
-			out.writeObject(this.fontStyle);	
+			out.writeObject(this.fontType);	
 			out.close();
 			fileOut.close();
 		} catch (IOException i) {
@@ -570,7 +603,6 @@ public class eReaderGUIView extends Application{
 					// Update page number and progress bar
 					updatePageNum();
 					
-					this.pageNumber = this.controller.pageNumber();
 					stage.close(); // Close the book menu after user makes choice
 					this.reader.show();
 				}); // End lambda event
