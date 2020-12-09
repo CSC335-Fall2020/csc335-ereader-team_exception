@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
@@ -253,6 +254,7 @@ public class eReaderGUIView extends Application{
 	    
 	    // Set font to white to simulate night mode.
 	    // Figure out what settings the images need and menu items
+	    
 	    
 		 // Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
