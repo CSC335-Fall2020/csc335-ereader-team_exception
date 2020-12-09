@@ -26,7 +26,8 @@ public class eReaderController {
 
 	/**
 	 * Purpose: Controller that instantiates the controller for the e-reader.
-	 * 
+	 *  creates the controller by checking for a save state file, if the file 
+	 *  exists recreates the state of the controllers booklist
 	 * 
 	 * 
 	 */
@@ -57,7 +58,6 @@ public class eReaderController {
 	}
 	
 	public void closeBook() {
-		System.out.println("closes book");
 		this.serialize(currBook);
 	}
 	
@@ -131,7 +131,9 @@ public class eReaderController {
 	}
 	
 	/**
-	 * when they open a book, deserialize that book
+	 * Purpose: checks for a serialized file for the specific book title.
+	 * if it exists return the eReaderModel otherwise return null.
+	 * @return the deserialized eReaderModel if it exists
 	 */
 	public eReaderModel deserialize(String title) {
 		try {
@@ -150,23 +152,14 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose:
-	 * @return
+	 * Purpose: returns the title of the current book
+	 * @return returns a string for the title of the book
 	 */
 	public String currBook() {
 		return this.currBook;
 	}
 
-	/**
-	 * 
-	 * @param pageLength
-	 * @param lineLength
-	 * @return
-	**/
-	public List<String> getPages(int pageLength, int lineLength) {
-		return model.getPages(pageLength, lineLength);
-	}
-	
+
 	/**
 	 * Purpose: returns current page number
 	 * @return an int of the models current page number
@@ -176,15 +169,15 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose:
-	 * @return
+	 * Purpose: return the int value for the number of pages in this model of the book
+	 * @return returns an int for the number of pages in the book
 	 */
 	public int bookSize() {
 		return model.getBookSize();
 	}
 	
 	/**
-	 * Purpose:
+	 * Purpose: Adds a bookmark to the model of the book.
 	 */
 //	public void addBookmark() {
 //		model.addBookmark();
@@ -194,6 +187,13 @@ public class eReaderController {
 //		model.removeBookmark();
 //	}
 	
+	public void removeBookmark() {
+		model.removeBookmark();
+	}
+	
+	public void getBookmarks() {
+		model.getBookmarks();
+	}
 	/**
 	 * Purpose: returns the next page of the current book
 	 * @return a string representing the page
@@ -222,41 +222,14 @@ public class eReaderController {
 	
 	/**
 	 * Purpose: returns the page that the model is currently on
-	 * @return
+	 * @return the string of the current page
 	 */
 	public String getCurrPage() {
 		return model.getCurrPage();
 	}
 	
-	/**
-	 * Purpose: returns the first page of the current book
-	 * @return a string representing the page
-	 */
-	public String startBook() {
-		return model.startBook();
-	}
-	
-	/**
-	 * Purpose: tester
-	 * @return
-	 */
-	public List<String> getBook() {
-		return this.model.getPages(30, 80);
-	}	
 
-	/**
-	 * Purpose:
-	 * 
-	 */
-	public List<String> getBookList(){
-		Set<String> bookSet = bookList.keySet();
-		List<String> bookListSorted = new ArrayList<String>();
-		for(String x: bookSet) {
-			bookListSorted.add(x);
-		}
-		Collections.sort(bookListSorted);
-		return bookListSorted;
-	}
+	
 	
 	/**
 	 * Purpose: Calls the search function to get the page number for the
