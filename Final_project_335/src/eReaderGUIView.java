@@ -23,7 +23,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -353,8 +352,7 @@ public class eReaderGUIView extends Application{
 				if (count == numBooks) { // stop if count is equal to the amount of books we have
 					break;
 				}
-				
-				
+			
 				String str = bookNames.get(count);
 				
 				VBox vbox = new VBox(); // to contain the cover and the title
@@ -366,6 +364,7 @@ public class eReaderGUIView extends Application{
 		        title.setMaxWidth(100);
 		        title.setMaxHeight(50);
 				
+
 				input = new FileInputStream("default_book_image/cover.png");
 				
 				ImageView imageView   = new ImageView(new Image(input, 110, 150, false, false));

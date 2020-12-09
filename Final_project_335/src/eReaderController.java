@@ -30,7 +30,6 @@ public class eReaderController {
 	 * 
 	 */
 
-
 	public eReaderController(){
 		initialDeserialize();
 	}
