@@ -1,4 +1,5 @@
 import java.util.TreeMap;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,37 +20,61 @@ public class eReaderController {
 	private eReaderModel model;
 	private TreeMap<String, eReaderModel> bookList;
 	private String currBook;
-	private String title;
 	
 	/**
 	 * 
 	 * @param model
 	 */
-	public eReaderController(eReaderModel model){
-		currBook = model.getName();
-		this.model = model;
-		bookList = new TreeMap<String,eReaderModel>();
-		bookList.put(currBook, model);
+	public eReaderController(){
+		initialDeserialize();
+		
 	}
-	
-
-
-	public void setTitle(String title) {
-		this.title = title;
+	public static void main(String[] args) {
+		eReaderController test = new eReaderController();
+		System.out.println(test.bookList);
+		//test.addBook("War of the Worlds", "books/warOfTheWorlds.txt");
+		test.openBook("War of the Worlds");
+		System.out.println(test.pageNumber());
+		System.out.println(test.nextPage());
+		System.out.println(test.pageNumber());
+		System.out.println(test.nextPage());
+		System.out.println(test.pageNumber());
+		test.closeBook();
+		test.openBook("Alice In Wonderland");
+		System.out.println(test.pageNumber());
+		System.out.println(test.nextPage());
+		System.out.println(test.pageNumber());
+		System.out.println(test.nextPage());
+		System.out.println(test.pageNumber());
+		test.closeBook();
+		test.openBook("Alice In Wonderland");
+		System.out.println(test.pageNumber());
+		System.out.println(test.nextPage());
+		System.out.println(test.pageNumber());
+		test.closeBook();
+		test.initialSerialize();
 	}
+
 	
-	public void addBook(String filename) {
-		eReaderModel newBook = new eReaderModel(filename);
-		bookList.put(title,newBook);
+	public void addBook(String bookTitle, String filename) {
+		model = new eReaderModel(bookTitle, filename);
+		bookList.put(bookTitle, model);
+		this.serialize(bookTitle);
 	}
 	
 	public void openBook(String name) {
 		if(bookList.containsKey(name)) {
-			this.model = bookList.get(name);
+			this.model = this.deserialize(name);
+			System.out.println(model.getName());
 			currBook = model.getName();
 		} else {
 			System.out.println("This book is not in the list.");
 		}
+	}
+	
+	public void closeBook() {
+		System.out.println("closes book");
+		this.serialize(currBook);
 	}
 	
 	/**
@@ -64,16 +89,9 @@ public class eReaderController {
 		}
 		Collections.sort(sorted);
 		try {
-			FileOutputStream fileOut = new FileOutputStream("/tmp/Booklist.ser");
+			FileOutputStream fileOut = new FileOutputStream("Booklist.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(this.bookList);
-			
-			for(String title : sorted) {
-				fileOut = new FileOutputStream("/tmp/" + title + ".ser");
-				out = new ObjectOutputStream(fileOut);
-				out.writeObject(bookList.get(title));
-			}
-			
+			out.writeObject(this.bookList);			
 			out.close();
 			fileOut.close();
 		} catch (IOException i) {
@@ -87,13 +105,28 @@ public class eReaderController {
 	@SuppressWarnings("unchecked")
 	public void initialDeserialize() {
 		try {
-			FileInputStream fileIn = new FileInputStream("/tmp/Booklist.ser");
+			FileInputStream fileIn = new FileInputStream("Booklist.ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			this.bookList = (TreeMap<String, eReaderModel>) in.readObject();
 			in.close();
 			fileIn.close();
 		} catch (FileNotFoundException f) {
-			initialSerialize();
+			try {
+				this.bookList = new TreeMap<String, eReaderModel>();
+				File bookListFile = new File("Booklist.ser");
+				bookListFile.createNewFile();
+				try {
+					FileOutputStream fileOut = new FileOutputStream("Booklist.ser");
+					ObjectOutputStream out = new ObjectOutputStream(fileOut);
+					out.writeObject(this.bookList);
+					out.close();
+					fileOut.close();
+				} catch (IOException i) {
+					i.printStackTrace();
+				}
+			}catch(IOException g) {
+				g.printStackTrace();
+			}
 		} catch (IOException i) {
 			i.printStackTrace();
 		} catch (ClassNotFoundException c) {
@@ -106,10 +139,11 @@ public class eReaderController {
 	 * BE SURE TO RUN THIS AFTER THE BOOK AND TITLE ARE ADDED TO BOOKLIST
 	 */
 	public void serialize(String title) {
+		
 		try {
-			FileOutputStream fileOut = new FileOutputStream("/tmp/" + title + ".ser");
+			FileOutputStream fileOut = new FileOutputStream(title + ".ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(bookList.get(title));
+			out.writeObject(model);
 			out.close();
 			fileOut.close();
 		} catch(IOException i) {
@@ -120,19 +154,20 @@ public class eReaderController {
 	/**
 	 * when they open, deserialize
 	 */
-	public void deserialize(String title) {
+	public eReaderModel deserialize(String title) {
 		try {
-			FileInputStream fileIn = new FileInputStream("/tmp/" + title + ".ser");
+			FileInputStream fileIn = new FileInputStream(title + ".ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			eReaderModel e = (eReaderModel) in.readObject();
-			// have to do something with e
 			in.close();
 			fileIn.close();
+			return e;
 		} catch(IOException i) {
 			i.printStackTrace();
 		} catch (ClassNotFoundException c) {
 			c.printStackTrace();
 		}
+		return null;
 	}
 	
 	public String currBook() {
@@ -230,6 +265,16 @@ public class eReaderController {
 	public List<String> getFilePath(String fileName) {
 		return this.model.getFileNames(fileName);
 	}
-	
-	
+	/*
+	 * 
+	 */
+	public List<String> getBookList(){
+		Set<String> bookSet = bookList.keySet();
+		List<String> bookListSorted = new ArrayList<String>();
+		for(String x: bookSet) {
+			bookListSorted.add(x);
+		}
+		Collections.sort(bookListSorted);
+		return bookListSorted;
+	}
 }//End class

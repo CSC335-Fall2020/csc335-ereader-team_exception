@@ -75,7 +75,6 @@ public class eReaderGUIView extends Application{
 	private eReaderController controller;
 	private GridPane          gridPane  ;
 	private BorderPane        window    ;
-	private eReaderModel      model     ;
 	private List<String>      book      ;
 	
 	// Buttons and Toolbar
@@ -126,6 +125,7 @@ public class eReaderGUIView extends Application{
 		this.newPage        = new GridPane  (            );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
+		controller = new eReaderController();
 		
 		
 	}
@@ -204,44 +204,12 @@ public class eReaderGUIView extends Application{
 		this.gridPane.add(toolbarVbox, 0, 0);           // Add Vbox to gridpane
 		this.gridPane.setAlignment(Pos.TOP_CENTER);    // Center gridpane
 		this.window.setCenter(this.gridPane);         // Set gridpane to top
-		
+		//this.window.setBottom();
 		////////////////////////////////////////////////////////////////////////////////
 		// EVENTS																	  //
 		////////////////////////////////////////////////////////////////////////////////
 
 		// Events for buttons
-		this.homeButton    .setOnAction(e-> { System.out.println("Home Button");});
-		this.backButton    .setOnAction(e-> { 
-			//resets gridpane with previous page as text
-			String page = controller.previousPage();
-			Text text = new Text();
-			VBox vbox = new VBox();
-			text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
-			text.setText(page);
-			vbox.getChildren().add(text);
-			GridPane newPage = new GridPane();
-			newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
-			newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
-			newPage.add(vbox, 0, 1);
-			this.gridPane = newPage;
-			this.window.setCenter(this.gridPane);      // Set gridpane to top
-			
-		});
-		this.forwardButton .setOnAction(e-> {
-			//resets gridpane with next page as text
-			String page = controller.nextPage();
-			Text text = new Text();
-			VBox vbox = new VBox();
-			text.setFont(Font.font (DEFAULT_FONT, DEFAULT_SIZE));
-			text.setText(page);
-			vbox.getChildren().add(text);
-			GridPane newPage = new GridPane();
-			newPage.add(toolbarVbox, 0, 0);        // Add Vbox to gridpane
-			newPage.setAlignment(Pos.TOP_CENTER); // Center gridpane
-			newPage.add(vbox, 0, 1);
-			this.gridPane = newPage;
-			this.window.setCenter(this.gridPane);      // Set gridpane to top
-		});
 
 		this.homeButton    .setOnAction(e-> {  menuStart();
 		
@@ -333,8 +301,8 @@ public class eReaderGUIView extends Application{
 		int numRows = 0;
 		
 		// Get file names. 
-		List<String> bookNames  = getFileNames("books");
-		List<String> bookImages = getFileNames("book_images");
+		List<String> bookNames  = controller.getBookList();
+		//List<String> bookImages = getFileNames("book_images");
 		System.out.println(bookNames);
 		// Calculate number of rows for the grid.
 		if(bookNames.size() % NUM_COLS == 0) {
@@ -361,13 +329,13 @@ public class eReaderGUIView extends Application{
 					break;
 				}
 				String str = bookNames.get(count);
-				int picIndex = getBookImageIndex(bookImages, str.substring(0, str.indexOf(".")));
+				//int picIndex = getBookImageIndex(bookImages, str.substring(0, str.indexOf(".")));
 				
-				if(picIndex != -1) {
-					input = new FileInputStream("book_images/"+ bookImages.get(picIndex));
-				}else {
+				//if(picIndex != -1) {
+					//input = new FileInputStream("book_images/"+ bookImages.get(picIndex));
+				//}else {
 					input = new FileInputStream("default_book_image/cover.png");
-				}
+				//}
 				
 				ImageView imageView   = new ImageView(new Image(input, 110, 150, false, false));
 			       
@@ -432,21 +400,18 @@ public class eReaderGUIView extends Application{
 	 * @param bookChoice string representing the user's choice of a book to read. 
 	 */
 	private void getBook(String bookChoice) {
-		// Create an instance of the model and controller
-		System.out.println(bookChoice);
-		this.model      = new eReaderModel("books/"+ bookChoice); 
-		this.controller = new eReaderController(this.model     ); 
-		this.book       = this.controller.getBook(             );
+
+		controller.openBook(bookChoice); 
 		setText(DEFAULT_FONT, DEFAULT_SIZE, false              );
 	}
 
-	/**
+	/*
 	 * Purpose: Sets the text field to the new desired text type. The parameter
 	 * newFont will be the new text type. It will then display the page of text
 	 * on the GUI. If a change is made to the same page (i.e. font style or size
 	 * is modified while viewing a page) then only that value that needs to be changed
 	 * will change. Otherwise, a new page will be retreived from the controller and
-	 * the page will be udpated. 
+	 * the page will be updated. 
 	 * 
 	 * @param newFont new font style to be applied (if applicable).
 	 * 
