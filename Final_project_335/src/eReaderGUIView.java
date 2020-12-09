@@ -1,6 +1,9 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -241,15 +244,44 @@ public class eReaderGUIView extends Application{
 
 		this.searchButton  .setOnAction(e-> { searchMenu();});
 		
-		// Events for font style. Sets each fontstyle to a particular type.
-		this.fontOne   .setOnAction(e-> { setText(DEFAULT_FONT, this.fontSize);});
-		this.fontTwo   .setOnAction(e-> { setText(FONT_ONE    , this.fontSize);});
-		this.fontThree .setOnAction(e-> { setText(FONT_TWO    , this.fontSize);});
+		// Courier new font style setting
+		this.fontOne   .setOnAction(e-> { setText(DEFAULT_FONT, this.fontSize);
+											      // Save state for font styles
+		                                          initialSerialize();
 		
-		// Events for font size
-		this.sizeTen    .setOnAction(e-> { setText(this.fontType, SIZE_ONE    );});
-		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    );});
-		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE);});
+		});
+		
+		// Times new Roman new font style setting
+		this.fontTwo   .setOnAction(e-> { setText(FONT_ONE    , this.fontSize);
+										          // Save state for font styles
+		                                         initialSerialize();
+		
+		});
+		
+		// Cambria new font style setting
+		this.fontThree .setOnAction(e-> { setText(FONT_TWO    , this.fontSize);
+											// Save state for font styles
+											initialSerialize();
+		
+		});
+		
+		// Size 10 font setting
+		this.sizeTen    .setOnAction(e-> { setText(this.fontType, SIZE_ONE    );
+													// Save state for font styles
+													initialSerialize();
+		});
+		// Size 11 font setting
+		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    );
+		                                    	   // Save state for font styles
+											       initialSerialize();
+		
+		
+		});
+		// Size 12 font setting
+		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE);
+													// Save state for font styles
+													initialSerialize();
+		});
 	
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
@@ -268,7 +300,6 @@ public class eReaderGUIView extends Application{
 			e.printStackTrace();
 		} 
 		
-
 		Scene sceneMenu = new Scene(root, 485, 500);
 		stage.setScene(sceneMenu);
 
@@ -294,7 +325,28 @@ public class eReaderGUIView extends Application{
 	}
 	
 	/**
-	 * Purpose: 
+	 * Purpose: Serializes the font size/style options to allow for a save
+	 * state to be possible.
+	 */
+	public void initialSerialize() {
+		try {
+			FileOutputStream fileOut = new FileOutputStream("Settings.ser");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(this.fontSize);	
+			out.writeObject(this.fontStyle);	
+			out.close();
+			fileOut.close();
+		} catch (IOException i) {
+			i.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Purpose: Creates a progress bar and associated page number. It will then be called
+	 * whenever a page is updated to update the book progress and page number.
+	 * 
+	 * 
 	 */
 	private void updatePageNum() {
 		// Add the progress bar 
@@ -328,6 +380,7 @@ public class eReaderGUIView extends Application{
 	 * book to make a choice. That will then open the book.
 	 * 
 	 * @return returns the gridpane to menuStart();
+	 * 
 	 * @throws FileNotFoundException throws exception if the file to be
 	 * read in for the pictures or books does not exist. 
 	 */
@@ -540,7 +593,7 @@ public class eReaderGUIView extends Application{
 	 * send a search for a string. 
 	 *  
 	 */
-	private void searchMenu() {									///////////////////////////////////////////////////// Here
+	private void searchMenu() {									
 		GridPane textContainer  = new GridPane(    );
 		Stage stage             = new Stage(       );
 		TextField textField     = new TextField(   ); 
@@ -614,7 +667,6 @@ public class eReaderGUIView extends Application{
 	 * @param newFont new font style to be applied (if applicable).
 	 * 
 	 * @param newSize new font size
-	 * 
 	 */
 	private void setText(String newFont, int newSize) {
 		String page = "";

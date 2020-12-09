@@ -244,7 +244,8 @@ public class eReaderController {
 		return this.model.getPages(30, 80);
 	}	
 
-	/*
+	/**
+	 * Purpose:
 	 * 
 	 */
 	public List<String> getBookList(){
@@ -256,7 +257,6 @@ public class eReaderController {
 		Collections.sort(bookListSorted);
 		return bookListSorted;
 	}
-	
 	
 	/**
 	 * Purpose: Calls the search function to get the page number for the
