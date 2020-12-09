@@ -93,8 +93,9 @@ public class eReaderGUIView extends Application{
 	private BorderPane mainMenuBorder;
 	
 	// PROGRESS BAR
-	GridPane progressPane;
+	GridPane    progressPane;
 	ProgressBar progressBar;
+	private int pageNumber;
 	
 	/**
 	 * Purpose: Constructor that instanstiates objects. These can be created
@@ -105,7 +106,7 @@ public class eReaderGUIView extends Application{
 		this.buttonList     = new ArrayList<Button>(     );
 		this.window         = new BorderPane(            ); 
 		this.gridPane       = new GridPane  (            );
-		this.progressPane   = new GridPane    (          );
+		this.progressPane   = new GridPane  (            );
 		this.toolbarVbox    = new VBox      (            );
 		this.fontMenu       = new Menu      ("Format"    );
 		this.fontStyle      = new Menu      ("Font Style");
@@ -121,6 +122,7 @@ public class eReaderGUIView extends Application{
 		this.progressBar    = new ProgressBar(0          );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
+		this.pageNumber     = 0;
 		
 		// load basic books into eReader
 		controller = new eReaderController();
@@ -145,21 +147,21 @@ public class eReaderGUIView extends Application{
 
 
 		// Add submenu to font styles (i.e. font type)
-				this.fontStyle.getItems().add(this.fontOne  );
-				this.fontStyle.getItems().add(this.fontTwo  );
-				this.fontStyle.getItems().add(this.fontThree);
+		this.fontStyle.getItems().add(this.fontOne  );
+		this.fontStyle.getItems().add(this.fontTwo  );
+		this.fontStyle.getItems().add(this.fontThree);
 				
-				// Add submenu to font size
-				this.fontSizeMenu.getItems().add(this.sizeTen   );
-				this.fontSizeMenu.getItems().add(this.sizeEleven);
-				this.fontSizeMenu.getItems().add(this.sizeTwelve);
+		// Add submenu to font size
+		this.fontSizeMenu.getItems().add(this.sizeTen   );
+		this.fontSizeMenu.getItems().add(this.sizeEleven);
+		this.fontSizeMenu.getItems().add(this.sizeTwelve);
 				
-				// Add font style and size to the font menu
-				this.fontMenu.getItems().add(this.fontStyle   );
-				this.fontMenu.getItems().add(this.fontSizeMenu);
+		// Add font style and size to the font menu
+		this.fontMenu.getItems().add(this.fontStyle   );
+		this.fontMenu.getItems().add(this.fontSizeMenu);
 				
-				// Add font menu to the menubar
-				this.menuBar.getMenus().add(this.fontMenu);
+		// Add font menu to the menubar
+		this.menuBar.getMenus().add(this.fontMenu);
 
 
 		// Add menubar to the window
@@ -207,26 +209,28 @@ public class eReaderGUIView extends Application{
 		// Button Spacing
 		toolbarHbox.setSpacing(50);
 		
-		this.toolbarVbox.getChildren().add(toolbarHbox); // Add Hbox to Vbox
-		this.gridPane.add(toolbarVbox, 0, 0);           // Add Vbox to gridpane
-		this.gridPane.setAlignment(Pos.TOP_CENTER);    // Center gridpane
-		this.window.setCenter(this.gridPane);         // Set gridpane to top
-		//this.window.setBottom();
+		this.toolbarVbox.getChildren().add(toolbarHbox);    // Add Hbox to Vbox
+		this.gridPane.add(toolbarVbox, 0, 0           );   // Add Vbox to gridpane
+		this.gridPane.setAlignment(Pos.TOP_CENTER     );  // Center gridpane
+		this.window.setCenter(this.gridPane           ); // Set gridpane to top
+		
 		////////////////////////////////////////////////////////////////////////////////
 		// EVENTS																	  //
 		////////////////////////////////////////////////////////////////////////////////
 
-		// Events for buttons
-
-
 		this.homeButton    .setOnAction(e-> {  controller.closeBook();reader.close();menuStart();
-		
-				
 		
 		});
 				
-		this.backButton    .setOnAction(e-> { controller.previousPage();setText(this.fontType, this.fontSize, true);});  
-		this.forwardButton .setOnAction(e-> { controller.nextPage();setText(this.fontType, this.fontSize, true);});
+		this.backButton    .setOnAction(e-> { controller.previousPage();
+		                                      setText(this.fontType, this.fontSize, true);
+			                                  updatePageNum(); // Update page number and progress bar
+		});  
+		
+		this.forwardButton .setOnAction(e-> { controller.nextPage();
+		                                      setText(this.fontType, this.fontSize, true);
+			                                  updatePageNum(); // Update page number and progress bar
+		});
 
 		this.searchButton  .setOnAction(e-> { searchMenu();});
 		
@@ -240,34 +244,15 @@ public class eReaderGUIView extends Application{
 		this.sizeEleven .setOnAction(e-> { setText(this.fontType, SIZE_TWO    , false);});
 		this.sizeTwelve .setOnAction(e-> { setText(this.fontType, DEFAULT_SIZE, false);});
 	
-	
-		
-		
-		// Add the progress bar 
-		HBox hbox = new HBox(this.progressBar);
-		
-		
-		this.progressPane.setAlignment(Pos.CENTER);
-		this.progressPane.add(hbox,1,2);
-		this.window.setBottom(progressPane);
-		
-		// Set the progress  // NEEDS TO MOVE TO THE APPROPRIATE PLACE TO UPDATE
-		progressBar.setProgress(0.5);
-		
-		// Set size 
-		this.progressBar.setPrefSize(400, 30);
-		
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
 		
-		// load current page of book before showing reader screen.
+		this.reader.setScene(scene);
 
-		reader.setScene(scene);
-
-		mainMenu = stage;
+		this.mainMenu = stage;
 		stage.setTitle("Main menu");
 		Group root  = new Group();
-		mainMenuBorder = new BorderPane();
+		this.mainMenuBorder = new BorderPane();
 		ScrollBar sc = new ScrollBar();
 		
 		try {
@@ -280,7 +265,7 @@ public class eReaderGUIView extends Application{
 		Scene sceneMenu = new Scene(root, 485, 500);
 		stage.setScene(sceneMenu);
 
-		mainMenuBorder.setTop(addComboBox(stage));
+		this.mainMenuBorder.setTop(addComboBox(stage));
 
 		root.getChildren().addAll(mainMenuBorder,sc);
 		
@@ -300,7 +285,24 @@ public class eReaderGUIView extends Application{
 		
 		stage.show();;
 	}
-
+	
+	/**
+	 * Purpose: 
+	 */
+	private void updatePageNum() {
+		// Add the progress bar 
+		Text text = new Text(String.valueOf("Page: "+ this.controller.pageNumber()));
+		HBox hbox = new HBox(this.progressBar);
+		HBox hbox2 = new HBox(text);
+		VBox vbox = new VBox(hbox, hbox2);
+		this.progressPane.setAlignment(Pos.CENTER);
+		this.progressPane.add(vbox,1,2);
+		this.window.setBottom(progressPane);
+		this.progressBar.setProgress(this.controller.getProgress());
+		
+		// Set progress bar size 
+		this.progressBar.setPrefSize(400, 30);
+	}
 	
 	/**
 	 * Purpose: Starts up the stage for the book selection menu. Closes upon
@@ -308,7 +310,6 @@ public class eReaderGUIView extends Application{
 	 * 
 	 */
 	public void menuStart() {
-		
 		mainMenu.show();
 	}
 	
@@ -331,8 +332,6 @@ public class eReaderGUIView extends Application{
 		
 
 		List<String> bookNames  = controller.getBookList();
-		//List<String> bookImages = getFileNames("book_images");
-
 		
 		// Calculate number of rows for the grid.
 		if(bookNames.size() % NUM_COLS == 0) {
@@ -364,8 +363,7 @@ public class eReaderGUIView extends Application{
 		        title.setMaxWidth(100);
 		        title.setMaxHeight(50);
 				
-
-				input = new FileInputStream("default_book_image/cover.png");
+		        input = new FileInputStream("default_book_image/cover.png");
 				
 				ImageView imageView   = new ImageView(new Image(input, 110, 150, false, false));
 				vbox.getChildren().addAll(imageView, title);
@@ -474,15 +472,11 @@ public class eReaderGUIView extends Application{
 		
 		border.setCenter(grid);
 		border.setBottom(buttons); // add buttons to grid
-		border.setAlignment(buttons, Pos.CENTER);
+		//border.setAlignment(buttons, Pos.CENTER);
 		
 		root.getChildren().addAll(border);
-		
-		
 		stage.show();
 	}
-	
-	
 	
 	/**
 	 * Purpose: Event handler that gathers the book name whenever the 
@@ -501,8 +495,13 @@ public class eReaderGUIView extends Application{
 					String bookChoice = this.buttonList.get(val).getId();
 					
 					getBook(bookChoice);
+					
+					// Update page number and progress bar
+					updatePageNum();
+					
+					this.pageNumber = this.controller.pageNumber();
 					stage.close(); // Close the book menu after user makes choice
-					reader.show();
+					this.reader.show();
 				}); // End lambda event
 		}
 	}
@@ -514,12 +513,10 @@ public class eReaderGUIView extends Application{
 	 * @param bookChoice string representing the user's choice of a book to read. 
 	 */
 	private void getBook(String bookChoice) {
-
-		controller.openBook(bookChoice); 
-		setText(DEFAULT_FONT, DEFAULT_SIZE, false              );
+		this.controller.openBook(bookChoice      ); 
+		setText(DEFAULT_FONT, DEFAULT_SIZE, false);
 	}
 
-	
 	/**
 	 * Purpose: Creates the stage for the search menu. It will
 	 * send a search for a string. 
@@ -580,7 +577,6 @@ public class eReaderGUIView extends Application{
 			alert.close();
 		}
 	}
-	
 	
 	/**
 	 * Purpose: Sets the text field to the new desired text type. The parameter

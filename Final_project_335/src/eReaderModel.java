@@ -272,7 +272,10 @@ public class eReaderModel implements Serializable {
 	}
 
 
-
+	/**
+	 * Purpose: 
+	 * @return
+	 */
 	public double getProgress() {
 		return progress;
 	}
