@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -31,6 +32,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
@@ -89,6 +91,7 @@ public class eReaderGUIView extends Application{
 	private int 	 fontSize;
 	private Stage mainMenu;
 	private Stage reader;
+	private BorderPane mainMenuBorder;
 	
 	// PROGRESS BAR
 	GridPane progressPane;
@@ -261,37 +264,42 @@ public class eReaderGUIView extends Application{
 		// load current page of book before showing reader screen.
 
 		reader.setScene(scene);
-		
+
 		mainMenu = stage;
+		stage.setTitle("Main menu");
 		Group root  = new Group();
-		BorderPane border = new BorderPane();
+		mainMenuBorder = new BorderPane();
 		ScrollBar sc = new ScrollBar();
 		
 		try {
-			border.setCenter(addGridPane(stage)); // Calls addGridPane() here
+			mainMenuBorder.setCenter(addGridPane(stage)); // Calls addGridPane() here
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} 
 		
+
 		Scene sceneMenu = new Scene(root, 485, 500);
 		stage.setScene(sceneMenu);
-		root.getChildren().addAll(border,sc);
+
+		mainMenuBorder.setTop(addComboBox(stage));
+
+		root.getChildren().addAll(mainMenuBorder,sc);
 		
 		sc.setLayoutX(sceneMenu.getWidth()-sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(500);
-        sc.setMax(200);
+        sc.setMax(1000);
 		
         // gives the scroll bar the ability to actually scroll
         sc.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
-                    border.setLayoutY(-new_val.doubleValue());
+            	mainMenuBorder.setLayoutY(-new_val.doubleValue());
             }
         });
 		
-		stage.show();
+		stage.show();;
 	}
 
 	
@@ -345,19 +353,26 @@ public class eReaderGUIView extends Application{
 				if (count == numBooks) { // stop if count is equal to the amount of books we have
 					break;
 				}
-				String str = bookNames.get(count);
-				//int picIndex = getBookImageIndex(bookImages, str.substring(0, str.indexOf(".")));
 				
-				//if(picIndex != -1) {
-					//input = new FileInputStream("book_images/"+ bookImages.get(picIndex));
-				//}else {
-					input = new FileInputStream("default_book_image/cover.png");
-				//}
+				
+				String str = bookNames.get(count);
+				
+				VBox vbox = new VBox(); // to contain the cover and the title
+				Label title = new Label(str); // sets titles as the label for each button
+				title.setMaxWidth(Double.MAX_VALUE);
+		        title.setAlignment(Pos.CENTER);
+		        title.setTextAlignment(TextAlignment.CENTER);
+		        title.setWrapText(true);
+		        title.setMaxWidth(100);
+		        title.setMaxHeight(50);
+				
+				input = new FileInputStream("default_book_image/cover.png");
 				
 				ImageView imageView   = new ImageView(new Image(input, 110, 150, false, false));
+				vbox.getChildren().addAll(imageView, title);
 			       
 				// create new button for each cover/title (vbox)
-				Button button = new Button("", imageView);  
+				Button button = new Button("", vbox);  
 				
 
 				button.setId(bookNames.get(count));
@@ -374,27 +389,100 @@ public class eReaderGUIView extends Application{
 	}
 	
 	/**
-	 * Purpose: Searches for a match in the book images file. For instance if
-	 * everything before the period in the file name matches then the picture
-	 * exists in the directory. It will then return the index of that particular
-	 * image within the directory. If not, then -1 will be returned. 
+	 * Creates a drop down bar to be added to the top of the menu.
+	 * <p>
+	 * Adds an input option to a combobox (drop down menu). 
+	 * Opens the input window and closes the menu upon clicking on the option.
 	 * 
-	 * @param bookImages list of strings that represent the file path to the
-	 * book images. 
-	 * 
-	 * @param searchVal string that matches the filepath in the book.
-	 * 
-	 * @return index of filename if found. Otherwise -1 will be returned. 
+	 * @param menuStage the menu stage; gives the ability to close it when the input window opens
+	 * @return a ComboBox; to be added to the menu
 	 */
-	private int getBookImageIndex(List<String> bookImages, String searchVal) {
-		searchVal =  searchVal +".png";
-		for(int i =0; i < bookImages.size(); i++) {
-			if(searchVal.equals(bookImages.get(i))) {
-				return i;
-			}
-		}
-		return -1;
+	private ComboBox addComboBox(Stage menuStage) {
+		final ComboBox<String> combo = new ComboBox();
+		
+		combo.getItems().add("Input");
+		combo.setOnAction((e) -> {
+            inputBookWindow(); // open input window
+            menuStage.close(); // close menu
+		});
+		return combo;
 	}
+	
+	/**
+	 * Creates the input window.
+	 * <p>
+	 * Creates a new stage, with two text fields that allow the user to input the
+	 * title of the book they want to add, as well as the books path.
+	 */
+	private void inputBookWindow() {
+		
+		Stage stage = new Stage();
+		Group root  = new Group();
+		BorderPane border = new BorderPane();
+		
+		Scene scene = new Scene(root, 485, 200);
+		stage.setScene(scene);
+		
+		Label title = new Label("Book title:");
+		TextField strTitle = new TextField ();
+		HBox getTitle = new HBox(); // contains the text field and label
+		getTitle.getChildren().addAll(title, strTitle);
+		getTitle.setSpacing(10);
+		
+		Label path = new Label("File path:");
+		TextField strPath = new TextField (); // MUST type exact path
+		HBox getPath = new HBox(); // contains the text field and label
+		getPath.getChildren().addAll(path, strPath);
+		getPath.setSpacing(15);
+		
+		GridPane grid = new GridPane();
+		grid.setVgap(30);
+		grid.setPadding(new Insets(20, 10, 20, 10));
+		
+		// add HBox's to grid
+		grid.add(getTitle, 0, 0);
+		grid.add(getPath, 0, 1);
+		
+		Button submit = new Button("Submit");
+		submit.setOnAction(e-> { 
+			if (strTitle.getText() != null && strPath.getText() != null) {
+				
+				// add book to controller
+				controller.addBook(strTitle.getText(), strPath.getText());
+				try {
+					mainMenuBorder.setCenter(addGridPane(mainMenu));
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				stage.close(); //close current stage
+				menuStart(); // reopen menu
+			}
+			
+			;});
+		
+		Button cancel = new Button("Cancel");
+		cancel.setOnAction(e-> { 
+			stage.close(); // close current stage
+			menuStart(); // reopen menu
+			;}); 
+		
+		HBox buttons = new HBox(); // Add buttons to HBox
+		buttons.getChildren().addAll(submit, cancel);
+		buttons.setSpacing(20);
+		buttons.setPadding(new Insets(20, 10, 20, 10));
+		
+		border.setCenter(grid);
+		border.setBottom(buttons); // add buttons to grid
+		border.setAlignment(buttons, Pos.CENTER);
+		
+		root.getChildren().addAll(border);
+		
+		
+		stage.show();
+	}
+	
 	
 	
 	/**
