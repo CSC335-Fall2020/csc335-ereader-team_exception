@@ -39,14 +39,14 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-
 /**
- * Purpose: Creates the GUI for the E-Reader program. This class represents the View. 
+ * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author wczeng, @author jialiangzhao
+ * FILE: eReaderGUIView.java
+ * ASSIGNMENT: Final Project
+ * Course: CSC 335; Fall 2020
+ * PURPOSE: Creates the GUI for the E-Reader program. This class represents the View. 
  * It creates a main stage with options that allow the user to choose a book, modify,
  * the font size/type, and search for particular words or phrases.
- * 
- * @author Ztaylor9000, caseywhitmire, jialiangzhao, David (Winston?), and blsmith86
- *
  */
 
 public class eReaderGUIView extends Application{
@@ -101,7 +101,7 @@ public class eReaderGUIView extends Application{
 	ProgressBar progressBar;
 	
 	/**
-	 * Purpose: Constructor that instanstiates objects. These can be created
+	 * Purpose: Constructor that instantiates objects. These can be created
 	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
@@ -170,8 +170,13 @@ public class eReaderGUIView extends Application{
 			c.printStackTrace();
 		}
 	}
+	
 	/**
-	 * Purpose: 
+	 * Starts the view for the application. Sets up the eBook scene; adds buttons
+	 * text, page number, and progress bar.
+	 * 
+	 * @param stage 
+	 * @throws Exception
 	 */
 	@Override
 	public void start(Stage stage)  throws Exception {
@@ -377,8 +382,6 @@ public class eReaderGUIView extends Application{
 	/**
 	 * Purpose: Creates a progress bar and associated page number. It will then be called
 	 * whenever a page is updated to update the book progress and page number.
-	 * 
-	 * 
 	 */
 	private void updatePageNum() {
 		// Add the progress bar 
@@ -398,8 +401,8 @@ public class eReaderGUIView extends Application{
 	/**
 	 * Purpose: Starts up the stage for the book selection menu. Closes upon
 	 * book selection. Adds a scroll functionality as well.
-	 * @throws FileNotFoundException 
 	 * 
+	 * @throws FileNotFoundException 
 	 */
 	public void menuStart() throws FileNotFoundException {
 		this.mainMenuBorder.setCenter(addGridPane(mainMenu));
@@ -481,8 +484,7 @@ public class eReaderGUIView extends Application{
 	}
 	
 	/**
-	 * Creates a drop down bar to be added to the top of the menu.
-	 * <p>
+	 * Purpose: Creates a drop down bar to be added to the top of the menu.
 	 * Adds an input option to a combobox (drop down menu). 
 	 * Opens the input window and closes the menu upon clicking on the option.
 	 * 
@@ -501,10 +503,9 @@ public class eReaderGUIView extends Application{
 	}
 	
 	/**
-	 * Creates the input window.
-	 * <p>
-	 * Creates a new stage, with two text fields that allow the user to input the
-	 * title of the book they want to add, as well as the books path.
+	 * Purpose: Creates the input window. Creates a new stage, with two text 
+	 * fields that allow the user to input the title of the book they want to 
+	 * add, as well as the books path.
 	 */
 	private void inputBookWindow() {
 		
@@ -589,7 +590,6 @@ public class eReaderGUIView extends Application{
 	 * 
 	 * @param stage stage object that will be used to close the menu
 	 * when the user chooses a book (i.e. click on a book image).
-	 * 
 	 */
 	private void getBookId(Stage stage) {
 		for(int i = 0; i < this.buttonList.size(); i++) {
@@ -622,7 +622,6 @@ public class eReaderGUIView extends Application{
 	/**
 	 * Purpose: Creates the stage for the search menu. It will
 	 * send a search for a string. 
-	 *  
 	 */
 	private void searchMenu() {									
 		GridPane textContainer  = new GridPane(    );
@@ -692,11 +691,10 @@ public class eReaderGUIView extends Application{
 	 * newFont will be the new text type. It will then display the page of text
 	 * on the GUI. If a change is made to the same page (i.e. font style or size
 	 * is modified while viewing a page) then only that value that needs to be changed
-	 * will change. Otherwise, a new page will be retreived from the controller and
+	 * will change. Otherwise, a new page will be retrieved from the controller and
 	 * the page will be updated. 
 	 * 
 	 * @param newFont new font style to be applied (if applicable).
-	 * 
 	 * @param newSize new font size
 	 */
 	private void setText(String newFont, int newSize) {

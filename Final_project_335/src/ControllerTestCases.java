@@ -2,12 +2,17 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+/**
+ * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author wczeng, @author jialiangzhao
+ * FILE: ControllerTestCases.java
+ * ASSIGNMENT: Final Project
+ * Course: CSC 335; Fall 2020
+ * PURPOSE: Create Model and Controller objects. This should test a great deal
+ * of the controller code. 
+ */
+
 public class ControllerTestCases {
 	
-	/**
-	 * Purpose: Create Model and Controller objects. This should test a great deal
-	 * of the controller code. 
-	 */
 	@Test
 	public void test() {
 //		eReaderController controller = new eReaderController();
