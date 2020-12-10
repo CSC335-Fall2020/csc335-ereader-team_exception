@@ -14,14 +14,11 @@ import org.junit.Test;
  */
 
 public class ControllerTestCases {
-	
-<<<<<<< HEAD
-=======
+
 	/**
 	 * Purpose: General test case
 	 */
 	@SuppressWarnings("deprecation")
->>>>>>> refs/remotes/origin/winston
 	@Test
 	public void test() {
 		eReaderController controller = new eReaderController();
