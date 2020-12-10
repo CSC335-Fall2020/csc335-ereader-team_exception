@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author , @author
+ * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author wczeng, @author jialiangzhao
  * FILE: ControllerTestCases.java
  * ASSIGNMENT: Final Project
  * Course: CSC 335; Fall 2020

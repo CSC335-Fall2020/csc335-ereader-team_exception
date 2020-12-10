@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author , @author
+ * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author wczeng, @author jialiangzhao
  * FILE: eReaderController.java
  * ASSIGNMENT: Final Project
  * Course: CSC 335; Fall 2020

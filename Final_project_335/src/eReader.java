@@ -1,7 +1,7 @@
 import javafx.application.Application;
 
 /**
- * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author , @author
+ * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author wczeng, @author jialiangzhao
  * FILE: eReader.java
  * ASSIGNMENT: Final Project
  * Course: CSC 335; Fall 2020

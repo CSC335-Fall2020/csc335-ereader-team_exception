@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author , @author
+ * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author wczeng, @author jialiangzhao
  * FILE: eReaderModel.java
  * ASSIGNMENT: Final Project
  * Course: CSC 335; Fall 2020
