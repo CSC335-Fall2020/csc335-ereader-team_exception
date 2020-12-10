@@ -1,11 +1,15 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 /**
  * Purpose: This class represents the Model of the MVC 
@@ -30,9 +34,8 @@ public class eReaderModel implements Serializable {
 	private double progress;
 
 	/**
-	 *  creates the model of each book with a title and a file address
-	 * @param filename is the file address for the text file of the book
-	 * @param bookName is the title for this book
+	 *  Will add number of lines per page and characters per line to constructor.
+	 * @param filename
 	 */
 	public eReaderModel(String bookName, String filename) {
 		currentPage = 0;
@@ -63,7 +66,7 @@ public class eReaderModel implements Serializable {
 	private void convertFile(String filename) {
 		BufferedReader fileInput = null;
 		try {
-            fileInput = new BufferedReader(new FileReader(filename));
+			fileInput = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "UTF-8"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }try {
@@ -75,6 +78,16 @@ public class eReaderModel implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Purpose: Returns the string that represents the book
+	 * to the controller. 
+	 * 
+	 * @return string that represents the book. 
+	 */
+	public String getBook() {
+		return book;
 	}
 	
 	/**
@@ -126,7 +139,15 @@ public class eReaderModel implements Serializable {
 		retval.add(currLine);
 		return retval;
 	}
-
+	
+	/**
+	 * Purpose: Accessor that returns the book. 
+	 * @return
+	 */
+	public String getText() {
+		return this.book;
+	}
+	
 
 	/**
 	 * Purpose: Gets the current page of the book.
@@ -142,7 +163,20 @@ public class eReaderModel implements Serializable {
 		return pages.get(currentPage);
 	}
 	
-
+	/**
+	 * Purpose: Starts book from first page.
+	 * 
+	 * @return The first page of the book
+	 */
+	public String startBook() {
+		if(pages == null || pages.size()==0) {
+			System.out.println("no book content");
+			return null;
+		}
+		currentPage = 0;
+		return pages.get(currentPage);
+	}
+	
 	/**
 	 * Purpose: Gets the next page of the book. 
 	 * 
@@ -203,73 +237,50 @@ public class eReaderModel implements Serializable {
 	 * @return index of string if found, -1 if not found. 
 	 */
 	public int search(String input) {
-		if(pages.isEmpty()) {
-			return -1;
-		}else {
-
-			if(searchBook == null || !searchCurrent.equals(input)) {
-				searchNumber = 0;
-				searchBook = book;
-			}
-			
-			searchCurrent = input;
-			for (int i = 0; i < searchBook.length(); i++) {
-				     if (i < searchBook.length() - input.length()) {
-				         if (searchBook.indexOf(input, i) >= 0) {
-				             i = searchBook.indexOf(input, i);
-				          //   If the position of the last word of return is found, 
-				             searchBook = searchBook.substring(i + input.length());
-				             searchNumber += i;
-				         
-				             if(searchNumber == 0) {//winston change
-				            	 searchNumber += i;
-				             } else {//winston change
-					             searchNumber += i;
-					             searchNumber += input.length();
-					             int g = 0;
-					             while(searchNumber > 0) {
-					            	 if (searchNumber > pages.get(g).length()) {
-					            		 searchNumber -=  pages.get(g).length();
-					            		 g++;
-					            	 }else {
-					            		 return g;
-					            	 }
-					             }
-				             }
-				         }
-				     }
-				 }
-			searchBook = book.substring(0);
+		if(searchBook == null || !searchCurrent.equals(input)) {
 			searchNumber = 0;
-			return -1;
+			searchBook = book;
 		}
+		
+		searchCurrent = input;
+		for (int i = 0; i < searchBook.length(); i++) {
+			     if (i < searchBook.length() - input.length()) {
+			         if (searchBook.indexOf(input, i) >= 0) {
+			             i = searchBook.indexOf(input, i);
+			          //   If the position of the last word of return is found, 
+			             searchBook = searchBook.substring(i + input.length());
+			             searchNumber += i;
+			         
+			             if(searchNumber == 0) {
+			            	 searchNumber += i;
+			             } else {
+				             searchNumber += i;
+				             searchNumber += input.length();
+			             }
+			         //If the position of the last word of return is found, 
+			         //the position of the first word is searchNumber-input.length();
+			             return searchNumber;
+			         }
+			     }
+			 }
+		searchBook = book.substring(0);
+		searchNumber = 0;
+		return -1;
 	}
 
 	/**
 	 * Purpose: Adds a bookmark to the page. 
 	 */
 	public void addBookmark() {
-		if(!bookmarks.contains(currentPage)) {
-			bookmarks.add(currentPage);
-		}
+		int index = search(pages.get(currentPage));
+		bookmarks.add(index);
 	}
+
 
 	/**
 	 * Purpose: 
 	 * @return
 	 */
-	
-	public void removeBookmark() {
-		if(bookmarks.contains(currentPage)) {
-			bookmarks.remove(currentPage);
-		}
-	}
-	
-	public List<Integer> getBookmarks() {
-		Collections.sort(bookmarks);
-		return bookmarks;
-	}
-	
 	public double getProgress() {
 		return progress;
 	}
