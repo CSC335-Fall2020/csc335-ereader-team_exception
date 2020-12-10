@@ -284,14 +284,7 @@ public class eReaderModel implements Serializable {
 		bookmarks.add(index);
 	}
 	
-	/**
-	 * Purpose: 
-	 */
-	public void removeBookmark() {
-		if(bookmarks.contains(currentPage)) {
-			bookmarks.remove(currentPage);
-		}
-	}
+	
 	/**
 	 * Purpose:
 	 * @return

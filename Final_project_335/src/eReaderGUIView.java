@@ -127,8 +127,7 @@ public class eReaderGUIView extends Application{
 		this.progressBar    = new ProgressBar(0          );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
-		System.out.println(fontSize);
-		System.out.println(fontType);
+		
 		initialDeserialize();
 		// load basic books into eReader
 		controller = new eReaderController();
@@ -139,8 +138,7 @@ public class eReaderGUIView extends Application{
 			controller.addBook("Roswell Report", "books/roswellReport.txt");
 			controller.addBook("Wizard of Oz", "books/wizardOfOz.txt");  
 		}
-		System.out.println(fontSize);
-		System.out.println(fontType);
+		
 	}
 	@SuppressWarnings("unchecked")
 	public void initialDeserialize() {
@@ -149,9 +147,9 @@ public class eReaderGUIView extends Application{
 			
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			this.fontSize = (int) in.readObject();
-			System.out.println(fontSize);
+			
 			this.fontType =  (String) in.readObject();	
-			System.out.println(fontType);
+			
 			in.close();
 			fileIn.close();
 		} catch (FileNotFoundException f) {
@@ -274,7 +272,7 @@ public class eReaderGUIView extends Application{
 		});
 				
 		this.backButton    .setOnAction(e-> { controller.previousPage();
-		System.out.println(this.fontType + this.fontSize);
+		
 		                                      setText(this.fontType, this.fontSize);
 			                                  updatePageNum(); // Update page number and progress bar
 		});  
@@ -368,7 +366,8 @@ public class eReaderGUIView extends Application{
 	}
 	
 	/**
-	 * Purpose: Makes the bookmark stage.
+	 * Purpose: Makes the bookmark stage. Creates a stage
+	 * with a next and add bookmark button. 
 	 */
 	private void bookMarkMenu() {
 		GridPane buttonContainer  = new GridPane(    );
@@ -377,16 +376,16 @@ public class eReaderGUIView extends Application{
 		
 		Button nextButton   = new Button("Next"  );
 		Button addButton    = new Button("Add"   );
-		Button removeButton = new Button("Remove");
+		
 		
 		Label label = new Label("Book Mark: ");
 		label.setFont(new Font("Crimson", 18));
 		
 		HBox hbox  = new HBox(nextButton);
 		HBox hbox1 = new HBox(addButton);
-		HBox hbox2 = new HBox(removeButton);
 		
-		HBox outerHbox = new HBox(label, hbox, hbox1, hbox2);
+		
+		HBox outerHbox = new HBox(label, hbox, hbox1);
 		
 		outerHbox.setSpacing(10);
 		buttonContainer.add(outerHbox, 3, 1     );
@@ -396,7 +395,7 @@ public class eReaderGUIView extends Application{
 		// Use next button to handle the event
 		nextButton.setOnAction(e->  {                                   });
 		addButton.setOnAction(e-> {    this.controller.addBookmark()   ;});
-		removeButton.setOnAction(e-> { this.controller.removeBookmark();});
+		
 		
 		Scene scene = new Scene(bookmarkWindow, 500, 125);
 		stage.setScene(scene);
@@ -727,8 +726,6 @@ public class eReaderGUIView extends Application{
 		}else {
 			
 			this.controller.flipToPage(page);
-			System.out.println("Before update: "+controller.pageNumber());
-			System.out.println("Page number: "+ page);
 			setText(this.fontType, this.fontSize);
 		}
 		

@@ -50,7 +50,7 @@ public class eReaderController {
 	public void openBook(String name) {
 		if(bookList.contains(name)) {
 			this.model = this.deserialize(name);
-			System.out.println(model.getName());
+			
 			currBook = model.getName();
 		} else {
 			System.out.println("This book is not in the list.");
@@ -176,13 +176,7 @@ public class eReaderController {
 		return model.getBookSize();
 	}
 	
-	/**
-	 * Purpose: Adds a bookmark to the model of the book.
-	 */
-
-	public void removeBookmark() {
-		model.removeBookmark();
-	}
+	
 	
 	/**
 	 * Purpose:
