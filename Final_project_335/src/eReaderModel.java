@@ -1,8 +1,11 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,10 +63,17 @@ public class eReaderModel implements Serializable {
 	 * 
 	 * @param filename name of file to be read in. 
 	 */
+
 	private void convertFile(String filename) {
 		BufferedReader fileInput = null;
 		try {
-            fileInput = new BufferedReader(new FileReader(filename));
+            try {
+				fileInput = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }try {

@@ -186,6 +186,9 @@ public class eReaderController {
 	public void getBookmarks() {
 		model.getBookmarks();
 	}
+	public void addBookmark() {
+		model.addBookmark();
+	}
 	/**
 	 * Purpose: returns the next page of the current book
 	 * @return a string representing the page
