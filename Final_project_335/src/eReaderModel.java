@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,14 +26,15 @@ public class eReaderModel implements Serializable {
 	private String        searchBook;
 	private int           searchNumber;
 	private String        searchCurrent;
-	private List<Integer> bookmarks;
+	private List<Integer> bookmarks = new ArrayList<Integer>();
 	private String bookName;
 	private static final long serialVersionUID = 42L;
 	private double progress;
 
 	/**
-	 *  Will add number of lines per page and characters per line to constructor.
-	 * @param filename
+	 *  creates the model of each book with a title and a file address
+	 * @param filename is the file address for the text file of the book
+	 * @param bookName is the title for this book
 	 */
 	public eReaderModel(String bookName, String filename) {
 		currentPage = 0;
@@ -59,10 +62,17 @@ public class eReaderModel implements Serializable {
 	 * 
 	 * @param filename name of file to be read in. 
 	 */
+
 	private void convertFile(String filename) {
 		BufferedReader fileInput = null;
 		try {
-            fileInput = new BufferedReader(new FileReader(filename));
+            try {
+				fileInput = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }try {
@@ -74,16 +84,6 @@ public class eReaderModel implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Purpose: Returns the string that represents the book
-	 * to the controller. 
-	 * 
-	 * @return string that represents the book. 
-	 */
-	public String getBook() {
-		return book;
 	}
 	
 	/**
@@ -135,15 +135,7 @@ public class eReaderModel implements Serializable {
 		retval.add(currLine);
 		return retval;
 	}
-	
-	/**
-	 * Purpose: Accessor that returns the book. 
-	 * @return
-	 */
-	public String getText() {
-		return this.book;
-	}
-	
+
 
 	/**
 	 * Purpose: Gets the current page of the book.
@@ -152,27 +144,10 @@ public class eReaderModel implements Serializable {
 	 * ArrayList.
 	 */
 	public String getCurrPage() {
-		if(pages == null || pages.size()== 0) {
-			System.out.println("no book content");
-			return null;
-		}
 		return pages.get(currentPage);
 	}
 	
-	/**
-	 * Purpose: Starts book from first page.
-	 * 
-	 * @return The first page of the book
-	 */
-	public String startBook() {
-		if(pages == null || pages.size()==0) {
-			System.out.println("no book content");
-			return null;
-		}
-		currentPage = 0;
-		return pages.get(currentPage);
-	}
-	
+
 	/**
 	 * Purpose: Gets the next page of the book. 
 	 * 
@@ -180,7 +155,7 @@ public class eReaderModel implements Serializable {
 	 */
 	public String getNext() {
 		currentPage++;
-		if(pages == null || pages.size() == 0 || currentPage >= pages.size()) {
+		if(currentPage >= pages.size()) {
 			System.out.println("no book content or no more page");
 			currentPage--;
 			return null;
@@ -196,8 +171,7 @@ public class eReaderModel implements Serializable {
 	 */
 	public String getPrevious() {
 		currentPage--;
-		if(pages == null || pages.size() == 0 || currentPage <0) {
-			System.out.println("no book content or first page now");
+		if(currentPage <0) {
 			currentPage++;
 			return null;
 		}
@@ -233,60 +207,85 @@ public class eReaderModel implements Serializable {
 	 * @return index of string if found, -1 if not found. 
 	 */
 	public int search(String input) {
-		if(searchBook == null || !searchCurrent.equals(input)) {
-			searchNumber = 0;
-			searchBook = book;
-		}
-		
-		searchCurrent = input;
-		for (int i = 0; i < searchBook.length(); i++) {
-			     if (i < searchBook.length() - input.length()) {
-			         if (searchBook.indexOf(input, i) >= 0) {
-			             i = searchBook.indexOf(input, i);
-			          //   If the position of the last word of return is found, 
-			             searchBook = searchBook.substring(i + input.length());
-			             searchNumber += i;
-			         
-			             if(searchNumber == 0) {//winston change
-			            	 searchNumber += i;
-			             } else {//winston change
+		if(pages.isEmpty()) {
+			return -1;
+		}else {
+
+			if(searchBook == null || !searchCurrent.equals(input)) {
+				searchNumber = 0;
+				searchBook = book;
+			}
+			
+			searchCurrent = input;
+			for (int i = 0; i < searchBook.length(); i++) {
+				     if (i < searchBook.length() - input.length()) {
+				         if (searchBook.indexOf(input, i) >= 0) {
+				             i = searchBook.indexOf(input, i);
+				          //   If the position of the last word of return is found, 
+				             searchBook = searchBook.substring(i + input.length());
 				             searchNumber += i;
-				             searchNumber += input.length();
-			             }
-			         //If the position of the last word of return is found, 
-			         //the position of the first word is searchNumber-input.length();
-			             return searchNumber;
-			         }
-			     }
-			 }
-		searchBook = book.substring(0);
-		searchNumber = 0;
-		return -1;
+				         
+				             if(searchNumber == 0) {
+				            	 searchNumber += i;
+				             } else {
+					             searchNumber += i;
+					             searchNumber += input.length();
+					             int g = 0;
+					             while(searchNumber > 0) {
+					            	 if (searchNumber > pages.get(g).length()) {
+					            		 searchNumber -=  pages.get(g).length();
+					            		 g++;
+					            	 }else {
+					            		 return g;
+					            	 }
+					             }
+				             }
+				         }
+				     }
+				 }
+			searchBook = book.substring(0);
+			searchNumber = 0;
+			return -1;
+		}
 	}
 
 	/**
 	 * Purpose: Adds a bookmark to the page. 
 	 */
 	public void addBookmark() {
-		if(!bookmarks.contains(currentPage)) {
-			bookmarks.add(currentPage);
+		if(!this.bookmarks.contains(currentPage)) {
+			this.bookmarks.add(currentPage);
 		}
 	}
+
+	/**
+	 * Purpose: 
+	 * @return
+	 */
 	
 	public void removeBookmark() {
-		if(bookmarks.contains(currentPage)) {
-			bookmarks.remove(currentPage);
+		if(this.bookmarks.contains(currentPage)) {
+			this.bookmarks.remove(currentPage);
 		}
 	}
 	
 	public List<Integer> getBookmarks() {
-		Collections.sort(bookmarks);
-		return bookmarks;
+		Collections.sort(this.bookmarks);
+		return this.bookmarks;
 	}
 	
 	public double getProgress() {
 		return progress;
 	}
 	
+	/**
+	 * Purpose: 
+	 */
+	public void setPage(int pageNumber) {
+		if(pageNumber < pages.size()) {
+			System.out.println("In the model");
+			this.currentPage = pageNumber;
+		}
+	}
 
 } // End class
