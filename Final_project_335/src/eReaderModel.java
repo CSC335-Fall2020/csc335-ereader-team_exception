@@ -16,7 +16,6 @@ import java.util.List;
  * methods to get page info and create a save state. 
  * 
  * @author Ztaylor9000, caseywhitmire, jialiangzhao, David (Winston?), and blsmith86
- *
  */
 
 public class eReaderModel implements Serializable {
@@ -32,7 +31,7 @@ public class eReaderModel implements Serializable {
 	private double progress;
 
 	/**
-	 *  creates the model of each book with a title and a file address
+	 * Purpose: creates the model of each book with a title and a file address
 	 * @param filename is the file address for the text file of the book
 	 * @param bookName is the title for this book
 	 */
@@ -69,7 +68,6 @@ public class eReaderModel implements Serializable {
             try {
 				fileInput = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -93,8 +91,7 @@ public class eReaderModel implements Serializable {
 	 * 
 	 * @param lineLength length of the line to slice. 
 	 * 
-	 * @return retval ArrayList that holds the book spit into
-	 * pages. 
+	 * @return retval ArrayList that holds the book spit into pages. 
 	 */
 	public List<String> getPages(int pageLength, int lineLength){
 		List<String> retval = new ArrayList<String>();
@@ -126,9 +123,7 @@ public class eReaderModel implements Serializable {
 				retval.add(currLine);
 				pageLine = 0;
 				currLine = "";
-				
 			}
-			
 		}
 		
 		currLine +=book.substring(start)+ "\n";
@@ -147,11 +142,10 @@ public class eReaderModel implements Serializable {
 		return pages.get(currentPage);
 	}
 	
-
 	/**
 	 * Purpose: Gets the next page of the book. 
 	 * 
-	 * @return string that represets the next page in the book. 
+	 * @return string that represents the next page in the book. 
 	 */
 	public String getNext() {
 		currentPage++;
@@ -259,8 +253,7 @@ public class eReaderModel implements Serializable {
 	}
 
 	/**
-	 * Purpose: 
-	 * @return
+	 * Purpose: Removes a bookmark.
 	 */
 	
 	public void removeBookmark() {
@@ -269,17 +262,28 @@ public class eReaderModel implements Serializable {
 		}
 	}
 	
+	/**
+	 * Purpose: Returns a sorted list containing all bookmarked pages.
+	 * 
+	 * @return this.bookmarks sorted list of bookmarked page numbers
+	 */
 	public List<Integer> getBookmarks() {
 		Collections.sort(this.bookmarks);
 		return this.bookmarks;
 	}
 	
+	/**
+	 * Purpose: Returns the user's progress.
+	 * 
+	 * @return progress decimal value between 0 and 1 representing
+	 * how much of the book has been read
+	 */
 	public double getProgress() {
 		return progress;
 	}
 	
 	/**
-	 * Purpose: 
+	 * Purpose: Jumps to a specified page in the book.
 	 */
 	public void setPage(int pageNumber) {
 		if(pageNumber < pages.size()) {

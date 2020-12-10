@@ -7,8 +7,7 @@ import org.junit.Test;
 public class ControllerTestCases {
 	
 	/**
-	 * Purpose: Create Model and Controller objects. This should test a great deal
-	 * of the controller code. 
+	 * Purpose: General test case
 	 */
 	@SuppressWarnings("deprecation")
 	@Test
@@ -43,6 +42,9 @@ public class ControllerTestCases {
 		controller.openBook("abcd");
 	}
 
+	/**
+	 * Purpose: Empty text file test case.
+	 */
 	@Test
 	public void testEmpty() {
 		eReaderController controller = new eReaderController();
