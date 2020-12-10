@@ -283,8 +283,24 @@ public class eReaderModel implements Serializable {
 		int index = search(pages.get(currentPage));
 		bookmarks.add(index);
 	}
-
-
+	
+	/**
+	 * Purpose: 
+	 */
+	public void removeBookmark() {
+		if(bookmarks.contains(currentPage)) {
+			bookmarks.remove(currentPage);
+		}
+	}
+	/**
+	 * Purpose:
+	 * @return
+	 */
+	public List<Integer> getBookmarks() {
+		Collections.sort(bookmarks);
+		return bookmarks;
+	}
+	
 	/**
 	 * Purpose: 
 	 * @return

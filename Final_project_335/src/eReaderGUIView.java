@@ -95,7 +95,8 @@ public class eReaderGUIView extends Application{
 	private Stage mainMenu;
 	private Stage reader;
 	private BorderPane mainMenuBorder;
-	
+	private Menu bookmarkMenu;
+	private MenuItem bookMarkMenuItem;
 	// PROGRESS BAR
 	GridPane    progressPane;
 	ProgressBar progressBar;
@@ -105,6 +106,9 @@ public class eReaderGUIView extends Application{
 	 * before since the info will be added later. 
 	 */
 	public eReaderGUIView() {
+		this.bookmarkMenu     = new Menu("Bookmark");
+		this.bookMarkMenuItem = new MenuItem("Bookmark Menu");
+		
 		this.buttonList     = new ArrayList<Button>(     );
 		this.window         = new BorderPane(            ); 
 		this.gridPane       = new GridPane  (            );
@@ -179,8 +183,7 @@ public class eReaderGUIView extends Application{
 	 */
 	@Override
 	public void start(Stage stage)  throws Exception {
-		System.out.println(fontSize);
-		System.out.println(fontType);
+		
 		reader = new Stage();
 		reader.setTitle("E-Mongoose");
 		this.gridPane = new GridPane();
@@ -200,6 +203,9 @@ public class eReaderGUIView extends Application{
 		this.fontMenu.getItems().add(this.fontStyle   );
 		this.fontMenu.getItems().add(this.fontSizeMenu);
 				
+		this.bookmarkMenu .getItems().add(this.bookMarkMenuItem);
+		
+		this.menuBar.getMenus().add(this.bookmarkMenu);
 		// Add font menu to the menubar
 		this.menuBar.getMenus().add(this.fontMenu);
 
@@ -320,8 +326,7 @@ public class eReaderGUIView extends Application{
 													initialSerialize();
 		});
 	
-		System.out.println(fontSize);
-		System.out.println(fontType);
+		this.bookMarkMenuItem.setOnAction(e-> {      bookMarkMenu();    });
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
 		
@@ -364,10 +369,48 @@ public class eReaderGUIView extends Application{
 	}
 	
 	/**
+	 * Purpose: Makes the bookmark stage.
+	 */
+	private void bookMarkMenu() {
+		GridPane buttonContainer  = new GridPane(    );
+		Stage stage             = new Stage(       );
+		TextField textField     = new TextField(   ); 
+		BorderPane bookmarkWindow = new BorderPane(  );
+		
+		Button nextButton  = new Button("Next"  );
+		Button addButton = new Button("Add"   );
+		Button removeButton = new Button("Remove");
+		
+		Label label = new Label("Book Mark: ");
+		label.setFont(new Font("Crimson", 18));
+		
+		HBox hbox  = new HBox(nextButton);
+		HBox hbox1 = new HBox(addButton);
+		HBox hbox2 = new HBox(removeButton);
+		
+		HBox outerHbox = new HBox(label, hbox, hbox1, hbox2);
+		
+		
+		outerHbox.setSpacing(10);
+		buttonContainer.add(outerHbox, 3, 1     );
+		buttonContainer.setAlignment(Pos.CENTER );
+		bookmarkWindow.setCenter(buttonContainer);
+	
+		// Use next button to handle the event
+		nextButton.setOnAction(e->  {    });
+		addButton.setOnAction(e-> {    this.controller.addBookmark()   ;});
+		removeButton.setOnAction(e-> { this.controller.removeBookmark();});
+		
+		Scene scene = new Scene(bookmarkWindow, 500, 125);
+		stage.setScene(scene);
+		stage.show();  // Show the stage 
+	}
+	
+	/**
 	 * Purpose: Serializes the font size/style options to allow for a save
 	 * state to be possible.
 	 */
-	public void initialSerialize() {
+	private void initialSerialize() {
 		try {
 			FileOutputStream fileOut = new FileOutputStream("Settings.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -408,7 +451,7 @@ public class eReaderGUIView extends Application{
 	 * @throws FileNotFoundException 
 	 * 
 	 */
-	public void menuStart() throws FileNotFoundException {
+	private void menuStart() throws FileNotFoundException {
 		this.mainMenuBorder.setCenter(addGridPane(mainMenu));
 		System.out.println(fontSize);
 		System.out.println(fontType);
@@ -425,7 +468,7 @@ public class eReaderGUIView extends Application{
 	 * @throws FileNotFoundException throws exception if the file to be
 	 * read in for the pictures or books does not exist. 
 	 */
-	public GridPane addGridPane(Stage stage) throws FileNotFoundException {
+	private GridPane addGridPane(Stage stage) throws FileNotFoundException {
 		GridPane grid = new GridPane();
 		grid.setHgap(30);
 		grid.setVgap(30);
