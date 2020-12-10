@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -395,7 +394,7 @@ public class eReaderGUIView extends Application{
 		bookmarkWindow.setCenter(buttonContainer);
 	
 		// Use next button to handle the event
-		nextButton.setOnAction(e->  {    });
+		nextButton.setOnAction(e->  {                                   });
 		addButton.setOnAction(e-> {    this.controller.addBookmark()   ;});
 		removeButton.setOnAction(e-> { this.controller.removeBookmark();});
 		
@@ -451,8 +450,6 @@ public class eReaderGUIView extends Application{
 	 */
 	private void menuStart() throws FileNotFoundException {
 		this.mainMenuBorder.setCenter(addGridPane(mainMenu));
-		System.out.println(fontSize);
-		System.out.println(fontType);
 		mainMenu.show();
 	}
 	
@@ -665,8 +662,8 @@ public class eReaderGUIView extends Application{
 	 * @param bookChoice string representing the user's choice of a book to read. 
 	 */
 	private void getBook(String bookChoice) {
-		this.controller.openBook(bookChoice      ); 
-		setText(fontType, fontSize);
+		this.controller.openBook(bookChoice ); 
+		setText(fontType, fontSize          );
 	}
 
 	/**

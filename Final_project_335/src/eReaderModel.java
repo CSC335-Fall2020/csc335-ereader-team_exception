@@ -315,7 +315,6 @@ public class eReaderModel implements Serializable {
 	public void setPage(int pageNumber) {
 		
 		if(pageNumber < pages.size()) {
-			System.out.println("In the model");
 			this.currentPage = pageNumber;
 		}
 	}
