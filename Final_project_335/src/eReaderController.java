@@ -179,6 +179,7 @@ public class eReaderController {
 	/**
 	 * Purpose: Adds a bookmark to the model of the book.
 	 */
+
 //	public void removeBookmark() {
 //		model.removeBookmark();
 //	}
@@ -186,6 +187,10 @@ public class eReaderController {
 //	public void getBookmarks() {
 //		model.getBookmarks();
 //	}
+//	public void addBookmark() {
+//		model.addBookmark();
+//	}
+
 	/**
 	 * Purpose: returns the next page of the current book
 	 * @return a string representing the page
