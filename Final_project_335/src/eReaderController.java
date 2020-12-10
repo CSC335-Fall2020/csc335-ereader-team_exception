@@ -236,14 +236,6 @@ public class eReaderController {
 	public String startBook() {
 		return model.startBook();
 	}
-	
-	/**
-	 * Purpose: tester
-	 * @return
-	 */
-	public List<String> getBook() {
-		return this.model.getPages(30, 80);
-	}	
 
 	/*
 	 * 
