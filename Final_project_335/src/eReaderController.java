@@ -1,5 +1,4 @@
 import java.util.TreeMap;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,12 +26,11 @@ public class eReaderController {
 	private String currBook;
 
 	/**
-	 * Purpose: Controller that instantiates the controller for the e-reader.
-	 * creates the controller by checking for a save state file, if the file 
-	 * exists recreates the state of the controllers booklist.
+	 * Purpose: Constructor that instantiates the controller for the e-reader.
+	 *  creates the controller by checking for a save state file, if the file 
+	 *  exists recreates the state of the controllers booklist
 	 */
-
-	public eReaderController(){
+	public eReaderController() {
 		initialDeserialize();
 	}
 
@@ -44,8 +42,8 @@ public class eReaderController {
 	 * @param bookTitle a string representing the title of a book
 	 * @param filename a string representing the actual books filename
 	 */
-	public void addBook(String bookTitle, String filename) {
-		model = new eReaderModel(bookTitle, filename);
+	public void addBook(String bookTitle, String filePath) {
+		model = new eReaderModel(bookTitle, filePath);
 		bookList.add(bookTitle);
 		this.serialize(bookTitle);
 		initialSerialize();
@@ -74,8 +72,9 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose: When a book is added to the book list this method will serialize 
-	 * the book list again, to include said book.
+	 * Purpose: This function is only run once, at it is the very first time
+	 * this program was run. The booklist is serialized so it never has to
+	 * be recreated again. 
 	 */
 	public void initialSerialize() {
 		try {
@@ -117,7 +116,7 @@ public class eReaderController {
 				} catch (IOException i) {
 					i.printStackTrace();
 				}
-			}catch(IOException g) {
+			} catch(IOException g) {
 				g.printStackTrace();
 			}
 		} catch (IOException i) {
@@ -128,13 +127,11 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose: When the books is closed or a new book is added, serialize it.
-	 * NOTE: BE SURE TO RUN THIS AFTER THE BOOK AND TITLE ARE ADDED TO BOOKLIST
+	 * Purpose: Serializes a book with the specified title.
 	 * 
-	 * @param title a string representing the title of a book
+	 * @param title title of book
 	 */
 	public void serialize(String title) {
-		
 		try {
 			FileOutputStream fileOut = new FileOutputStream(title + ".ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -147,7 +144,7 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose: checks for a serialized file for the specific book title.
+	 * Purpose: Checks for a serialized file for the specific book title.
 	 * if it exists return the eReaderModel otherwise return null.
 	 * 
 	 * @return the deserialized eReaderModel if it exists
@@ -169,7 +166,7 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose: returns the title of the current book
+	 * Purpose: Returns the title of the current book
 	 * 
 	 * @return returns a string for the title of the book
 	 */
@@ -179,7 +176,7 @@ public class eReaderController {
 
 
 	/**
-	 * Purpose: returns current page number
+	 * Purpose: Returns current page number
 	 * 
 	 * @return an int of the models current page number
 	 */
@@ -188,7 +185,7 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose: return the int value for the number of pages in this model of the book
+	 * Purpose: Returns the int value for the number of pages in this model of the book
 	 * 
 	 * @return returns an int for the number of pages in the book
 	 */
@@ -199,26 +196,29 @@ public class eReaderController {
 	/**
 	 * Purpose: Adds a bookmark to the model of the book.
 	 */
-	public void removeBookmark() {
-		model.removeBookmark();
-	}
-	
-	/**
-	 * Purpose: Gets the bookmarks from book.
-	 */
-	public void getBookmarks() {
-		model.getBookmarks();
-	}
-	
-	/**
-	 * Purpose: Adds a bookmark to a book
-	 */
 	public void addBookmark() {
 		model.addBookmark();
 	}
 	
 	/**
-	 * Purpose: returns the next page of the current book
+	 * Purpose: Removes a bookmark.
+	 */
+	public void removeBookmark() {
+		model.removeBookmark();
+	}
+	
+	
+	/**
+	 * Purpose: Returns a sorted list containing all bookmarked pages.
+	 * 
+	 * @return sorted list of bookmarked page numbers
+	 */
+	public List<Integer> getBookmarks() {
+		return model.getBookmarks();
+	}
+
+	/**
+	 * Purpose: Returns the next page of the current book
 	 * 
 	 * @return a string representing the page
 	 */
@@ -232,7 +232,7 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose: returns the previous page of the current book if it exists
+	 * Purpose: Returns the previous page of the current book if it exists
 	 * 
 	 * @return a string representing the page
 	 */
@@ -246,7 +246,7 @@ public class eReaderController {
 	}
 	
 	/**
-	 * Purpose: returns the page that the model is currently on
+	 * Purpose: Returns the page that the model is currently on
 	 * 
 	 * @return the string of the current page
 	 */
@@ -254,6 +254,11 @@ public class eReaderController {
 		return model.getCurrPage();
 	}
 	
+	/**
+	 * Purpose: Returns the booklist.
+	 * 
+	 * @return 
+	 */
 	public List<String> getBookList(){
 		Collections.sort(bookList);
 		return bookList;
@@ -273,9 +278,9 @@ public class eReaderController {
 	
 	
 	/**
-	 * Purpose: Gets the users progress of the book from the model and returns it. 
+	 * Purpose: Returns the user's progress.
 	 * 
-	 * @return a double representing the progress through the book.
+	 * @return decimal between 0 and 1 representing percentage of book read
 	 */
 	public double getProgress() {
 		return this.model.getProgress();

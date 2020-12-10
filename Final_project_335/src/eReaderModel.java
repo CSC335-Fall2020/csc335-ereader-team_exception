@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -11,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+<<<<<<< HEAD
  * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author wczeng, @author jialiangzhao
  * FILE: eReaderModel.java
  * ASSIGNMENT: Final Project
@@ -18,6 +18,14 @@ import java.util.List;
  * PURPOSE: This class represents the Model of the MVC architecture. It has methods to 
  * read in the book from a folder contained within the project. It also contains 
  * methods to get page info and create a save state.
+=======
+ * Purpose: This class represents the Model of the MVC 
+ * architecture. It has methods to read in the book from
+ * a folder contained within the project. It also contains 
+ * methods to get page info and create a save state. 
+ * 
+ * @author Ztaylor9000, caseywhitmire, jialiangzhao, David (Winston?), and blsmith86
+>>>>>>> refs/remotes/origin/winston
  */
 
 public class eReaderModel implements Serializable {
@@ -27,14 +35,17 @@ public class eReaderModel implements Serializable {
 	private String        searchBook;
 	private int           searchNumber;
 	private String        searchCurrent;
-	private List<Integer> bookmarks;
+	private List<Integer> bookmarks = new ArrayList<Integer>();
 	private String bookName;
 	private static final long serialVersionUID = 42L;
 	private double progress;
 
 	/**
 	 * Purpose: creates the model of each book with a title and a file address
+<<<<<<< HEAD
 	 * 
+=======
+>>>>>>> refs/remotes/origin/winston
 	 * @param filename is the file address for the text file of the book
 	 * @param bookName is the title for this book
 	 */
@@ -70,7 +81,6 @@ public class eReaderModel implements Serializable {
             try {
 				fileInput = new BufferedReader( new InputStreamReader(new FileInputStream(filename), "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -92,6 +102,10 @@ public class eReaderModel implements Serializable {
 	 * 
 	 * @param pageLength length of the page to slice out
 	 * @param lineLength length of the line to slice. 
+<<<<<<< HEAD
+=======
+	 * 
+>>>>>>> refs/remotes/origin/winston
 	 * @return retval ArrayList that holds the book spit into pages. 
 	 */
 	public List<String> getPages(int pageLength, int lineLength){
@@ -124,9 +138,7 @@ public class eReaderModel implements Serializable {
 				retval.add(currLine);
 				pageLine = 0;
 				currLine = "";
-				
 			}
-			
 		}
 		
 		currLine +=book.substring(start)+ "\n";
@@ -141,14 +153,9 @@ public class eReaderModel implements Serializable {
 	 * @return current page of the book stored in the ArrayList.
 	 */
 	public String getCurrPage() {
-		if(pages == null || pages.size()== 0) {
-			System.out.println("no book content");
-			return null;
-		}
 		return pages.get(currentPage);
 	}
 	
-
 	/**
 	 * Purpose: Gets the next page of the book. 
 	 * 
@@ -156,7 +163,7 @@ public class eReaderModel implements Serializable {
 	 */
 	public String getNext() {
 		currentPage++;
-		if(pages == null || pages.size() == 0 || currentPage >= pages.size()) {
+		if(currentPage >= pages.size()) {
 			System.out.println("no book content or no more page");
 			currentPage--;
 			return null;
@@ -172,8 +179,7 @@ public class eReaderModel implements Serializable {
 	 */
 	public String getPrevious() {
 		currentPage--;
-		if(pages == null || pages.size() == 0 || currentPage <0) {
-			System.out.println("no book content or first page now");
+		if(currentPage <0) {
 			currentPage++;
 			return null;
 		}
@@ -226,9 +232,9 @@ public class eReaderModel implements Serializable {
 				             searchBook = searchBook.substring(i + input.length());
 				             searchNumber += i;
 				         
-				             if(searchNumber == 0) {//winston change
+				             if(searchNumber == 0) {
 				            	 searchNumber += i;
-				             } else {//winston change
+				             } else {
 					             searchNumber += i;
 					             searchNumber += input.length();
 					             int g = 0;
@@ -254,47 +260,67 @@ public class eReaderModel implements Serializable {
 	 * Purpose: Adds a bookmark to the page. 
 	 */
 	public void addBookmark() {
-		if(!bookmarks.contains(currentPage)) {
-			bookmarks.add(currentPage);
+		if(!this.bookmarks.contains(currentPage)) {
+			this.bookmarks.add(currentPage);
 		}
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Purpose: Removes a bookmark from the bookmark list.
+=======
+	 * Purpose: Removes a bookmark.
+>>>>>>> refs/remotes/origin/winston
 	 */
 	
 	public void removeBookmark() {
-		if(bookmarks.contains(currentPage)) {
-			bookmarks.remove(currentPage);
+		if(this.bookmarks.contains(currentPage)) {
+			this.bookmarks.remove(currentPage);
 		}
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Purpose: Returns a list of bookmarks.
 	 * 
 	 * @return an integer list representing the pages? each bookmark was added
+=======
+	 * Purpose: Returns a sorted list containing all bookmarked pages.
+	 * 
+	 * @return this.bookmarks sorted list of bookmarked page numbers
+>>>>>>> refs/remotes/origin/winston
 	 */
 	public List<Integer> getBookmarks() {
-		Collections.sort(bookmarks);
-		return bookmarks;
+		Collections.sort(this.bookmarks);
+		return this.bookmarks;
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Purpose: Returns the users progress through a book
 	 * 
 	 * @return a double representing the users progress
+=======
+	 * Purpose: Returns the user's progress.
+	 * 
+	 * @return progress decimal value between 0 and 1 representing
+	 * how much of the book has been read
+>>>>>>> refs/remotes/origin/winston
 	 */
 	public double getProgress() {
 		return progress;
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Purpose: Allows the ability to change a given page number.
 	 * 
 	 * @param pageNumber an integer
+=======
+	 * Purpose: Jumps to a specified page in the book.
+>>>>>>> refs/remotes/origin/winston
 	 */
 	public void setPage(int pageNumber) {
-		
 		if(pageNumber < pages.size()) {
 			System.out.println("In the model");
 			this.currentPage = pageNumber;
