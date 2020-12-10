@@ -11,13 +11,13 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Purpose: This class represents the Model of the MVC 
- * architecture. It has methods to read in the book from
- * a folder contained within the project. It also contains 
- * methods to get page info and create a save state. 
- * 
- * @author Ztaylor9000, caseywhitmire, jialiangzhao, David (Winston?), and blsmith86
- *
+ * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author , @author
+ * FILE: eReaderModel.java
+ * ASSIGNMENT: Final Project
+ * Course: CSC 335; Fall 2020
+ * PURPOSE: This class represents the Model of the MVC architecture. It has methods to 
+ * read in the book from a folder contained within the project. It also contains 
+ * methods to get page info and create a save state.
  */
 
 public class eReaderModel implements Serializable {
@@ -33,7 +33,8 @@ public class eReaderModel implements Serializable {
 	private double progress;
 
 	/**
-	 *  creates the model of each book with a title and a file address
+	 * Purpose: creates the model of each book with a title and a file address
+	 * 
 	 * @param filename is the file address for the text file of the book
 	 * @param bookName is the title for this book
 	 */
@@ -63,7 +64,6 @@ public class eReaderModel implements Serializable {
 	 * 
 	 * @param filename name of file to be read in. 
 	 */
-
 	private void convertFile(String filename) {
 		BufferedReader fileInput = null;
 		try {
@@ -91,11 +91,8 @@ public class eReaderModel implements Serializable {
 	 * Purpose: Gets the specific page in the book. 
 	 * 
 	 * @param pageLength length of the page to slice out
-	 * 
 	 * @param lineLength length of the line to slice. 
-	 * 
-	 * @return retval ArrayList that holds the book spit into
-	 * pages. 
+	 * @return retval ArrayList that holds the book spit into pages. 
 	 */
 	public List<String> getPages(int pageLength, int lineLength){
 		List<String> retval = new ArrayList<String>();
@@ -141,8 +138,7 @@ public class eReaderModel implements Serializable {
 	/**
 	 * Purpose: Gets the current page of the book.
 	 * 
-	 * @return current page of the book stored in the
-	 * ArrayList.
+	 * @return current page of the book stored in the ArrayList.
 	 */
 	public String getCurrPage() {
 		if(pages == null || pages.size()== 0) {
@@ -156,7 +152,7 @@ public class eReaderModel implements Serializable {
 	/**
 	 * Purpose: Gets the next page of the book. 
 	 * 
-	 * @return string that represets the next page in the book. 
+	 * @return string that represents the next page in the book. 
 	 */
 	public String getNext() {
 		currentPage++;
@@ -209,7 +205,6 @@ public class eReaderModel implements Serializable {
 	 * next instance when called. 
 	 * 
 	 * @param input string to search for 
-	 * 
 	 * @return index of string if found, -1 if not found. 
 	 */
 	public int search(String input) {
@@ -265,8 +260,7 @@ public class eReaderModel implements Serializable {
 	}
 
 	/**
-	 * Purpose: 
-	 * @return
+	 * Purpose: Removes a bookmark from the bookmark list.
 	 */
 	
 	public void removeBookmark() {
@@ -275,17 +269,29 @@ public class eReaderModel implements Serializable {
 		}
 	}
 	
+	/**
+	 * Purpose: Returns a list of bookmarks.
+	 * 
+	 * @return an integer list representing the pages? each bookmark was added
+	 */
 	public List<Integer> getBookmarks() {
 		Collections.sort(bookmarks);
 		return bookmarks;
 	}
 	
+	/**
+	 * Purpose: Returns the users progress through a book
+	 * 
+	 * @return a double representing the users progress
+	 */
 	public double getProgress() {
 		return progress;
 	}
 	
 	/**
-	 * Purpose: 
+	 * Purpose: Allows the ability to change a given page number.
+	 * 
+	 * @param pageNumber an integer
 	 */
 	public void setPage(int pageNumber) {
 		

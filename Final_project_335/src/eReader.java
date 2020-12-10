@@ -1,9 +1,11 @@
 import javafx.application.Application;
 
 /**
- * 
- * @author 
- *
+ * AUTHOR: @author ztaylor, @author blsmith86, @author caseywhitmire @author , @author
+ * FILE: eReader.java
+ * ASSIGNMENT: Final Project
+ * Course: CSC 335; Fall 2020
+ * PURPOSE: Responsible for running the application (eReader).
  */
 public class eReader {
 
