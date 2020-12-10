@@ -124,8 +124,6 @@ public class eReaderGUIView extends Application{
 		this.progressBar    = new ProgressBar(0          );
 		this.fontType       = DEFAULT_FONT;
 		this.fontSize       = DEFAULT_SIZE;
-		System.out.println(fontSize);
-		System.out.println(fontType);
 		initialDeserialize();
 		// load basic books into eReader
 		controller = new eReaderController();
@@ -136,8 +134,6 @@ public class eReaderGUIView extends Application{
 			controller.addBook("Roswell Report", "books/roswellReport.txt");
 			controller.addBook("Wizard of Oz", "books/wizardOfOz.txt");  
 		}
-		System.out.println(fontSize);
-		System.out.println(fontType);
 	}
 	@SuppressWarnings("unchecked")
 	public void initialDeserialize() {
@@ -319,9 +315,6 @@ public class eReaderGUIView extends Application{
 													// Save state for font styles
 													initialSerialize();
 		});
-	
-		System.out.println(fontSize);
-		System.out.println(fontType);
 		// Set the scene
 		Scene scene = new Scene(this.window, WIDTH, HEIGHT);
 		
@@ -410,8 +403,6 @@ public class eReaderGUIView extends Application{
 	 */
 	public void menuStart() throws FileNotFoundException {
 		this.mainMenuBorder.setCenter(addGridPane(mainMenu));
-		System.out.println(fontSize);
-		System.out.println(fontType);
 		mainMenu.show();
 	}
 	
