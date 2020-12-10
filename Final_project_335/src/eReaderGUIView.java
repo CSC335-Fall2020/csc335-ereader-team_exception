@@ -365,7 +365,7 @@ public class eReaderGUIView extends Application{
             }
         });
 		
-		stage.show();;
+		stage.show();
 	}
 	
 	/**
@@ -373,12 +373,11 @@ public class eReaderGUIView extends Application{
 	 */
 	private void bookMarkMenu() {
 		GridPane buttonContainer  = new GridPane(    );
-		Stage stage             = new Stage(       );
-		TextField textField     = new TextField(   ); 
+		Stage stage               = new Stage(       );
 		BorderPane bookmarkWindow = new BorderPane(  );
 		
-		Button nextButton  = new Button("Next"  );
-		Button addButton = new Button("Add"   );
+		Button nextButton   = new Button("Next"  );
+		Button addButton    = new Button("Add"   );
 		Button removeButton = new Button("Remove");
 		
 		Label label = new Label("Book Mark: ");
@@ -389,7 +388,6 @@ public class eReaderGUIView extends Application{
 		HBox hbox2 = new HBox(removeButton);
 		
 		HBox outerHbox = new HBox(label, hbox, hbox1, hbox2);
-		
 		
 		outerHbox.setSpacing(10);
 		buttonContainer.add(outerHbox, 3, 1     );
